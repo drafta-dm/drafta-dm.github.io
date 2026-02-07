@@ -1,4 +1,4 @@
-# 🏆 DRAFTA v4.0
+# 🏆 DRAFTA v5.0
 
 **Live Serie A Fantasy Draft** - Sistema di draft in tempo reale perFantaCalcio con notifiche push avanzate.
 
@@ -138,6 +138,11 @@ Trigger: `onDocumentWritten("rooms/{roomId}")`
 ---
 
 ## 📝 Changelog
+
+### v5.0 (2026-02-07) - **Domain Migration & Fixes** 🚀
+- Migliorato sistema di notifiche (funziona anche ad app chiusa)
+- Migrazione a dominio root `drafta-dm.github.io`
+- Fix per icona e manifest PWA
 
 ### v4.0 (2026-02-05) - **FCM Notification System** 🔔
 - ✅ Implementato Firebase Cloud Messaging
