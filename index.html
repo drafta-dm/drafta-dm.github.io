@@ -1,0 +1,400 @@
+<!-- Force Deploy 2026-02-06 -->
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Drafta | Live Serie A Fantasy Draft</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="icons/icon-192x192.png">
+    <link rel="stylesheet" href="style.css">
+
+    <!-- MODAL: TEAM MANAGER -->
+    <div id="modal-team-manager" class="modal-overlay hidden">
+        <div class="modal-card">
+            <h2 class="font-title">Gestione Squadra</h2>
+            <div class="modal-body">
+                <input type="hidden" id="tm-team-id">
+                <div style="margin-bottom:15px; text-align:left;">
+                    <label style="color:var(--text-muted); font-size:0.8rem;">Nome Squadra</label>
+                    <input type="text" id="tm-team-name"
+                        style="width:100%; padding:10px; background:#222; border:1px solid #444; color:white; border-radius:4px;">
+                </div>
+                <div style="margin-bottom:15px; text-align:left;">
+                    <label style="color:var(--text-muted); font-size:0.8rem;">Assegna a Utente</label>
+                    <select id="tm-user-select"
+                        style="width:100%; padding:10px; background:#222; border:1px solid #444; color:white; border-radius:4px;">
+                        <!-- JS populated -->
+                    </select>
+                </div>
+            </div>
+            <div style="display:flex; gap:10px;">
+                <button class="btn btn-outline" style="flex:1"
+                    onclick="document.getElementById('modal-team-manager').classList.add('hidden')">Annulla</button>
+                <button class="btn" style="flex:1; background:var(--primary); color:black;"
+                    id="btn-tm-save">Salva</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: START DRAFT INFO -->
+    <div id="modal-start-draft" class="modal-overlay hidden">
+        <div class="modal-card">
+            <h2 class="font-title" style="color:var(--primary)">Asta Avviata!</h2>
+            <div class="modal-body">
+                <p style="color:var(--text-muted); margin-bottom:1rem;">L'Host ha avviato la sessione.</p>
+                <p>Attendere l'inizio delle chiamate.</p>
+            </div>
+            <button class="btn btn-primary"
+                onclick="document.getElementById('modal-start-draft').classList.add('hidden')">OK</button>
+        </div>
+    </div>
+
+    <!-- MODAL: NOTIFICATION PERMISSION -->
+    <div id="modal-notifications" class="modal-overlay hidden">
+        <div class="modal-card" style="max-width: 450px;">
+            <div style="text-align:center; font-size:3rem; margin-bottom:1rem;">🔔</div>
+            <h2 class="font-title" style="color:var(--primary); text-align:center;">Abilita Notifiche</h2>
+            <div class="modal-body">
+                <p style="color:var(--text-muted); margin-bottom:1rem;">Ricevi notifiche quando è il tuo turno durante
+                    il draft!</p>
+                <ul
+                    style="text-align:left; color:var(--text-muted); font-size:0.9rem; margin-bottom:1.5rem; padding-left:20px;">
+                    <li>Notifica desktop/mobile quando tocca a te</li>
+                    <li>Non perdere mai il tuo turno</li>
+                    <li>Puoi disattivarle in qualsiasi momento</li>
+                </ul>
+            </div>
+            <div style="display:flex; gap:10px;">
+                <button class="btn btn-outline" style="flex:1" id="btn-notif-later">Più Tardi</button>
+                <button class="btn btn-primary" style="flex:1" id="btn-notif-enable">Abilita</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: FIRST ROUND ORDER -->
+    <div id="modal-load-order" class="modal-overlay hidden">
+        <div class="modal-card">
+            <h2 class="font-title">Ordine Iniziale</h2>
+            <div class="modal-body">
+                <p style="color:var(--text-muted); margin-bottom:1.5rem;">Genera l'ordine casuale per la prima tornata
+                    di chiamate.</p>
+                <div class="order-preview" id="order-preview-list"
+                    style="margin-bottom:15px; max-height:150px; overflow-y:auto; background:#111; padding:10px; border-radius:6px; font-size:0.85rem; text-align:left;">
+                    <!-- JS populated -->
+                </div>
+            </div>
+            <div style="display:flex; gap:10px;">
+                <button id="btn-gen-random-start" class="btn btn-outline" style="flex:1;">🎲 Genera Random</button>
+                <button id="btn-confirm-start-order" class="btn btn-primary" style="flex:1;">Conferma & Inizia</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap">
+
+    <!-- Firebase SDKs will be loaded efficiently via modules in app.js -->
+</head>
+
+<body class="dark-theme">
+    <div id="app">
+        <!-- Toast / Notification Container -->
+        <div id="toast-container"></div>
+
+        <!-- VIEW: LOGIN -->
+        <section id="view-login" class="view active">
+            <div class="login-card">
+                <h1>DRAFTA <small style="font-size:1rem; color:var(--text-muted); opacity:0.7;">v4.1</small></h1>
+                <p class="subtitle">Live Serie A Fantasy Draft</p>
+
+                <div class="login-actions">
+                    <button id="btn-login-google" class="btn btn-primary">
+                        <span class="icon">G</span> Accedi con Google
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW: DASHBOARD (Home after login) -->
+        <section id="view-dashboard" class="view hidden">
+            <header class="app-header">
+                <div class="user-info">
+                    <img id="user-avatar" src="" alt="Avatar">
+                    <span id="user-name">Loading...</span>
+                </div>
+                <button id="btn-logout" class="btn btn-sm btn-outline">Esci</button>
+            </header>
+
+            <div class="dashboard-grid">
+                <div class="card action-card">
+                    <h2>Crea Stanza</h2>
+                    <p>Sei l'Host? Crea una nuova asta.</p>
+                    <!-- URL input removed - not needed -->
+
+                    <div class="input-group" style="margin-top:10px;">
+                        <label for="input-team-count" style="font-size:0.8rem; color:var(--text-muted);">Numero
+                            Squadre</label>
+                        <select id="input-team-count"
+                            style="padding:12px; background:var(--bg-surface); color:white; border:none; border-radius:6px; font-size:1rem;">
+                            <option value="6">6 Squadre</option>
+                            <option value="8" selected>8 Squadre</option>
+                            <option value="10">10 Squadre</option>
+                            <option value="12">12 Squadre</option>
+                            <option value="14">14 Squadre</option>
+                            <option value="16">16 Squadre</option>
+                            <option value="18">18 Squadre</option>
+                            <option value="20">20 Squadre</option>
+                        </select>
+                    </div>
+
+                    <div class="settings-group" style="margin-top:15px; display:flex; gap:20px; flex-wrap:wrap;">
+                        <label class="switch-label">
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="input-block-gk" checked>
+                                <span class="slider"></span>
+                            </div>
+                            Blocco Portieri
+                            <span class="info-icon"
+                                data-tooltip="Se acquisti un portiere, il sistema prova ad assegnarti automaticamente gli altri portieri della stessa squadra.">?</span>
+                        </label>
+                        <label class="switch-label">
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="input-strict-roles" checked>
+                                <span class="slider"></span>
+                            </div>
+                            Ordine Ruoli (P→D→C→A)
+                            <span class="info-icon"
+                                data-tooltip="Obbliga a completare i reparti in ordine: Portieri > Difensori > Centrocampisti > Attaccanti.">?</span>
+                        </label>
+                    </div>
+
+                    <button id="btn-create-room" class="btn btn-accent" style="margin-top:10px;">Crea Nuova
+                        Asta</button>
+                    <button id="btn-import-room" class="btn btn-outline" style="width: 100%; margin-top: 10px;">
+                        📂 Importa Rose da File
+                    </button>
+                    <input type="file" id="input-import-csv" accept=".csv" style="display:none">
+                </div>
+
+                <div class="card action-card">
+                    <h2>Unisciti</h2>
+                    <p>Hai un codice? Entra in una stanza.</p>
+                    <div class="input-group">
+                        <input type="text" id="input-room-id" placeholder="ID Stanza">
+                        <input type="password" id="input-room-pass" placeholder="Password">
+                    </div>
+                    <button id="btn-join-room" class="btn btn-primary">Entra</button>
+
+                    <div id="recent-rooms-container" class="recent-rooms hidden">
+                        <h3>Recenti</h3>
+                        <ul id="recent-rooms-list"></ul>
+                        <!-- Delete buttons will be added dynamically by JS for Host -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW: LOBBY (Waiting for start) -->
+        <section id="view-lobby" class="view hidden">
+            <header class="lobby-header">
+                <button id="btn-leave-lobby" class="nav-back">← Torna</button>
+                <div class="room-info-display">
+                    <h2>Stanza: <span id="lobby-room-id" class="code-font">...</span></h2>
+                    <div id="lobby-pass-display" class="hidden">Pass: <span id="lobby-room-pass"
+                            class="code-font">...</span></div>
+                </div>
+            </header>
+
+            <div class="lobby-content">
+                <div class="lobby-columns">
+                    <!-- LEFT: Connected Users (Waiting) -->
+                    <div class="participants-section">
+                        <h3>Utenti Connessi <span id="connected-count">(0)</span></h3>
+                        <ul id="lobby-connected-list" class="user-list">
+                            <!-- Populated by JS -->
+                        </ul>
+                    </div>
+
+                    <!-- RIGHT: Teams (Slots) -->
+                    <div class="teams-section">
+                        <h3>Squadre <span id="team-count-display"></span></h3>
+                        <div id="lobby-teams-grid" class="teams-grid">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <div id="host-controls" class="host-panel hidden">
+                    <div class="host-actions">
+                        <p style="margin-bottom:10px; color:var(--text-muted);">Trascina o clicca per assegnare gli
+                            utenti alle squadre.</p>
+                        <button id="btn-start-draft" class="btn btn-success btn-block">AVVIA ASTA</button>
+                    </div>
+                </div>
+
+                <div id="guest-waiting-msg" class="waiting-msg">
+                    In attesa che l'host inizi l'asta...
+                </div>
+            </div>
+        </section>
+
+        <!-- DRAFT VIEW -->
+        <section id="view-draft" class="screen hidden">
+            <!-- HEADER -->
+            <header class="draft-header">
+                <div class="header-left" style="display:flex; align-items:center; gap:20px;">
+                    <h1 class="font-title" style="margin:0;">DRAFT<span style="color:var(--primary)">A</span> <small
+                            style="font-size:0.4em; color:var(--text-muted); font-weight:normal;">v4.1</small></h1>
+                    <div id="turn-indicator-box"
+                        style="display:flex; align-items:baseline; gap:10px; padding-left:20px; border-left:1px solid #333;">
+                        <span class="label"
+                            style="color:#666; font-size:0.9rem; text-transform:uppercase;">Turno:</span>
+                        <span id="txt-current-turn-team"
+                            style="font-size:1.3rem; font-weight:bold; color:white;">--</span>
+                    </div>
+                </div>
+
+                <!-- Timer removed - not used -->
+
+                <div class="header-right" id="room-info-display" style="display:flex; gap:15px; align-items:center;">
+                    <div style="text-align:right;">
+                        <code id="txt-room-id-display"
+                            style="display:block; color:var(--primary); font-size:0.9rem;">...</code>
+                        <code id="txt-room-pass-display"
+                            style="display:block; color:var(--text-muted); font-size:0.75rem;">...</code>
+                    </div>
+                    <!-- Round moved here or hidden? User didn't specify round, but good to keep. Putting it next to timer? -->
+                    <!-- Let's put Round next to timer in center, cleaner -->
+                    <div style="text-align:center; margin-right:15px;">
+                        <span id="txt-round"
+                            style="display:block; font-size:0.8rem; color:#666; text-transform:uppercase;">Round
+                            1</span>
+                    </div>
+                    <!-- Host-only Export CSV button -->
+                    <button id="btn-export-csv" class="btn btn-sm btn-outline" style="display:none;">
+                        📥 Export CSV
+                    </button>
+                    <img id="header-user-avatar" src=""
+                        style="width:32px; height:32px; border-radius:50%; background:#333;">
+                </div>
+            </header>
+
+            <div class="draft-view-container">
+                <!-- LEFT PANEL: Active Card + Player List -->
+                <div class="draft-left-panel">
+
+                    <!-- ACTIVE PLAYER CARD -->
+                    <div class="active-player-panel">
+                        <div class="active-card-content" id="active-player-card">
+                            <div class="card-header">
+                                <span class="role-badge large" id="active-player-role">?</span>
+                                <div class="player-identity">
+                                    <h2 id="active-player-name">Seleziona Giocatore</h2>
+                                    <p id="active-player-team">-</p>
+                                </div>
+                                <span id="active-player-fvm" class="fvm-badge">FVM: -</span>
+                            </div>
+
+                            <div class="card-body">
+                                <img id="active-player-img" src="" alt="Player" class="player-main-img hidden"
+                                    referrerpolicy="no-referrer">
+                            </div>
+
+                            <!-- HOST CONTROLS -->
+                            <div id="host-bid-controls" class="pick-controls">
+                                <!-- Random Order Btn removed from here, moved to modal -->
+                                <button id="btn-confirm-pick" class="btn btn-pick">PICK</button>
+                                <button id="btn-clear-pick" class="btn btn-secondary"
+                                    style="background:#666; margin-left:10px;"
+                                    title="Deseleziona giocatore">🗑️</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PLAYER LIST (Moved Here) -->
+                    <div class="player-database">
+                        <div class="filters">
+                            <div class="role-tabs" id="role-filters">
+                                <button class="role-tab active" data-role="all">ALL</button>
+                                <button class="role-tab" data-role="P">P</button>
+                                <button class="role-tab" data-role="D">D</button>
+                                <button class="role-tab" data-role="C">C</button>
+                                <button class="role-tab" data-role="A">A</button>
+                            </div>
+                            <input type="text" id="search-player" placeholder="Cerca giocatore...">
+                        </div>
+                        <div class="player-list-container">
+                            <ul id="player-list">
+                                <!-- JS Populated -->
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- RIGHT PANEL: Teams Queue -->
+                <div class="draft-right-panel">
+                    <div id="teams-matrix" class="teams-matrix">
+                        <!-- JS populated Columns -->
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- MODAL: Room Created -->
+        <div id="modal-room-created" class="modal-overlay hidden">
+            <div class="modal-card">
+                <h2>Stanza Creata!</h2>
+                <div class="modal-body">
+                    <p>Condividi questi dati con i partecipanti:</p>
+                    <div class="credentials-box">
+                        <div class="cred-row">
+                            <span class="label">ID Stanza</span>
+                            <span id="modal-room-id" class="code-text">...</span>
+                        </div>
+                        <div class="cred-row">
+                            <span class="label">Password</span>
+                            <span id="modal-room-pass" class="code-text">...</span>
+                        </div>
+                    </div>
+                </div>
+                <button id="btn-modal-enter" class="btn btn-primary btn-block">Entra nella Stanza</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="app.js"></script>
+    <!-- MODAL: Order Settings -->
+    <div id="modal-order-settings" class="modal-overlay hidden">
+        <div class="modal-card" style="max-width: 400px;">
+            <h3>Genera Ordine Turni</h3>
+            <p>Scegli il criterio per stabilire i turni:</p>
+            <div style="display:flex; flex-direction:column; gap:10px; margin-top:15px;">
+                <button id="btn-order-strict" class="btn btn-outline" style="text-align:left;">
+                    <b>🏷️ Per Ruolo Mancante</b><br>
+                    <small>Chi è più indietro coi ruoli sceglie SEMPRE per primo.</small>
+                </button>
+                <button id="btn-order-count" class="btn btn-outline" style="text-align:left;">
+                    <b>🔢 Per Numero Giocatori</b><br>
+                    <small>Chi ha meno giocatori sceglie SEMPRE per primo.</small>
+                </button>
+                <button id="btn-order-value" class="btn btn-outline" style="text-align:left;">
+                    <b>💎 Per Valore Rosa</b><br>
+                    <small>Chi ha speso meno sceglie SEMPRE per primo.</small>
+                </button>
+            </div>
+            <div style="margin-top:20px; text-align:right;">
+                <button id="btn-close-order-modal" class="btn btn-text">Annulla</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
