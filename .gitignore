@@ -1,0 +1,18 @@
+# Helper files
+.vscode/
+.idea/
+*.log
+*.DS_Store
+
+# Dependencies
+node_modules/
+functions/node_modules/
+
+# Build folders
+_site/
+.jekyll-cache/
+.jekyll-metadata
+
+# Firebase
+.firebase/
+firebase-debug.log

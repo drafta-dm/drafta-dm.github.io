@@ -1,0 +1,8 @@
+exclude:
+  - functions/node_modules
+  - functions
+  - node_modules
+  - .firebase
+  - package.json
+  - package-lock.json
+  - version.json
