@@ -43,6 +43,9 @@ function switchView(viewName) {
 function initAuth() {
     onAuthStateChanged(auth, (user) => {
         if (user) {
+            // CHECK VERSION
+            verifyAppVersion();
+
             state.user = user;
             updateUserInfo(user);
             updateUserInfo(user);
@@ -124,6 +127,39 @@ function closeNotificationModal() {
     localStorage.setItem('drafta-notification-asked', 'true');
     document.getElementById('modal-notifications').classList.add('hidden');
     showToast('Puoi abilitare le notifiche in seguito dalle impostazioni del browser');
+}
+
+// --- VERSION CHECK ---
+async function verifyAppVersion() {
+    try {
+        const response = await fetch(`./version.json?t=${Date.now()}`, { cache: "no-store" });
+        if (!response.ok) return;
+        const data = await response.json();
+        const serverVersion = data.version;
+        const localVersion = localStorage.getItem('drafta_version');
+
+        if (serverVersion && serverVersion !== localVersion) {
+            console.log(`New version found: ${serverVersion} (Local: ${localVersion})`);
+            // Update stored version
+            localStorage.setItem('drafta_version', serverVersion);
+
+            // Unregister Service Workers to force update
+            if ('serviceWorker' in navigator) {
+                const registrations = await navigator.serviceWorker.getRegistrations();
+                for (let registration of registrations) {
+                    await registration.unregister();
+                }
+            }
+
+            // Force Reload if it's a major change (or just user feedback)
+            showToast(`🚀 Aggiornamento a v${serverVersion} in corso...`);
+            setTimeout(() => {
+                window.location.reload(true);
+            }, 1500);
+        }
+    } catch (e) {
+        console.error("Version check failed", e);
+    }
 }
 
 // --- FIREBASE CLOUD MESSAGING ---
