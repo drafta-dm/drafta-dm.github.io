@@ -66,7 +66,7 @@ exports.onTurnChange = onDocumentWritten("rooms/{roomId}", async (event) => {
             // 1) Web Push Config (Action Link)
             webpush: {
                 fcm_options: {
-                    link: `https://davide-mariotti.github.io/games/drafta/`
+                    link: `https://drafta-dm.github.io/`
                 }
             },
             // 2) APNs (Apple) Config for Background/Closed App
@@ -170,7 +170,7 @@ exports.onNudge = onDocumentWritten("rooms/{roomId}", async (event) => {
             // 1) Web Push Config (Action Link)
             webpush: {
                 fcm_options: {
-                    link: `https://davide-mariotti.github.io/games/drafta/`
+                    link: `https://drafta-dm.github.io/`
                 }
             },
             // 2) APNs (Apple) Config for Background/Closed App

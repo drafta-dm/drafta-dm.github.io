@@ -29,8 +29,8 @@ messaging.onBackgroundMessage((payload) => {
     const notificationTitle = payload.notification?.title || 'Drafta';
     const notificationOptions = {
         body: payload.notification?.body || 'È il tuo turno!',
-        icon: '/games/drafta/icons/icon-192x192.png',
-        badge: '/games/drafta/icons/icon-192x192.png',
+        icon: '/icons/icon-192x192.png',
+        badge: '/icons/icon-192x192.png',
         tag: 'drafta-notification',
         requireInteraction: true, // Keeps notification visible until user interacts
         data: payload.data
@@ -57,7 +57,7 @@ self.addEventListener('notificationclick', (event) => {
                 }
                 // If not open, open new window
                 if (clients.openWindow) {
-                    return clients.openWindow('/games/drafta/');
+                    return clients.openWindow('/');
                 }
             })
     );

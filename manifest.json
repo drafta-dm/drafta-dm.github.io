@@ -1,9 +1,9 @@
 {
   "name": "Drafta - Serie A Fantasy Draft",
   "short_name": "Drafta",
-  "id": "/games/drafta/",
-  "start_url": "./index.html",
-  "scope": "/games/drafta/",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#121212",
   "theme_color": "#00FFC2",
