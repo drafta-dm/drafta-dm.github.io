@@ -378,13 +378,6 @@ export const playersDB = [
         "cost": 1
     },
     {
-        "id": "6125",
-        "name": "Vasquez D.",
-        "team": "Roma",
-        "role": "P",
-        "cost": 1
-    },
-    {
         "id": "7185",
         "name": "Nunziante",
         "team": "Udinese",
@@ -430,13 +423,6 @@ export const playersDB = [
         "id": "7042",
         "name": "Calligaris",
         "team": "Inter",
-        "role": "P",
-        "cost": 1
-    },
-    {
-        "id": "7301",
-        "name": "Tornqvist",
-        "team": "Como",
         "role": "P",
         "cost": 1
     },

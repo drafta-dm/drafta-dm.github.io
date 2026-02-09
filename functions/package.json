@@ -1,6 +1,6 @@
 {
     "name": "drafta-functions",
-    "version": "5.0.0",
+    "version": "6.1.0",
     "description": "Cloud Functions for Drafta game notifications",
     "scripts": {
         "serve": "firebase emulators:start --only functions",
