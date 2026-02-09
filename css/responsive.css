@@ -114,6 +114,11 @@
         font-size: 0.85rem;
     }
 
+    /* Player Item Mobile Font Size */
+    .player-item {
+        font-size: 0.85rem;
+    }
+
     /* Turn Strip - Ensure visibility */
     .turn-strip-panel {
         display: flex !important;

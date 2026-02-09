@@ -6,9 +6,11 @@
 :root {
     /* Colors */
     --bg-dark: #0a0a0f;
+    --bg-card: #1E1E1E;
     --bg-surface: #1a1a24;
     --bg-elevated: #252535;
     --primary: #00ffc2;
+    --primary-dim: #00cc9b;
     --accent: #7c3aed;
     --text: #e4e4e7;
     --text-dim: #a1a1aa;

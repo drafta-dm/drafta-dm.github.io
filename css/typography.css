@@ -50,3 +50,11 @@ h3 {
         font-size: 1.4rem;
     }
 }
+
+/* Code Text Utility */
+.code-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.1rem;
+    color: var(--primary);
+    font-weight: bold;
+}

@@ -164,6 +164,15 @@
     gap: 10px;
 }
 
+#search-player {
+    width: 100%;
+    padding: 10px;
+    background: var(--bg-dark);
+    border: 1px solid var(--bg-surface);
+    color: white;
+    border-radius: 6px;
+}
+
 .search-box {
     width: 100%;
     padding: 10px;
@@ -209,4 +218,139 @@
 
 .host-view #btn-export-csv {
     display: inline-block;
+}
+
+/* ============================================================================
+   MISSING STYLES RESTORED FROM OLD CSS
+   ============================================================================ */
+
+/* Turn Strip */
+.turn-strip-panel {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    overflow-x: auto;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid var(--bg-surface);
+}
+
+.turn-strip-track {
+    display: flex;
+    gap: 10px;
+    height: 100%;
+}
+
+.strip-team-card {
+    width: 180px;
+    height: 100%;
+    background: var(--bg-surface);
+    border-radius: 8px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-top: 4px solid #444;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+}
+
+.strip-team-card.active {
+    border-top-color: var(--success);
+    background: #2a3a35;
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.strip-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+}
+
+.strip-team-name {
+    font-weight: bold;
+    font-size: 1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.strip-stats {
+    display: flex;
+    gap: 10px;
+    font-size: 0.8rem;
+    color: var(--text-dim);
+}
+
+.strip-stats div {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Compact Filters & Lists */
+.filters-compact {
+    padding: 10px;
+    border-bottom: 1px solid var(--bg-surface);
+}
+
+.role-tabs.mini button {
+    padding: 4px 8px;
+    font-size: 0.8rem;
+}
+
+.player-list-compact {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0;
+    list-style: none;
+}
+
+.player-list-compact li {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--bg-surface);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.player-list-compact li:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* Modal Credentials */
+.credentials-box {
+    background: var(--bg-dark);
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+}
+
+.cred-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #333;
+}
+
+.cred-row:last-child {
+    border-bottom: none;
+}
+
+.cred-row .label {
+    color: var(--text-dim);
+}
+
+/* Pick Controls */
+.pick-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1rem;
 }
