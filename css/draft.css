@@ -34,7 +34,7 @@
     font-size: 1.5rem;
     font-weight: bold;
     color: var(--primary);
-    background: rgba(0, 255, 194, 0.1);
+    background: var(--primary-alpha-10);
     padding: 4px 8px;
     border-radius: 4px;
 }
@@ -227,7 +227,7 @@
 /* Turn Strip */
 .turn-strip-panel {
     flex: 1;
-    background: rgba(0, 0, 0, 0.2);
+    background: var(--dark-overlay-light);
     border-radius: 12px;
     overflow-x: auto;
     display: flex;
@@ -251,7 +251,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    border-top: 4px solid #444;
+    border-top: 4px solid var(--bg-elevated);
     flex-shrink: 0;
     transition: all 0.3s ease;
 }
@@ -320,7 +320,7 @@
 }
 
 .player-list-compact li:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--overlay-light);
 }
 
 /* Modal Credentials */
@@ -335,7 +335,7 @@
     display: flex;
     justify-content: space-between;
     padding: 8px 0;
-    border-bottom: 1px solid #333;
+    border-bottom: 1px solid var(--bg-surface);
 }
 
 .cred-row:last-child {

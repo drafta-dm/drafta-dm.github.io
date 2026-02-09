@@ -110,10 +110,10 @@ select:focus {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #333;
+    background-color: var(--bg-surface);
     transition: .4s;
     border-radius: 34px;
-    border: 1px solid #444;
+    border: 1px solid var(--bg-elevated);
 }
 
 .slider:before {
@@ -131,7 +131,7 @@ select:focus {
 input:checked+.slider {
     background-color: var(--primary);
     border-color: var(--primary);
-    box-shadow: 0 0 10px rgba(0, 255, 194, 0.4);
+    box-shadow: 0 0 10px var(--primary-alpha-40);
 }
 
 input:checked+.slider:before {
@@ -173,19 +173,19 @@ input:checked+.slider:before {
     justify-content: center;
     width: 18px;
     height: 18px;
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--overlay-medium);
     color: var(--text-dim);
     border-radius: 50%;
     font-size: 0.7rem;
     margin-left: 8px;
     cursor: help;
     position: relative;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid var(--overlay-strong);
 }
 
 .info-icon:hover {
     color: white;
-    background: rgba(255, 255, 255, 0.2);
+    background: var(--overlay-strong);
 }
 
 .info-icon::after {
@@ -194,15 +194,15 @@ input:checked+.slider:before {
     bottom: 125%;
     left: 50%;
     transform: translateX(-50%);
-    background: #222;
-    color: #fff;
+    background: var(--bg-dark);
+    color: var(--text-white);
     padding: 8px 12px;
     border-radius: 6px;
     font-size: 0.75rem;
     white-space: pre-wrap;
     width: max-content;
     max-width: 250px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    box-shadow: var(--shadow-lg);
     border: 1px solid var(--bg-surface);
     opacity: 0;
     pointer-events: none;

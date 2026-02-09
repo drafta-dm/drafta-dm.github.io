@@ -37,7 +37,7 @@
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    background: #333;
+    background: var(--bg-surface);
 }
 
 .dashboard-grid {
@@ -148,7 +148,7 @@
 }
 
 .team-slot.assigned {
-    background: rgba(0, 255, 194, 0.05);
+    background: var(--primary-alpha-05);
     border-color: var(--primary);
 }
 
@@ -192,7 +192,7 @@
 
 .bid-control {
     margin-top: 1.5rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid var(--overlay-medium);
     padding-top: 1rem;
     width: 100%;
 }

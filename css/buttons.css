@@ -32,7 +32,7 @@ button {
 
 .btn-primary {
     background: var(--primary);
-    color: #000;
+    color: var(--text-black);
 }
 
 .btn-accent {

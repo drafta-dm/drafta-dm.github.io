@@ -14,6 +14,8 @@
     --accent: #7c3aed;
     --text: #e4e4e7;
     --text-dim: #a1a1aa;
+    --text-white: #fff;
+    --text-black: #000;
     --border: #333344;
     --danger: #ff4444;
     --success: #00ff88;
@@ -24,6 +26,28 @@
     --role-def: #56c500;
     --role-mid: #006df0;
     --role-att: #ff4444;
+
+    /* Role Backgrounds (with alpha) */
+    --role-gk-bg: rgba(255, 165, 0, 0.25);
+    --role-def-bg: rgba(86, 197, 0, 0.25);
+    --role-mid-bg: rgba(0, 109, 240, 0.25);
+    --role-att-bg: rgba(255, 68, 68, 0.25);
+
+    /* Overlays */
+    --overlay-subtle: rgba(255, 255, 255, 0.02);
+    --overlay-light: rgba(255, 255, 255, 0.05);
+    --overlay-medium: rgba(255, 255, 255, 0.1);
+    --overlay-strong: rgba(255, 255, 255, 0.2);
+
+    /* Primary Alpha Variations */
+    --primary-alpha-05: rgba(0, 255, 194, 0.05);
+    --primary-alpha-10: rgba(0, 255, 194, 0.1);
+    --primary-alpha-20: rgba(0, 255, 194, 0.2);
+    --primary-alpha-40: rgba(0, 255, 194, 0.4);
+
+    /* Dark Overlays */
+    --dark-overlay-light: rgba(0, 0, 0, 0.2);
+    --dark-overlay-strong: rgba(0, 0, 0, 0.85);
 
     /* Spacing */
     --space-xs: 0.25rem;
