@@ -1,0 +1,206 @@
+/**
+ * Draft View
+ * Stili specifici per la vista draft completa
+ */
+
+/* ============================================================================
+   DRAFT HEADER
+   ============================================================================ */
+
+.draft-header {
+    height: 60px;
+    border-bottom: 1px solid var(--bg-surface);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem;
+    background: var(--bg-card);
+}
+
+.header-top {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.timer-display {
+    font-family: 'Courier New', monospace;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary);
+    background: rgba(0, 255, 194, 0.1);
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.current-turn-info {
+    text-align: center;
+    line-height: 1.2;
+}
+
+.current-turn-info .label {
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    display: block;
+}
+
+#txt-current-turn-team {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.room-id-display {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+}
+
+/* ============================================================================
+   DRAFT LAYOUT
+   ============================================================================ */
+
+.draft-layout {
+    flex: 1;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    overflow: hidden;
+    position: relative;
+}
+
+@media (min-width: 900px) {
+    .draft-layout {
+        grid-template-columns: 350px 1fr 300px;
+        grid-template-rows: 1fr;
+    }
+}
+
+.draft-view-container {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    padding: 10px;
+    gap: 10px;
+}
+
+/* ============================================================================
+   DRAFT PANELS
+   ============================================================================ */
+
+/* LEFT PANEL: Giocatore Attivo + Search + Lista */
+.draft-left-panel {
+    flex: 0 0 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 100%;
+}
+
+/* RIGHT PANEL: Matrice Squadre */
+.draft-right-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow: hidden;
+}
+
+.draft-main-stage {
+    padding: 1rem;
+    background: var(--bg-dark);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-bottom: 1px solid var(--bg-surface);
+}
+
+@media (min-width: 900px) {
+    .draft-main-stage {
+        border-right: 1px solid var(--bg-surface);
+        border-bottom: none;
+    }
+}
+
+.active-player-panel {
+    width: 100% !important;
+    min-width: 280px;
+}
+
+/* ============================================================================
+   PLAYER DATABASE (Search + List)
+   ============================================================================ */
+
+.player-database {
+    background: var(--bg-card);
+    border-radius: 12px;
+    border: 1px solid var(--bg-surface);
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+    min-height: 0;
+}
+
+#player-list-container {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+}
+
+.filters {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.search-box {
+    width: 100%;
+    padding: 10px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    color: white;
+    border-radius: 8px;
+    font-size: 0.95rem;
+}
+
+.search-box:focus {
+    border-color: var(--primary);
+    outline: none;
+}
+
+/* ============================================================================
+   TEAMS MATRIX (in Draft View)
+   ============================================================================ */
+
+.turn-strip-panel {
+    padding: 10px;
+    background: var(--bg-card);
+    border-radius: 12px;
+    border: 1px solid var(--bg-surface);
+    overflow-x: auto;
+}
+
+.draft-main-grid {
+    display: grid;
+    gap: 15px;
+}
+
+/* ============================================================================
+   EXPORT CSV
+   ============================================================================ */
+
+#btn-export-csv {
+    display: none;
+}
+
+.host-view #btn-export-csv {
+    display: inline-block;
+}

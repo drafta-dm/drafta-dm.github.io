@@ -1,0 +1,148 @@
+/**
+ * Buttons
+ * Tutti gli stili per pulsanti e varianti
+ */
+
+/* ============================================================================
+   BUTTON BASE
+   ============================================================================ */
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    outline: none;
+}
+
+.btn {
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: transform 0.1s, opacity 0.2s;
+}
+
+.btn:active {
+    transform: scale(0.96);
+}
+
+/* ============================================================================
+   BUTTON VARIANTS
+   ============================================================================ */
+
+.btn-primary {
+    background: var(--primary);
+    color: #000;
+}
+
+.btn-accent {
+    background: var(--bg-surface);
+    color: var(--primary);
+    border: 1px solid var(--primary);
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid var(--text-dim);
+    color: var(--text-dim);
+}
+
+.btn-danger {
+    background: var(--danger);
+    color: white;
+}
+
+.btn-success {
+    background: var(--success);
+    color: black;
+}
+
+/* ============================================================================
+   BUTTON SIZES
+   ============================================================================ */
+
+.btn-block {
+    width: 100%;
+    display: block;
+}
+
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+}
+
+.btn-icon {
+    padding: 8px;
+    font-size: 1.2rem;
+    background: var(--bg-surface);
+    color: var(--text);
+    border-radius: 50%;
+}
+
+/* ============================================================================
+   SPECIAL BUTTONS
+   ============================================================================ */
+
+.btn-pick {
+    background: linear-gradient(90deg, #FF4444 0%, #CC0044 100%);
+    color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+    width: 100%;
+    padding: 15px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(255, 68, 68, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.btn-pick:hover {
+    transform: scale(1.02);
+}
+
+.btn-step {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--bg-surface);
+    font-size: 1.2rem;
+}
+
+.btn-delete-room {
+    background: transparent;
+    color: var(--danger);
+    border: 1px solid var(--danger);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.btn-delete-room:hover {
+    background: var(--danger);
+    color: white;
+}
+
+.nav-back {
+    background: none;
+    color: var(--text-dim);
+    font-size: 1rem;
+}
+
+/* Host Controls */
+#host-bid-controls {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .btn {
+        padding: 10px 20px;
+        font-size: 0.95rem;
+    }
+}

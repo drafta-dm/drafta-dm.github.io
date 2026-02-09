@@ -1,0 +1,198 @@
+/**
+ * Views
+ * Stili specifici per le view principali: Login, Dashboard, Lobby
+ */
+
+/* ============================================================================
+   LOGIN VIEW
+   ============================================================================ */
+
+#view-login {
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at center, #2a2a2a 0%, #121212 70%);
+}
+
+/* ============================================================================
+   DASHBOARD VIEW
+   ============================================================================ */
+
+.app-header {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem;
+    border-bottom: 1px solid var(--bg-surface);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#user-avatar,
+#header-user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #333;
+}
+
+.dashboard-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+@media (min-width: 768px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr 1fr;
+        max-width: 900px;
+        margin: 0 auto;
+    }
+}
+
+.recent-rooms {
+    margin-top: 1.5rem;
+    border-top: 1px solid var(--bg-surface);
+    padding-top: 1rem;
+}
+
+.recent-rooms h3 {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    margin-bottom: 0.5rem;
+}
+
+#recent-rooms-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* ============================================================================
+   LOBBY VIEW
+   ============================================================================ */
+
+.lobby-header {
+    padding: 1rem;
+    border-bottom: 1px solid var(--bg-surface);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.room-info-display {
+    display: flex;
+    flex-direction: column;
+}
+
+.room-info-display h2 {
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+#lobby-pass-display {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+}
+
+.lobby-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.lobby-columns {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+}
+
+@media(min-width: 768px) {
+    .lobby-columns {
+        grid-template-columns: 1fr 2fr;
+    }
+}
+
+.teams-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+}
+
+.team-slot {
+    background: var(--bg-card);
+    border: 1px solid var(--bg-surface);
+    padding: 15px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 120px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.team-slot:hover {
+    border-color: var(--primary);
+    transform: translateY(-2px);
+}
+
+.team-slot.assigned {
+    background: rgba(0, 255, 194, 0.05);
+    border-color: var(--primary);
+}
+
+.team-name-input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--bg-surface);
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 5px 0;
+    width: 100%;
+}
+
+.team-name-input:focus {
+    outline: none;
+    border-bottom-color: var(--primary);
+}
+
+.team-slot-owner {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.team-slot-owner.empty {
+    font-style: italic;
+}
+
+#host-controls {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--bg-surface);
+}
+
+/* ============================================================================
+   COMMON ELEMENTS
+   ============================================================================ */
+
+.bid-control {
+    margin-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 1rem;
+    width: 100%;
+}

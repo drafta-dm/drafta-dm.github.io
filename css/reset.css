@@ -1,0 +1,73 @@
+/**
+ * CSS Reset e Stili Base
+ * Reset globale e configurazione base dell'applicazione
+ */
+
+/* ============================================================================
+   RESET GLOBALE
+   ============================================================================ */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* ============================================================================
+   BODY E CONTAINER PRINCIPALE
+   ============================================================================ */
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+}
+
+#app {
+    height: 100%;
+    width: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ============================================================================
+   SISTEMA VIEWS E NAVIGAZIONE
+   ============================================================================ */
+
+.view {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    z-index: 10;
+    background: var(--bg-dark);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.view.active {
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 20;
+}
+
+/* ============================================================================
+   UTILITY CLASSES
+   ============================================================================ */
+
+.hidden {
+    display: none !important;
+}
+
+.code-font {
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.05em;
+}

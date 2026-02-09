@@ -1,4 +1,4 @@
-import { playersDB as defaultPlayers } from './players.js';
+import { playersDB as defaultPlayers } from './data/players.js';
 
 export class PlayerService {
     constructor() {

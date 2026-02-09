@@ -1,0 +1,60 @@
+/**
+ * Main Stylesheet - Drafta Fantasy Draft Application
+ * ==================================================
+ * Questo file importa tutti i moduli CSS dell'applicazione.
+ * Ogni modulo è organizzato tematicamente per migliore manutenibilità.
+ * 
+ * IMPORTANTE: Non modificare direttamente questo file.
+ * Modifica i file CSS specifici nella directory css/ per le tue modifiche.
+ */
+
+/* ============================================================================
+   CORE - Variabili e Reset
+   ============================================================================ */
+@import './css/variables.css';
+/* Variabili CSS custom properties */
+@import './css/reset.css';
+/* Reset globale e stili base */
+
+/* ============================================================================
+   TYPOGRAPHY & UI ELEMENTS
+   ============================================================================ */
+@import './css/typography.css';
+/* Font, headings, utilità testo */
+@import './css/buttons.css';
+/* Pulsanti e varianti */
+@import './css/forms.css';
+/* Input, select, toggle, stepper */
+
+/* ============================================================================
+   COMPONENTS & LAYOUT
+   ============================================================================ */
+@import './css/components.css';
+/* Card, modal, toast, badge, tabs, liste */
+@import './css/views.css';
+/* Login, Dashboard, Lobby */
+@import './css/draft.css';
+/* Vista Draft completa */
+
+/* ============================================================================
+   RESPONSIVE
+   ============================================================================ */
+@import './css/responsive.css';
+/* Media queries mobile/tablet/desktop */
+
+/* ============================================================================
+   FINE IMPORTS
+   ============================================================================
+   
+   Struttura modulare CSS completata!
+   - Totale 9 file CSS (variables + 8 moduli)
+   - ~1800 righe CSS organizzate in modo professionale
+   - Manutenibilità massima - ogni file ha uno scopo chiaro
+   
+   Per modifiche:
+   - Variabili colori/spacing -> css/variables.css
+   - Stili pulsanti -> css/buttons.css
+   - Layout draft -> css/draft.css
+   - Responsive mobile -> css/responsive.css
+   - ecc...
+*/

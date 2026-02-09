@@ -1,0 +1,52 @@
+/**
+ * Tipografia
+ * Stili per headings, paragrafi e testo
+ */
+
+/* ============================================================================
+   HEADINGS
+   ============================================================================ */
+
+h1,
+h2,
+h3 {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+h1 {
+    font-size: 2rem;
+}
+
+h2 {
+    font-size: 1.5rem;
+}
+
+h3 {
+    font-size: 1.2rem;
+}
+
+/* ============================================================================
+   TEXT UTILITIES
+   ============================================================================ */
+
+.subtitle {
+    color: var(--text-dim);
+    margin-bottom: 2rem;
+}
+
+.font-title {
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+/* Mobile typography overrides */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    h2 {
+        font-size: 1.4rem;
+    }
+}
