@@ -397,7 +397,7 @@ export function updateStage(player) {
                 }
             }
 
-            controls.style.display = canPick ? 'flex' : 'none';
+            controls.style.opacity = canPick ? '1' : '0';
         }
 
     } else {
@@ -418,7 +418,7 @@ export function updateStage(player) {
 
         // Nascondi pulsanti
         const controls = document.getElementById('host-bid-controls');
-        if (controls) controls.style.display = 'none';
+        if (controls) controls.style.opacity = '0';
     }
 }
 

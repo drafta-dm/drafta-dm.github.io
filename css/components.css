@@ -66,6 +66,7 @@
     flex-direction: column;
     height: 100%;
     position: relative;
+    min-width: 355px;
 }
 
 .card-header {
