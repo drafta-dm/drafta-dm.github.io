@@ -441,6 +441,8 @@
     overflow-y: visible;
     -webkit-overflow-scrolling: touch;
     font-size: 0.9rem;
+    cursor: grab;
+    user-select: none;
 }
 
 .matrix-grid {
