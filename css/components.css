@@ -434,17 +434,17 @@
    ============================================================================ */
 
 #teams-matrix {
-    display: grid;
+    display: flex;
+    flex-direction: row;
     gap: 15px;
     overflow-x: auto;
+    overflow-y: visible;
     -webkit-overflow-scrolling: touch;
     font-size: 0.9rem;
 }
 
 .matrix-grid {
-    display: flex;
-    flex-direction: row;
-    gap: 15px;
+    display: contents;
 }
 
 .matrix-column {
