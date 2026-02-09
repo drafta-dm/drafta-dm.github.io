@@ -19,17 +19,17 @@ import {
 import { playerService } from './player-service.js';
 
 // Core application modules
-import { state } from './js/state.js';          // Global application state
-import { showToast } from './js/utils.js';      // Utility functions
+import { state } from './state.js';          // Global application state
+import { showToast } from './utils.js';      // Utility functions
 
 // Feature modules - Each handles a specific application domain
-import { initAuth, setupAuthListeners } from './js/auth.js';
-import { setupNotificationListeners } from './js/notifications.js';
-import { setupRoomListeners } from './js/room-manager.js';
-import { setupLobbyListeners } from './js/lobby.js';
-import { setupFilters } from './js/player-filters.js';
-import { setupDraftListeners } from './js/draft-logic.js';
-import { setupCSVListeners } from './js/csv-handler.js';
+import { initAuth, setupAuthListeners } from './auth.js';
+import { setupNotificationListeners } from './notifications.js';
+import { setupRoomListeners } from './room-manager.js';
+import { setupLobbyListeners } from './lobby.js';
+import { setupFilters } from './player-filters.js';
+import { setupDraftListeners } from './draft-logic.js';
+import { setupCSVListeners } from './csv-handler.js';
 
 /**
  * Application initialization sequence
