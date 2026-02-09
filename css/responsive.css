@@ -142,9 +142,7 @@
     }
 
     .draft-right-panel {
-        flex: 0 0 140px;
         width: 100%;
-        order: 2;
         min-height: 500px !important;
         height: auto !important;
         overflow-y: auto;
