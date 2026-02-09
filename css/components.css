@@ -143,7 +143,6 @@
 
 .need-count.done {
     color: var(--success);
-    opacity: 0.5;
 }
 
 .need-count.missing {
@@ -405,7 +404,7 @@
 
 .role-tab.active {
     background: var(--bg-surface);
-    color: var(--primary);
+    color: var(--text);
 }
 
 .role-tab:hover:not(.active) {
@@ -686,6 +685,7 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    padding-left: 1rem;
 }
 
 .p-name {
@@ -701,7 +701,7 @@
 
 .p-value {
     font-weight: bold;
-    color: var(--primary);
+    color: var(--text);
     font-size: 0.9rem;
     margin-left: auto;
 }

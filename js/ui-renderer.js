@@ -230,10 +230,10 @@ export function renderTeamsMatrix(data) {
                 ${renderMatrixRosterFixed(team.roster)}
             </ul>
             <div class="matrix-footer">
-                <span class="need-count ${roles.P >= 3 ? 'done' : ''}" style="${roles.P < 3 ? 'color:#ff4444; font-weight:bold' : ''}">P:${3 - roles.P}</span>
-                <span class="need-count ${roles.D >= 8 ? 'done' : ''}" style="${roles.D < 8 ? 'color:#ff4444; font-weight:bold' : ''}">D:${8 - roles.D}</span>
-                <span class="need-count ${roles.C >= 8 ? 'done' : ''}" style="${roles.C < 8 ? 'color:#ff4444; font-weight:bold' : ''}">C:${8 - roles.C}</span>
-                <span class="need-count ${roles.A >= 6 ? 'done' : ''}" style="${roles.A < 6 ? 'color:#ff4444; font-weight:bold' : ''}">A:${6 - roles.A}</span>
+                <span class="need-count ${roles.P >= 3 ? 'done' : 'missing'}">P:${roles.P}/3</span>
+                <span class="need-count ${roles.D >= 8 ? 'done' : 'missing'}">D:${roles.D}/8</span>
+                <span class="need-count ${roles.C >= 8 ? 'done' : 'missing'}">C:${roles.C}/8</span>
+                <span class="need-count ${roles.A >= 6 ? 'done' : 'missing'}">A:${roles.A}/6</span>
             </div>
         `;
 
