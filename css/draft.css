@@ -150,10 +150,11 @@
     min-height: 550px;
 }
 
-#player-list-container {
+.player-list-container {
     flex: 1;
     overflow-y: auto;
     min-height: 0;
+    max-height: 100%;
 }
 
 .filters {

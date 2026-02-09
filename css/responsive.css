@@ -74,7 +74,7 @@
     }
 
     /* Player List - max height for mobile */
-    #player-list-container {
+    .player-list-container {
         max-height: 50vh !important;
         overflow-y: auto;
         min-height: 420px;
