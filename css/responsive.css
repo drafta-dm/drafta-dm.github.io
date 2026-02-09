@@ -231,9 +231,4 @@
         border-right: 1px solid var(--bg-surface);
         border-bottom: none;
     }
-
-    /* Teams Matrix - Grid layout on desktop */
-    .matrix-grid {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    }
 }
