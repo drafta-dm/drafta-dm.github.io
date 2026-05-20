@@ -19,7 +19,8 @@
 - Real-time multi-user draft
 - Dynamic turn order (role-based, count-based, value-based)
 - Snake draft support
-- Live team matrix visualization
+- Live team matrix visualization with desktop mouse drag-to-scroll support
+- Improved roster needs counters (current/max format with green/red status color-coding)
 - CSV import/export
 
 ### 👥 User Management
@@ -35,7 +36,7 @@
 - Dynamic roster management (25 fixed slots)
 
 ### 🏗️ Professional Architecture
-- **15 modular JavaScript files** in `js/`
+- **16 modular JavaScript files** in `js/`
 - **10 modular CSS files** in `css/`
 - Clean separation of concerns
 - Comprehensive Italian documentation
@@ -102,7 +103,7 @@ drafta-dm.github.io/
 ├── firebase.json, .firebaserc      # Firebase config
 ├── firestore.rules                 # Security rules
 │
-├── js/                             # JavaScript Modules (15 files)
+├── js/                             # JavaScript Modules (16 files)
 │   ├── app.js                      # Application entry point
 │   ├── firebase-modules.js         # Firebase SDK initialization
 │   ├── player-service.js           # Player data service
@@ -117,6 +118,7 @@ drafta-dm.github.io/
 │   ├── player-filters.js           # Player filtering
 │   ├── version-check.js            # Version checking
 │   ├── csv-handler.js              # CSV operations
+│   ├── drag-scroll.js              # Mouse drag-to-scroll for teams matrix
 │   └── data/
 │       └── players.js              # Serie A player data
 │
@@ -186,6 +188,14 @@ drafta-dm.github.io/
 ---
 
 ## 📝 Changelog
+
+### v6.1 (2026-02-09) - **UX Improvements & Database Release** 🚀
+- ✅ **Added Serie A Players Database**: `players.js` with 761 players.
+- ✅ **Desktop Drag-to-Scroll**: Integrated new `drag-scroll.js` module to enable click-and-drag horizontal scrolling on the teams matrix.
+- ✅ **Improved Roster Counters**: Need counters updated to show current/max format (e.g., `2/8` instead of `6`) with red/green status color-coding.
+- ✅ **CSS Variables Optimization**: Consolidated spacing and colors into `variables.css` across all 10 CSS modules, achieving zero hardcoded hex/rgba values.
+- ✅ **UI/UX Refinements**: Updated role colors (DEF: green, MID: blue), changed active tab/value color to `--text`, and added spacing to player lists.
+- ✅ **Code Cleanup**: Removed obsolete `old-style.css`.
 
 ### v6.0 (2026-02-09) - **Complete Architecture Refactor** 🏗️
 - ✅ **Complete project reorganization** with modular architecture
