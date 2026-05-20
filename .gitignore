@@ -16,3 +16,10 @@ _site/
 # Firebase
 .firebase/
 firebase-debug.log
+
+# Scripts - file Excel scaricati (non vanno nel repository)
+scripts/*.xlsx
+
+# Python cache
+__pycache__/
+*.pyc

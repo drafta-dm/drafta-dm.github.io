@@ -134,15 +134,60 @@ drafta-dm.github.io/
 │   ├── draft.css                   # Draft view styles
 │   └── responsive.css              # Responsive design
 │
-├── scripts/                        # Development scripts
-│   ├── convert_excel_to_js.py      # Excel to JS converter
-│   └── inspect_excel.py            # Excel inspector
+├── scripts/                        # Development & automation scripts
+│   ├── download_excel.py           # Download automatico Excel da fantacalcio.it
+│   ├── convert_excel_to_js.py      # Convertitore Excel → players.js
+│   ├── update_players.py           # Script combinato (download + conversione)
+│   └── inspect_excel.py            # Excel inspector (debug)
 │
+├── .github/workflows/
+│   └── update-players.yml          # GitHub Action: aggiornamento giornaliero DB
 ├── examples/                       # Example files
 ├── icons/                          # PWA icons
 └── functions/                      # Firebase Cloud Functions
     ├── index.js                    # Turn & nudge notifications
     └── package.json                # Dependencies
+```
+
+---
+
+## 🔄 Aggiornamento automatico del Database Giocatori
+
+Il database dei giocatori (`js/data/players.js`) viene aggiornato automaticamente ogni giorno tramite **GitHub Actions**.
+
+### Come funziona
+
+1. Il workflow `.github/workflows/update-players.yml` si avvia ogni giorno alle **09:00 ora italiana** (07:00 UTC).
+2. Lo script `scripts/download_excel.py` si autentica su **fantacalcio.it** con Playwright (browser headless) e scarica il file Excel ufficiale delle quotazioni.
+3. Lo script `scripts/convert_excel_to_js.py` converte il file in `js/data/players.js`.
+4. Il file aggiornato viene committato automaticamente nel repository.
+
+### Setup dei GitHub Secrets
+
+Per far funzionare l'automazione devi configurare **due Secrets** nel tuo repository GitHub:
+
+1. Vai su **GitHub → Repository → Settings → Secrets and variables → Actions**
+2. Clicca **"New repository secret"** e aggiungi:
+
+| Secret | Valore |
+|--------|--------|
+| `FANTACALCIO_USERNAME` | Il tuo username di Fantacalcio.it |
+| `FANTACALCIO_PASSWORD` | La tua password di Fantacalcio.it |
+
+### Esecuzione manuale
+
+Puoi anche eseguire il workflow manualmente da **GitHub → Actions → Update Players Database → Run workflow**.
+
+Oppure in locale:
+```bash
+# Solo download Excel
+python scripts/download_excel.py
+
+# Solo conversione (se hai già l'Excel)
+python scripts/convert_excel_to_js.py
+
+# Download + conversione in un comando
+python scripts/update_players.py
 ```
 
 ---
