@@ -12,6 +12,7 @@
 // Import moduli interni
 import { state } from './state.js';                          // Stato globale (players, roomData)
 import { selectPlayerForAuction } from './draft-logic.js';   // Funzione per selezionare giocatore
+import { playerService } from './player-service.js';         // Servizio giocatori (timestamp DB)
 
 /**
  * Renderizza la lista dei giocatori disponibili applicando filtri e ricerca
@@ -169,6 +170,12 @@ export function updatePlayerListVisuals(takenIds, hiddenRoles = []) {
  * setupFilters();
  */
 export function setupFilters() {
+    // ── Mostra data ultimo aggiornamento DB ─────────────────────────────
+    const lastUpdatedEl = document.getElementById('players-last-updated');
+    if (lastUpdatedEl) {
+        lastUpdatedEl.textContent = playerService.getLastUpdatedLabel();
+    }
+
     // ── Tab filtro ruoli ────────────────────────────────────────────────
     document.querySelectorAll('.role-tab').forEach(tab => {
         tab.addEventListener('click', (e) => {

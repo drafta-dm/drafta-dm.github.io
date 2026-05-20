@@ -1,8 +1,9 @@
-import { playersDB as defaultPlayers } from './data/players.js';
+import { playersDB as defaultPlayers, playersLastUpdated as defaultLastUpdated } from './data/players.js';
 
 export class PlayerService {
     constructor() {
         this.players = [...defaultPlayers];
+        this.lastUpdated = defaultLastUpdated || null;
     }
 
     async loadFromUrl(url) {
@@ -37,6 +38,27 @@ export class PlayerService {
 
     getPlayers() {
         return this.players;
+    }
+
+    getLastUpdated() {
+        return this.lastUpdated;
+    }
+
+    getLastUpdatedLabel() {
+        if (!this.lastUpdated) return 'Data non disponibile';
+        try {
+            const date = new Date(this.lastUpdated);
+            return date.toLocaleString('it-IT', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                timeZone: 'Europe/Rome'
+            });
+        } catch {
+            return this.lastUpdated;
+        }
     }
 }
 

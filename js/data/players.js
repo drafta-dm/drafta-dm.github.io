@@ -1,3 +1,5 @@
+export const playersLastUpdated = "2026-05-20T14:45:14Z";
+
 export const playersDB = [
     {
         "id": "4431",

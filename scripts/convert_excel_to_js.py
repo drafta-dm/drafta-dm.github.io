@@ -61,8 +61,13 @@ def convert():
                 "cost": cost
             })
             
-        # Output JS file content
-        js_content = f"export const playersDB = {json.dumps(players, indent=4)};"
+        # Output JS file content con timestamp di aggiornamento
+        from datetime import datetime, timezone
+        now_iso = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+        js_content = (
+            f"export const playersLastUpdated = \"{now_iso}\";\n\n"
+            f"export const playersDB = {json.dumps(players, indent=4)};"
+        )
         
         # Assicura che la directory di destinazione esista
         os.makedirs(os.path.dirname(target_path), exist_ok=True)
