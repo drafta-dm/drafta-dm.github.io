@@ -5,4 +5,3 @@ exclude:
   - .firebase
   - package.json
   - package-lock.json
-  - version.json

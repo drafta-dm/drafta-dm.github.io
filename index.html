@@ -1,4 +1,4 @@
-<!-- Force Deploy 2026-05-20 v6.2 -->
+<!-- Force Deploy 2026-05-20 v6.3 -->
 <!DOCTYPE html>
 <html lang="it">
 
@@ -106,10 +106,26 @@
             </div>
         </div>
 
+        <!-- MODAL: USER PROFILE -->
+        <div id="modal-profile" class="modal-overlay hidden">
+            <div class="modal-card" style="max-width: 400px; text-align: center;">
+                <h2 class="font-title">Profilo Utente</h2>
+                <div class="modal-body" style="margin: 20px 0;">
+                    <img id="profile-modal-avatar" src="" alt="Avatar" style="width: 80px; height: 80px; border-radius: 50%; margin-bottom: 15px; border: 2px solid var(--primary); object-fit: cover;">
+                    <h3 id="profile-modal-name" style="margin: 5px 0; font-size: 1.2rem;">--</h3>
+                    <p id="profile-modal-email" style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">--</p>
+                </div>
+                <div style="display:flex; gap:10px;">
+                    <button class="btn btn-outline" style="flex:1" onclick="document.getElementById('modal-profile').classList.add('hidden')">Chiudi</button>
+                    <button id="btn-profile-logout" class="btn" style="flex:1; background:#d9534f; color:white;">Disconnetti</button>
+                </div>
+            </div>
+        </div>
+
         <!-- VIEW: LOGIN -->
         <section id="view-login" class="view active">
             <div class="login-card">
-                <h1>DRAFTA <small style="font-size:1rem; color:var(--text-muted); opacity:0.7;">v6.2</small></h1>
+                <h1>DRAFTA <small style="font-size:1rem; color:var(--text-muted); opacity:0.7;">v6.3</small></h1>
                 <p class="subtitle">Live Serie A Fantasy Draft</p>
 
                 <div class="login-actions">
@@ -124,7 +140,7 @@
         <section id="view-dashboard" class="view hidden">
             <header class="app-header">
                 <div class="user-info">
-                    <img id="user-avatar" src="" alt="Avatar">
+                    <img id="user-avatar" src="" alt="Avatar" style="cursor:pointer;">
                     <span id="user-name">Loading...</span>
                 </div>
                 <button id="btn-logout" class="btn btn-sm btn-outline">Esci</button>
@@ -249,7 +265,7 @@
             <header class="draft-header">
                 <div class="header-left" style="display:flex; align-items:center; gap:20px;">
                     <h1 class="font-title" style="margin:0;">DRAFT<span style="color:var(--primary)">A</span> <small
-                            style="font-size:0.4em; color:var(--text-muted); font-weight:normal;">v6.2</small></h1>
+                            style="font-size:0.4em; color:var(--text-muted); font-weight:normal;">v6.3</small></h1>
                     <div id="turn-indicator-box"
                         style="display:flex; align-items:baseline; gap:10px; padding-left:20px; border-left:1px solid #333;">
                         <span class="label"
@@ -279,8 +295,12 @@
                     <button id="btn-export-csv" class="btn btn-sm btn-outline" style="display:none;">
                         📥 Export CSV
                     </button>
+                    <!-- Home / Leave Room Button -->
+                    <button id="btn-leave-draft" class="btn btn-sm btn-outline">
+                        ← Home
+                    </button>
                     <img id="header-user-avatar" src=""
-                        style="width:32px; height:32px; border-radius:50%; background:#333;">
+                        style="width:32px; height:32px; border-radius:50%; background:#333; cursor:pointer;">
                 </div>
             </header>
 

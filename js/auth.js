@@ -139,9 +139,38 @@ export function setupAuthListeners() {
     });
 
     // ── Pulsante Logout ─────────────────────────────────────────────────
-    document.getElementById('btn-logout').addEventListener('click', () => {
+    const handleLogout = () => {
         // Termina la sessione Firebase
         // onAuthStateChanged verrà chiamato con user = null
         signOut(auth);
-    });
+    };
+
+    document.getElementById('btn-logout').addEventListener('click', handleLogout);
+
+    // ── Profilo Utente ──────────────────────────────────────────────────
+    const openProfileModal = () => {
+        if (!state.user) return;
+        document.getElementById('profile-modal-avatar').src = state.user.photoURL || '';
+        document.getElementById('profile-modal-name').textContent = state.user.displayName || 'Utente';
+        document.getElementById('profile-modal-email').textContent = state.user.email || '';
+        document.getElementById('modal-profile').classList.remove('hidden');
+    };
+
+    const userAvatar = document.getElementById('user-avatar');
+    if (userAvatar) {
+        userAvatar.addEventListener('click', openProfileModal);
+    }
+
+    const headerUserAvatar = document.getElementById('header-user-avatar');
+    if (headerUserAvatar) {
+        headerUserAvatar.addEventListener('click', openProfileModal);
+    }
+
+    const btnProfileLogout = document.getElementById('btn-profile-logout');
+    if (btnProfileLogout) {
+        btnProfileLogout.addEventListener('click', () => {
+            document.getElementById('modal-profile').classList.add('hidden');
+            handleLogout();
+        });
+    }
 }

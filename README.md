@@ -189,6 +189,11 @@ drafta-dm.github.io/
 
 ## 📝 Changelog
 
+### v6.3 (2026-05-20) - **Draft Navigation, Profile Menu & Excel Automation** 🚀
+- ✅ **Draft Navigation**: Added a `← Home` exit button inside the draft header to allow leaving the draft and returning to the dashboard cleanly (with a confirmation prompt to prevent accidental exits).
+- ✅ **Unified User Profile Modal**: Introduced a modal displaying Google account information (Name, Email, Avatar) and a "Logout" action, accessible by clicking the user avatar from both the dashboard and draft header.
+- ✅ **Excel Conversion Automation**: Updated `convert_excel_to_js.py` to automatically output the converted `players.js` file directly inside the `js/data/` folder, removing the manual file-move requirement.
+
 ### v6.2 (2026-05-20) - **Security & Stability Release** 🚀
 - ✅ **Fixed presence bug**: `connectedUsers` now strictly stores UID strings instead of object literals, resolving the bug where disconnected users remained online forever.
 - ✅ **Fixed memory/timer leaks**: Heartbeat and window event listeners are now fully cleaned up when leaving a room or logging out.

@@ -1,10 +1,21 @@
 import openpyxl
 import json
 import io
+import os
 
 def convert():
     try:
-        wb = openpyxl.load_workbook('Quotazioni_Fantacalcio_Stagione_2025_26.xlsx', data_only=True)
+        # Calcolo dei percorsi in modo dinamico
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        project_root = os.path.dirname(script_dir)
+        target_path = os.path.join(project_root, 'js', 'data', 'players.js')
+
+        excel_name = 'Quotazioni_Fantacalcio_Stagione_2025_26.xlsx'
+        excel_path = os.path.join(project_root, excel_name)
+        if not os.path.exists(excel_path):
+            excel_path = os.path.join(script_dir, excel_name)
+
+        wb = openpyxl.load_workbook(excel_path, data_only=True)
         sheet = wb.active
         
         players = []
@@ -53,11 +64,14 @@ def convert():
         # Output JS file content
         js_content = f"export const playersDB = {json.dumps(players, indent=4)};"
         
-        # Write to file directly
-        with open('players.js', 'w', encoding='utf-8') as f:
+        # Assicura che la directory di destinazione esista
+        os.makedirs(os.path.dirname(target_path), exist_ok=True)
+
+        # Scrittura del file direttamente nel percorso di destinazione corretto
+        with open(target_path, 'w', encoding='utf-8') as f:
             f.write(js_content)
             
-        print(f"Successfully converted {len(players)} players.")
+        print(f"Successfully converted and saved {len(players)} players to: {target_path}")
         
     except Exception as e:
         print(f"Error: {e}")

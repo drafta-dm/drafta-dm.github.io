@@ -661,6 +661,16 @@ export function setupRoomListeners() {
     // ── Lobby: Uscita ───────────────────────────────────────────────────
     document.getElementById('btn-leave-lobby').addEventListener('click', leaveRoom);
 
+    // ── Draft: Uscita ───────────────────────────────────────────────────
+    const btnLeaveDraft = document.getElementById('btn-leave-draft');
+    if (btnLeaveDraft) {
+        btnLeaveDraft.addEventListener('click', () => {
+            if (confirm("Vuoi davvero uscire dal draft e tornare alla Home?")) {
+                leaveRoom();
+            }
+        });
+    }
+
     // ── Modal Stanza Creata: Ingresso ───────────────────────────────────
     document.getElementById('btn-modal-enter').addEventListener('click', () => {
         try {
