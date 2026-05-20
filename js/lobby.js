@@ -309,13 +309,16 @@ export async function saveTeamManager() {
     const newTeams = [...state.roomData.teams];
     newTeams[teamIndex].name = name;
 
-    // Assegna nuovo proprietario se selezionato
+    // Assegna o rimuove proprietario
     if (userId) {
         const userName = state.roomData.participantNames?.[userId] ||
             (userId === state.user.uid ? state.user.displayName : `User ${userId.substring(0, 6)}`);
 
         newTeams[teamIndex].ownerUid = userId;
         newTeams[teamIndex].ownerName = userName;
+    } else {
+        newTeams[teamIndex].ownerUid = null;
+        newTeams[teamIndex].ownerName = null;
     }
 
     try {

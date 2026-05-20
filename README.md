@@ -189,6 +189,14 @@ drafta-dm.github.io/
 
 ## 📝 Changelog
 
+### v6.2 (2026-05-20) - **Security & Stability Release** 🚀
+- ✅ **Fixed presence bug**: `connectedUsers` now strictly stores UID strings instead of object literals, resolving the bug where disconnected users remained online forever.
+- ✅ **Fixed memory/timer leaks**: Heartbeat and window event listeners are now fully cleaned up when leaving a room or logging out.
+- ✅ **Enhanced security rules**: Restructured Firestore rules to protect critical room settings/passwords from manipulation by non-host participants.
+- ✅ **Valid HTML**: Relocated modals from `<head>` to `<body>`.
+- ✅ **Lobby improvements**: Allowed hosts to unassign/reset a team owner.
+- ✅ **Drag scroll enhancement**: Captured and stopped click propagation during drag scroll to prevent opening modals accidentally.
+
 ### v6.1 (2026-02-09) - **UX Improvements & Database Release** 🚀
 - ✅ **Added Serie A Players Database**: `players.js` with 761 players.
 - ✅ **Desktop Drag-to-Scroll**: Integrated new `drag-scroll.js` module to enable click-and-drag horizontal scrolling on the teams matrix.

@@ -89,11 +89,10 @@ export async function createRoom() {
         password: password,
         status: 'lobby',                      // Stato iniziale: in attesa di partecipanti
         participantIds: [state.user.uid],    // Host è il primo partecipante
-        connectedUsers: [{                    // Formato vecchio per retrocompatibilità
-            uid: state.user.uid,
-            name: state.user.displayName,
-            photoURL: state.user.photoURL
-        }],
+        connectedUsers: [state.user.uid],
+        participantNames: {
+            [state.user.uid]: state.user.displayName || state.user.email
+        },
         teams: teams,
         currentTurnIndex: 0,
         roundNumber: 1,
@@ -165,14 +164,10 @@ export async function joinRoom() {
 
     if (!isParticipant) {
         // Aggiungi nuovo utente alla stanza
-        const newUser = {
-            uid: state.user.uid,
-            name: state.user.displayName,
-            photoURL: state.user.photoURL
-        };
         await updateDoc(roomRef, {
-            connectedUsers: arrayUnion(newUser),
-            participantIds: arrayUnion(state.user.uid)
+            connectedUsers: arrayUnion(state.user.uid),
+            participantIds: arrayUnion(state.user.uid),
+            [`participantNames.${state.user.uid}`]: state.user.displayName || state.user.email
         });
     }
 
@@ -199,6 +194,13 @@ export async function joinRoom() {
  * leaveRoom();
  */
 export function leaveRoom() {
+    // Esegui cleanup presenza se attivo
+    if (typeof state.presenceCleanup === 'function') {
+        state.presenceCleanup();
+        state.presenceCleanup = null;
+    }
+    state.heartbeatInterval = null;
+
     // Cleanup stato
     state.currentRoomId = null;
     state.roomData = null;
@@ -336,10 +338,14 @@ export function enterRoom(roomId, isHost, password = null) {
      */
     const removePresence = () => {
         clearInterval(heartbeatInterval);
-        updateDoc(roomRef, {
-            connectedUsers: arrayRemove(state.user.uid)
-            // NON rimuoviamo participantNames per preservare storico
-        }).catch(e => console.error('Presence removal error:', e));
+        window.removeEventListener('beforeunload', removePresence);
+        window.removeEventListener('pagehide', removePresence);
+        if (state.user && state.user.uid) {
+            updateDoc(roomRef, {
+                connectedUsers: arrayRemove(state.user.uid)
+                // NON rimuoviamo participantNames per preservare storico
+            }).catch(e => console.error('Presence removal error:', e));
+        }
     };
 
     // Registra cleanup su eventi di uscita pagina

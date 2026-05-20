@@ -16,7 +16,7 @@ import { state } from './state.js';                                             
 import { showToast, switchView } from './utils.js';                              // Utilità UI
 import { verifyAppVersion } from './version-check.js';                           // Controllo versione
 import { initializeFCM, checkAndShowNotificationModal } from './notifications.js'; // Sistema notifiche
-import { loadRecentRooms } from './room-manager.js';                             // Gestione stanze
+import { loadRecentRooms, leaveRoom } from './room-manager.js';                             // Gestione stanze
 
 /**
  * Inizializza il sistema di autenticazione Firebase
@@ -70,6 +70,9 @@ export function initAuth() {
 
         } else {
             // ── Utente non autenticato ──────────────────────────────────────
+
+            // Esegue cleanup stanza se attiva
+            leaveRoom();
 
             // Rimuove l'utente dallo stato globale
             state.user = null;

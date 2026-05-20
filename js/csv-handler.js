@@ -216,11 +216,10 @@ export async function createRoomFromCSV(csvText) {
         password: password,
         status: 'started',              // Stanza importata parte già in modalità draft
         participantIds: [state.user.uid],
-        connectedUsers: [{
-            uid: state.user.uid,
-            name: state.user.displayName,
-            photoURL: state.user.photoURL
-        }],
+        connectedUsers: [state.user.uid],
+        participantNames: {
+            [state.user.uid]: state.user.displayName || state.user.email
+        },
         teams: teams,
         currentTurnIndex: 0,
         roundNumber: 1,

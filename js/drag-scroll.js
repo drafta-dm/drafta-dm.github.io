@@ -96,11 +96,21 @@ export function enableDragToScroll(element, options = {}) {
         }
     };
 
+    // Intercetta click accidentali dopo il drag
+    const onClick = (e) => {
+        if (hasDragged) {
+            e.preventDefault();
+            e.stopPropagation();
+            hasDragged = false;
+        }
+    };
+
     // Attach event listeners
     element.addEventListener('mousedown', onMouseDown);
     element.addEventListener('mousemove', onMouseMove);
     element.addEventListener('mouseup', onMouseUp);
     element.addEventListener('mouseleave', onMouseLeave);
+    element.addEventListener('click', onClick, true);
 
     // Previeni selezione testo durante drag
     element.addEventListener('dragstart', (e) => e.preventDefault());
@@ -111,6 +121,7 @@ export function enableDragToScroll(element, options = {}) {
         element.removeEventListener('mousemove', onMouseMove);
         element.removeEventListener('mouseup', onMouseUp);
         element.removeEventListener('mouseleave', onMouseLeave);
+        element.removeEventListener('click', onClick, true);
         element.style.cursor = '';
         element.style.userSelect = '';
     };

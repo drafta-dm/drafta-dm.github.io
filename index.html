@@ -1,4 +1,4 @@
-<!-- Force Deploy 2026-02-09 v6.1 -->
+<!-- Force Deploy 2026-05-20 v6.2 -->
 <!DOCTYPE html>
 <html lang="it">
 
@@ -9,88 +9,6 @@
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="icons/icon-192x192.png">
     <link rel="stylesheet" href="css/style.css">
-
-    <!-- MODAL: TEAM MANAGER -->
-    <div id="modal-team-manager" class="modal-overlay hidden">
-        <div class="modal-card">
-            <h2 class="font-title">Gestione Squadra</h2>
-            <div class="modal-body">
-                <input type="hidden" id="tm-team-id">
-                <div style="margin-bottom:15px; text-align:left;">
-                    <label style="color:var(--text-muted); font-size:0.8rem;">Nome Squadra</label>
-                    <input type="text" id="tm-team-name"
-                        style="width:100%; padding:10px; background:#222; border:1px solid #444; color:white; border-radius:4px;">
-                </div>
-                <div style="margin-bottom:15px; text-align:left;">
-                    <label style="color:var(--text-muted); font-size:0.8rem;">Assegna a Utente</label>
-                    <select id="tm-user-select"
-                        style="width:100%; padding:10px; background:#222; border:1px solid #444; color:white; border-radius:4px;">
-                        <!-- JS populated -->
-                    </select>
-                </div>
-            </div>
-            <div style="display:flex; gap:10px;">
-                <button class="btn btn-outline" style="flex:1"
-                    onclick="document.getElementById('modal-team-manager').classList.add('hidden')">Annulla</button>
-                <button class="btn" style="flex:1; background:var(--primary); color:black;"
-                    id="btn-tm-save">Salva</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL: START DRAFT INFO -->
-    <div id="modal-start-draft" class="modal-overlay hidden">
-        <div class="modal-card">
-            <h2 class="font-title" style="color:var(--primary)">Asta Avviata!</h2>
-            <div class="modal-body">
-                <p style="color:var(--text-muted); margin-bottom:1rem;">L'Host ha avviato la sessione.</p>
-                <p>Attendere l'inizio delle chiamate.</p>
-            </div>
-            <button class="btn btn-primary"
-                onclick="document.getElementById('modal-start-draft').classList.add('hidden')">OK</button>
-        </div>
-    </div>
-
-    <!-- MODAL: NOTIFICATION PERMISSION -->
-    <div id="modal-notifications" class="modal-overlay hidden">
-        <div class="modal-card" style="max-width: 450px;">
-            <div style="text-align:center; font-size:3rem; margin-bottom:1rem;">🔔</div>
-            <h2 class="font-title" style="color:var(--primary); text-align:center;">Abilita Notifiche</h2>
-            <div class="modal-body">
-                <p style="color:var(--text-muted); margin-bottom:1rem;">Ricevi notifiche quando è il tuo turno durante
-                    il draft!</p>
-                <ul
-                    style="text-align:left; color:var(--text-muted); font-size:0.9rem; margin-bottom:1.5rem; padding-left:20px;">
-                    <li>Notifica desktop/mobile quando tocca a te</li>
-                    <li>Non perdere mai il tuo turno</li>
-                    <li>Puoi disattivarle in qualsiasi momento</li>
-                </ul>
-            </div>
-            <div style="display:flex; gap:10px;">
-                <button class="btn btn-outline" style="flex:1" id="btn-notif-later">Più Tardi</button>
-                <button class="btn btn-primary" style="flex:1" id="btn-notif-enable">Abilita</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL: FIRST ROUND ORDER -->
-    <div id="modal-load-order" class="modal-overlay hidden">
-        <div class="modal-card">
-            <h2 class="font-title">Ordine Iniziale</h2>
-            <div class="modal-body">
-                <p style="color:var(--text-muted); margin-bottom:1.5rem;">Genera l'ordine casuale per la prima tornata
-                    di chiamate.</p>
-                <div class="order-preview" id="order-preview-list"
-                    style="margin-bottom:15px; max-height:150px; overflow-y:auto; background:#111; padding:10px; border-radius:6px; font-size:0.85rem; text-align:left;">
-                    <!-- JS populated -->
-                </div>
-            </div>
-            <div style="display:flex; gap:10px;">
-                <button id="btn-gen-random-start" class="btn btn-outline" style="flex:1;">🎲 Genera Random</button>
-                <button id="btn-confirm-start-order" class="btn btn-primary" style="flex:1;">Conferma & Inizia</button>
-            </div>
-        </div>
-    </div>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -106,10 +24,92 @@
         <!-- Toast / Notification Container -->
         <div id="toast-container"></div>
 
+        <!-- MODAL: TEAM MANAGER -->
+        <div id="modal-team-manager" class="modal-overlay hidden">
+            <div class="modal-card">
+                <h2 class="font-title">Gestione Squadra</h2>
+                <div class="modal-body">
+                    <input type="hidden" id="tm-team-id">
+                    <div style="margin-bottom:15px; text-align:left;">
+                        <label style="color:var(--text-muted); font-size:0.8rem;">Nome Squadra</label>
+                        <input type="text" id="tm-team-name"
+                            style="width:100%; padding:10px; background:#222; border:1px solid #444; color:white; border-radius:4px;">
+                    </div>
+                    <div style="margin-bottom:15px; text-align:left;">
+                        <label style="color:var(--text-muted); font-size:0.8rem;">Assegna a Utente</label>
+                        <select id="tm-user-select"
+                            style="width:100%; padding:10px; background:#222; border:1px solid #444; color:white; border-radius:4px;">
+                            <!-- JS populated -->
+                        </select>
+                    </div>
+                </div>
+                <div style="display:flex; gap:10px;">
+                    <button class="btn btn-outline" style="flex:1"
+                        onclick="document.getElementById('modal-team-manager').classList.add('hidden')">Annulla</button>
+                    <button class="btn" style="flex:1; background:var(--primary); color:black;"
+                        id="btn-tm-save">Salva</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL: START DRAFT INFO -->
+        <div id="modal-start-draft" class="modal-overlay hidden">
+            <div class="modal-card">
+                <h2 class="font-title" style="color:var(--primary)">Asta Avviata!</h2>
+                <div class="modal-body">
+                    <p style="color:var(--text-muted); margin-bottom:1rem;">L'Host ha avviato la sessione.</p>
+                    <p>Attendere l'inizio delle chiamate.</p>
+                </div>
+                <button class="btn btn-primary"
+                    onclick="document.getElementById('modal-start-draft').classList.add('hidden')">OK</button>
+            </div>
+        </div>
+
+        <!-- MODAL: NOTIFICATION PERMISSION -->
+        <div id="modal-notifications" class="modal-overlay hidden">
+            <div class="modal-card" style="max-width: 450px;">
+                <div style="text-align:center; font-size:3rem; margin-bottom:1rem;">🔔</div>
+                <h2 class="font-title" style="color:var(--primary); text-align:center;">Abilita Notifiche</h2>
+                <div class="modal-body">
+                    <p style="color:var(--text-muted); margin-bottom:1rem;">Ricevi notifiche quando è il tuo turno durante
+                        il draft!</p>
+                    <ul
+                        style="text-align:left; color:var(--text-muted); font-size:0.9rem; margin-bottom:1.5rem; padding-left:20px;">
+                        <li>Notifica desktop/mobile quando tocca a te</li>
+                        <li>Non perdere mai il tuo turno</li>
+                        <li>Puoi disattivarle in qualsiasi momento</li>
+                    </ul>
+                </div>
+                <div style="display:flex; gap:10px;">
+                    <button class="btn btn-outline" style="flex:1" id="btn-notif-later">Più Tardi</button>
+                    <button class="btn btn-primary" style="flex:1" id="btn-notif-enable">Abilita</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL: FIRST ROUND ORDER -->
+        <div id="modal-load-order" class="modal-overlay hidden">
+            <div class="modal-card">
+                <h2 class="font-title">Ordine Iniziale</h2>
+                <div class="modal-body">
+                    <p style="color:var(--text-muted); margin-bottom:1.5rem;">Genera l'ordine casuale per la prima tornata
+                        di chiamate.</p>
+                    <div class="order-preview" id="order-preview-list"
+                        style="margin-bottom:15px; max-height:150px; overflow-y:auto; background:#111; padding:10px; border-radius:6px; font-size:0.85rem; text-align:left;">
+                        <!-- JS populated -->
+                    </div>
+                </div>
+                <div style="display:flex; gap:10px;">
+                    <button id="btn-gen-random-start" class="btn btn-outline" style="flex:1;">🎲 Genera Random</button>
+                    <button id="btn-confirm-start-order" class="btn btn-primary" style="flex:1;">Conferma & Inizia</button>
+                </div>
+            </div>
+        </div>
+
         <!-- VIEW: LOGIN -->
         <section id="view-login" class="view active">
             <div class="login-card">
-                <h1>DRAFTA <small style="font-size:1rem; color:var(--text-muted); opacity:0.7;">v5.0</small></h1>
+                <h1>DRAFTA <small style="font-size:1rem; color:var(--text-muted); opacity:0.7;">v6.2</small></h1>
                 <p class="subtitle">Live Serie A Fantasy Draft</p>
 
                 <div class="login-actions">
@@ -249,7 +249,7 @@
             <header class="draft-header">
                 <div class="header-left" style="display:flex; align-items:center; gap:20px;">
                     <h1 class="font-title" style="margin:0;">DRAFT<span style="color:var(--primary)">A</span> <small
-                            style="font-size:0.4em; color:var(--text-muted); font-weight:normal;">v5.0</small></h1>
+                            style="font-size:0.4em; color:var(--text-muted); font-weight:normal;">v6.2</small></h1>
                     <div id="turn-indicator-box"
                         style="display:flex; align-items:baseline; gap:10px; padding-left:20px; border-left:1px solid #333;">
                         <span class="label"
