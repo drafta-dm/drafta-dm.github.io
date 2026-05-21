@@ -13,6 +13,8 @@ env:
 jobs:
   update-players:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write   # necessario per il git push di players.js
 
     steps:
       - name: Checkout del repository
