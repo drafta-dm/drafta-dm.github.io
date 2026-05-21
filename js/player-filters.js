@@ -125,7 +125,8 @@ export function updatePlayerListVisuals(takenIds, hiddenRoles = []) {
 
     if (visible.length === 0) {
         // Determina il messaggio appropriato
-        const message = hiddenRoles.length >= 4
+        const isDraftComplete = hiddenRoles.length >= 4;
+        const message = isDraftComplete
             ? "Draft Completato! 🎉"                              // Tutti ruoli completi
             : "Nessun giocatore disponibile per i ruoli richiesti."; // Solo alcuni ruoli esauriti
 
@@ -147,9 +148,23 @@ export function updatePlayerListVisuals(takenIds, hiddenRoles = []) {
             msgEl.textContent = message;
             msgEl.style.display = 'block';
         }
+
+        // Quando il draft è completato → evidenzia il bottone Export CSV
+        const btnCsv = document.getElementById('btn-export-csv');
+        if (btnCsv) {
+            if (isDraftComplete) {
+                btnCsv.classList.add('csv-ready');
+            } else {
+                btnCsv.classList.remove('csv-ready');
+            }
+        }
     } else {
         // Nascondi il messaggio se ci sono giocatori visibili
         if (msgEl) msgEl.style.display = 'none';
+
+        // Draft in corso → rimuovi eventuale stato csv-ready
+        const btnCsv = document.getElementById('btn-export-csv');
+        if (btnCsv) btnCsv.classList.remove('csv-ready');
     }
 }
 

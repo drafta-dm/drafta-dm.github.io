@@ -226,12 +226,46 @@
    EXPORT CSV
    ============================================================================ */
 
-#btn-export-csv {
-    display: none;
+/* Export CSV - icona discreta durante il draft, bottone completo a fine asta */
+.btn-csv-icon {
+    background: none;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    color: var(--text-muted, #666);
+    font-size: 1rem;
+    padding: 4px 6px;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s, background 0.2s;
+    white-space: nowrap;
 }
 
-.host-view #btn-export-csv {
-    display: inline-block;
+.btn-csv-icon .csv-label {
+    display: none;  /* testo nascosto durante il draft */
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.btn-csv-icon:hover {
+    color: var(--text-secondary, #aaa);
+    border-color: var(--bg-surface);
+}
+
+/* Stato: draft completato - bottone pieno e visibile */
+.btn-csv-icon.csv-ready {
+    background: rgba(39, 174, 96, 0.15);
+    border-color: #27ae60;
+    color: #27ae60;
+    padding: 4px 10px;
+    animation: pulse-csv 1.5s ease-in-out 3;
+}
+
+.btn-csv-icon.csv-ready .csv-label {
+    display: inline;  /* mostra il testo a fine asta */
+}
+
+@keyframes pulse-csv {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0); }
+    50%       { box-shadow: 0 0 0 6px rgba(39, 174, 96, 0.3); }
 }
 
 /* ============================================================================
