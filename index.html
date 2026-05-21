@@ -264,7 +264,9 @@
             <!-- HEADER -->
             <header class="draft-header">
                 <div class="header-left" style="display:flex; align-items:center; gap:20px;">
-                    <h1 class="font-title" style="margin:0;">DRAFT<span style="color:var(--primary)">A</span> <small
+                    <h1 id="draft-logo-home" class="font-title"
+                        style="margin:0; cursor:pointer; user-select:none;"
+                        title="Torna alla Home">DRAFT<span style="color:var(--primary)">A</span> <small
                             style="font-size:0.4em; color:var(--text-muted); font-weight:normal;">v6.3</small></h1>
                     <div id="turn-indicator-box"
                         style="display:flex; align-items:baseline; gap:10px; padding-left:20px; border-left:1px solid #333;">
@@ -284,8 +286,6 @@
                         <code id="txt-room-pass-display"
                             style="display:block; color:var(--text-muted); font-size:0.75rem;">...</code>
                     </div>
-                    <!-- Round moved here or hidden? User didn't specify round, but good to keep. Putting it next to timer? -->
-                    <!-- Let's put Round next to timer in center, cleaner -->
                     <div style="text-align:center; margin-right:15px;">
                         <span id="txt-round"
                             style="display:block; font-size:0.8rem; color:#666; text-transform:uppercase;">Round
@@ -295,14 +295,11 @@
                     <button id="btn-export-csv" class="btn btn-sm btn-outline" style="display:none;">
                         📥 Export CSV
                     </button>
-                    <!-- Home / Leave Room Button -->
-                    <button id="btn-leave-draft" class="btn btn-sm btn-outline">
-                        ← Home
-                    </button>
                     <img id="header-user-avatar" src=""
                         style="width:32px; height:32px; border-radius:50%; background:#333; cursor:pointer;">
                 </div>
             </header>
+
 
             <div class="draft-view-container">
                 <!-- LEFT PANEL: Active Card + Player List -->

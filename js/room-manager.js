@@ -661,10 +661,10 @@ export function setupRoomListeners() {
     // ── Lobby: Uscita ───────────────────────────────────────────────────
     document.getElementById('btn-leave-lobby').addEventListener('click', leaveRoom);
 
-    // ── Draft: Uscita ───────────────────────────────────────────────────
-    const btnLeaveDraft = document.getElementById('btn-leave-draft');
-    if (btnLeaveDraft) {
-        btnLeaveDraft.addEventListener('click', () => {
+    // ── Draft: Uscita (click sul logo DRAFTA) ───────────────────────────
+    const draftLogoHome = document.getElementById('draft-logo-home');
+    if (draftLogoHome) {
+        draftLogoHome.addEventListener('click', () => {
             if (confirm("Vuoi davvero uscire dal draft e tornare alla Home?")) {
                 leaveRoom();
             }
