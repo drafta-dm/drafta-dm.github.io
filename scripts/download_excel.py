@@ -1,135 +1,111 @@
+"""
+Script per scaricare le Quotazioni Fantacalcio da fantacalcio.it
+usando l'API REST del sito (niente browser, niente Playwright).
+
+Utilizzo:
+  python scripts/download_excel.py
+
+Variabili d'ambiente:
+  FANTACALCIO_USERNAME   (default: laravalafava)
+  FANTACALCIO_PASSWORD   (default: laravalafava)
+"""
+
 import os
 import sys
-from playwright.sync_api import sync_playwright
+import requests
+
+BASE_URL = "https://www.fantacalcio.it"
+LOGIN_ENDPOINT = f"{BASE_URL}/api/v1/User/login"
+DOWNLOAD_ENDPOINT = f"{BASE_URL}/api/v1/Excel/prices/20/1"
+
+HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/124.0.0.0 Safari/537.36"
+    ),
+    "Accept": "application/json, text/plain, */*",
+    "Accept-Language": "it-IT,it;q=0.9,en-US;q=0.8",
+    "Content-Type": "application/json",
+    "Origin": BASE_URL,
+    "Referer": f"{BASE_URL}/login",
+}
+
 
 def download():
-    # Leggi le credenziali dalle variabili d'ambiente con fallback su quelle di test
     username = os.environ.get("FANTACALCIO_USERNAME", "laravalafava")
     password = os.environ.get("FANTACALCIO_PASSWORD", "laravalafava")
 
     script_dir = os.path.dirname(os.path.abspath(__file__))
     target_excel = os.path.join(script_dir, "Quotazioni_Fantacalcio_Stagione_2025_26.xlsx")
 
-    print("Avvio di Playwright...", flush=True)
-    with sync_playwright() as p:
-        # Usa chromium headless con argomenti anti-bot (utile su server cloud)
-        browser = p.chromium.launch(
-            headless=True,
-            args=[
-                "--no-sandbox",
-                "--disable-setuid-sandbox",
-                "--disable-blink-features=AutomationControlled",
-                "--disable-dev-shm-usage",
-            ]
-        )
+    session = requests.Session()
+    session.headers.update(HEADERS)
 
-        # Context con user agent e header realistici per evitare blocchi Cloudflare
-        context = browser.new_context(
-            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-            viewport={"width": 1280, "height": 720},
-            extra_http_headers={
-                "Accept-Language": "it-IT,it;q=0.9,en-US;q=0.8,en;q=0.7",
-                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
-                "sec-ch-ua": '"Chromium";v="124", "Google Chrome";v="124", "Not-A.Brand";v="99"',
-                "sec-ch-ua-mobile": "?0",
-                "sec-ch-ua-platform": '"Windows"',
-            }
-        )
+    # ── 1. Login ────────────────────────────────────────────────────────────
+    print(f"Login come '{username}'...", flush=True)
+    login_resp = session.post(
+        LOGIN_ENDPOINT,
+        json={"username": username, "password": password},
+        timeout=30,
+    )
 
-        # Nasconde webdriver per eludere i controlli anti-bot basilari
-        context.add_init_script("""
-            Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
-        """)
+    print(f"  Status login: {login_resp.status_code}", flush=True)
 
-        page = context.new_page()
+    if login_resp.status_code != 200:
+        print(f"❌ Login fallita (HTTP {login_resp.status_code})", flush=True)
+        print(f"   Risposta: {login_resp.text[:500]}", flush=True)
+        sys.exit(1)
 
-        print("Apertura pagina di login...", flush=True)
-        page.goto("https://www.fantacalcio.it/login", wait_until="networkidle", timeout=30000)
+    login_data = login_resp.json()
+    print(f"  Risposta login: {login_data}", flush=True)
 
-        # Stampa URL attuale per debug
-        print(f"URL dopo navigazione login: {page.url}", flush=True)
-        print(f"Titolo pagina: {page.title()}", flush=True)
+    if not login_data.get("success"):
+        errors = login_data.get("errors", [])
+        msg = "; ".join(e.get("message", str(e)) for e in errors) if errors else str(login_data)
+        print(f"❌ Login fallita: {msg}", flush=True)
+        sys.exit(1)
 
-        # Verifica che la pagina di login sia accessibile (non bloccata da Cloudflare)
-        page_content = page.content()
-        if "challenge" in page_content.lower() or "cf-browser-verification" in page_content.lower():
-            print("⚠️ Cloudflare challenge rilevata - possibile blocco IP cloud", flush=True)
+    print("[OK] Login riuscita!", flush=True)
 
-        # Accetta i cookie se compare il banner Iubenda/Quantcast/Consenso
-        def dismiss_cookie_banner(stage_name):
-            try:
-                print(f"[{stage_name}] Controllo presenza banner cookie...", flush=True)
-                btn_selector = (
-                    "#qc-cmp2-container button[mode='primary'], "
-                    "#qc-cmp2-container #agree-btn, "
-                    "#qc-cmp2-container button:has-text('Accetto'), "
-                    "#qc-cmp2-container button:has-text('Acconsento'), "
-                    "#qc-cmp2-container #disagree-btn, "
-                    ".iubenda-cs-accept-btn, "
-                    "#iubenda-cs-banner button"
-                )
-                page.wait_for_selector(btn_selector, timeout=5000)
-                page.click(btn_selector)
-                print(f"[{stage_name}] Banner cookie chiuso.", flush=True)
-                page.wait_for_timeout(1000)
-            except Exception as e:
-                print(f"[{stage_name}] Nessun banner cookie (timeout): {type(e).__name__}", flush=True)
+    # -- 2. Download Excel ---------------------------------------------------
+    print(f"Download Excel da {DOWNLOAD_ENDPOINT}...", flush=True)
+    dl_resp = session.get(
+        DOWNLOAD_ENDPOINT,
+        stream=True,
+        timeout=60,
+        headers={
+            "Accept": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, */*",
+            "Referer": f"{BASE_URL}/quotazioni-fantacalcio",
+        },
+    )
 
-        dismiss_cookie_banner("Login Page")
+    print(f"  Status download: {dl_resp.status_code}", flush=True)
+    print(f"  Content-Type: {dl_resp.headers.get('Content-Type', 'N/A')}", flush=True)
 
-        # Verifica che il form di login esista
-        login_form = page.locator("#loginForm")
-        if not login_form.is_visible():
-            print("❌ Form di login non trovato! Contenuto pagina:", flush=True)
-            print(page.content()[:2000], flush=True)
-            sys.exit(1)
+    if dl_resp.status_code != 200:
+        print(f"[ERRORE] Download fallito (HTTP {dl_resp.status_code})", flush=True)
+        print(f"   Risposta: {dl_resp.text[:500]}", flush=True)
+        sys.exit(1)
 
-        print("Compilazione form di login...", flush=True)
-        page.fill("input[name='username']", username)
-        page.fill("input[name='password']", password)
+    # Verifica che sia davvero un file Excel (non una pagina di errore HTML)
+    content_type = dl_resp.headers.get("Content-Type", "")
+    if "html" in content_type:
+        print("[ERRORE] Il server ha risposto con HTML invece che con un file Excel.", flush=True)
+        print("   Probabile sessione non autenticata o reindirizzamento al login.", flush=True)
+        sys.exit(1)
 
-        print("Invio form di login...", flush=True)
-        page.click("button[type='submit']")
+    # Salva il file
+    with open(target_excel, "wb") as f:
+        for chunk in dl_resp.iter_content(chunk_size=8192):
+            f.write(chunk)
 
-        # Attendi il caricamento dopo il login
-        page.wait_for_load_state("networkidle")
-        page.wait_for_timeout(2000)
+    size = os.path.getsize(target_excel)
+    print(f"[OK] File salvato in: {target_excel} ({size:,} bytes)", flush=True)
 
-        print(f"URL dopo login: {page.url}", flush=True)
-        print(f"Titolo dopo login: {page.title()}", flush=True)
-
-        print("Navigazione alla pagina delle quotazioni...", flush=True)
-        page.goto("https://www.fantacalcio.it/quotazioni-fantacalcio", wait_until="networkidle")
-
-        print(f"URL quotazioni: {page.url}", flush=True)
-
-        # Gestisci il banner cookie anche qui
-        dismiss_cookie_banner("Quotazioni Page")
-
-        print("Ricerca del pulsante di download...", flush=True)
-        download_btn_selector = "a.download-players-price-serie-a"
-
-        # Attendi che il pulsante sia presente (indica che l'utente è autenticato)
-        try:
-            page.wait_for_selector(download_btn_selector, timeout=20000)
-        except Exception:
-            print("❌ Pulsante di download non trovato - probabilmente non autenticato", flush=True)
-            print(f"URL attuale: {page.url}", flush=True)
-            # Stampa parte della pagina per debug
-            print("Contenuto parziale della pagina:", flush=True)
-            print(page.content()[:3000], flush=True)
-            sys.exit(1)
-
-        print("Inizio download del file...", flush=True)
-        with page.expect_download() as download_info:
-            page.click(download_btn_selector)
-
-        download = download_info.value
-        download.save_as(target_excel)
-        size = os.path.getsize(target_excel)
-        print(f"✅ File scaricato con successo in: {target_excel} ({size:,} bytes)", flush=True)
-
-        browser.close()
+    if size < 10_000:
+        print("[WARN] Il file sembra troppo piccolo per essere un Excel valido.", flush=True)
+        sys.exit(1)
 
 
 if __name__ == "__main__":

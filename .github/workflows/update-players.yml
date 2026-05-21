@@ -27,11 +27,7 @@ jobs:
 
       - name: Installa dipendenze Python
         run: |
-          pip install playwright openpyxl
-
-      - name: Installa Chromium (Playwright) con dipendenze di sistema
-        run: |
-          playwright install chromium --with-deps
+          pip install requests openpyxl
 
       - name: Download Excel da Fantacalcio.it
         env:
