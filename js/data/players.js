@@ -1,4 +1,4 @@
-export const playersLastUpdated = "2026-05-22T10:26:21Z";
+export const playersLastUpdated = "2026-05-23T09:04:16Z";
 
 export const playersDB = [
     {
@@ -3708,6 +3708,20 @@ export const playersDB = [
         "id": "7368",
         "name": "Vermesan",
         "team": "Verona",
+        "role": "A",
+        "cost": 1
+    },
+    {
+        "id": "7381",
+        "name": "Mikolajewski",
+        "team": "Parma",
+        "role": "A",
+        "cost": 1
+    },
+    {
+        "id": "7388",
+        "name": "Mosconi",
+        "team": "Inter",
         "role": "A",
         "cost": 1
     }
