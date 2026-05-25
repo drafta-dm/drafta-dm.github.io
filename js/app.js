@@ -68,6 +68,37 @@ document.addEventListener('DOMContentLoaded', () => {
     setupChatListeners();            // Chat messaging
     setupSoundListeners();           // Sound effects toggle
 
+    // ── Mobile Bottom Nav ─────────────────────────────────────────────
+    document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Aggiorna stato attivo
+            document.querySelectorAll('.mobile-nav-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const target = btn.dataset.target;
+            const leftPanel = document.querySelector('.draft-left-panel');
+            const rightPanel = document.querySelector('.draft-right-panel');
+
+            if (target === 'players') {
+                if (leftPanel) leftPanel.style.display = '';
+                if (rightPanel) rightPanel.style.display = 'none';
+                document.getElementById('chat-panel')?.classList.add('hidden');
+                document.getElementById('draft-history-panel')?.classList.add('hidden');
+            } else if (target === 'teams') {
+                if (leftPanel) leftPanel.style.display = 'none';
+                if (rightPanel) rightPanel.style.display = '';
+                document.getElementById('chat-panel')?.classList.add('hidden');
+                document.getElementById('draft-history-panel')?.classList.add('hidden');
+            } else if (target === 'chat') {
+                document.getElementById('chat-panel')?.classList.remove('hidden');
+                document.getElementById('draft-history-panel')?.classList.add('hidden');
+            } else if (target === 'history') {
+                document.getElementById('draft-history-panel')?.classList.remove('hidden');
+                document.getElementById('chat-panel')?.classList.add('hidden');
+            }
+        });
+    });
+
     // Initialization complete
     console.log('✅ Drafta initialized successfully!');
 });

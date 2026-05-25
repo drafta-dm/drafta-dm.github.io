@@ -234,6 +234,11 @@ python scripts/update_players.py
 
 ## 📝 Changelog
 
+### v6.7 (2026-05-25) - **Riepilogo, Mobile Nav & Final Polish** 🏆📱
+- ✅ **Riepilogo Fine Draft**: Overlay automatico a fine asta con ranking squadre, crediti spesi/rimasti, media costo, best pick per squadra.
+- ✅ **Mobile Bottom Nav**: Barra di navigazione fissa in basso su mobile con tabs rapide per Giocatori, Squadre, Chat e Log.
+- ✅ **Spectator-ready**: Le regole Firestore permettono la lettura a qualsiasi utente autenticato (base per future modalità spettatore).
+
 ### v6.6 (2026-05-25) - **Colori, Info Link & Condivisione** 🎨ℹ️🔗
 - ✅ **Colori Squadra**: Palette di 20 colori vivaci assegnati automaticamente ad ogni squadra. Bordo colorato sulle colonne della matrice.
 - ✅ **Player Info Link**: Icona ℹ️ accanto ad ogni giocatore nella lista, link diretto alla pagina fantacalcio.it del giocatore.

@@ -28,6 +28,7 @@ import { renderOrderPreview } from './draft-logic.js';           // Preview ordi
 import { renderDraftHistory } from './draft-history.js';         // Cronologia pick
 import { playSound } from './sounds.js';                        // Effetti sonori
 import { initChat, cleanupChat } from './chat.js';              // Chat
+import { checkAndShowDraftSummary } from './draft-summary.js';  // Riepilogo fine draft
 
 // ── Variabili modulo ────────────────────────────────────────────────────
 // Unsubscribe function per il listener real-time della stanza corrente
@@ -449,6 +450,9 @@ export function enterRoom(roomId, isHost, password = null) {
 
         // ── Rendering Draft History ────────────────────────────────────
         renderDraftHistory(data);
+
+        // ── Check Draft Summary (fine draft) ──────────────────────────
+        checkAndShowDraftSummary(data);
 
         // ── Routing automatico tra Lobby e Draft ───────────────────────
         renderLobbyOrDraft(data);

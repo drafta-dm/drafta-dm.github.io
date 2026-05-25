@@ -41,6 +41,8 @@ import { updateDraftUI } from './ui-renderer.js';          // Aggiornamento UI d
  * });
  */
 export function renderLobbyOrDraft(data) {
+    const mobileNav = document.getElementById('mobile-bottom-nav');
+
     if (data.status === 'started' || data.status === 'drafting') {
         // ── Modalità Draft ──────────────────────────────────────────────
         if (views.draft.classList.contains('hidden')) {
@@ -49,12 +51,18 @@ export function renderLobbyOrDraft(data) {
         }
         updateDraftUI(data);
 
+        // Mostra mobile nav durante il draft
+        if (mobileNav) mobileNav.classList.remove('hidden');
+
     } else {
         // ── Modalità Lobby ──────────────────────────────────────────────
         if (views.lobby.classList.contains('hidden')) {
             switchView('lobby');
         }
         renderLobby(data);
+
+        // Nascondi mobile nav in lobby
+        if (mobileNav) mobileNav.classList.add('hidden');
     }
 }
 
