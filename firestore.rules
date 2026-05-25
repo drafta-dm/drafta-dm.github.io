@@ -29,6 +29,18 @@ service cloud.firestore {
         )
       );
       allow delete: if request.auth != null && resource.data.hostId == request.auth.uid;
+
+      // Sub-collezione messaggi chat
+      match /messages/{messageId} {
+        allow read: if request.auth != null;
+        allow create: if request.auth != null;
+      }
+
+      // Sub-collezione snapshot draft
+      match /snapshots/{snapshotId} {
+        allow read: if request.auth != null;
+        allow create: if request.auth != null;
+      }
     }
   }
 }
