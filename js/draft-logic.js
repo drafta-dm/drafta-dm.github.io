@@ -188,10 +188,7 @@ export async function confirmPick() {
     const player = state.players.find(p => p.id === playerId);
     const cost = player.cost;
 
-    // ── Validazione 3: Crediti ──────────────────────────────────────────
-    if (team.credits < cost && !state.isHost) {
-        return showToast("Crediti insufficienti!");
-    }
+    // (Nessuna limitazione budget/crediti per pick manuale in modalità draft)
 
     // ── Calcolo ruoli attuali squadra ───────────────────────────────────
     const roles = { P: 0, D: 0, C: 0, A: 0 };
@@ -229,21 +226,12 @@ export async function confirmPick() {
     // ── Logica Blocco Portieri Automatico ───────────────────────────────
     const useBlockGK = state.roomData.settings?.blockGK;
     if (targetRole === 'P' && useBlockGK && roles.P === 0) {
-        // Se è il primo portiere, cerca gli altri 2 della stessa squadra
+        // Se è il primo portiere, cerca gli altri 2 della stessa squadra ed assegnali
         const teamMates = state.players.filter(p =>
             p.team === player.team && p.role === 'P' && p.id !== player.id
         );
-
-        let extraCost = 0;
-        teamMates.forEach(m => extraCost += m.cost);
-
-        // Verifica se ci sono crediti sufficienti per prendere tutto il blocco
-        if (team.credits >= (cost + extraCost)) {
-            teamMates.forEach(m => pickedItems.push({ playerId: m.id, cost: m.cost }));
-            showToast(`Blocco portieri ${player.team} assegnato!`);
-        } else {
-            showToast("Crediti insufficienti per blocco portieri completo.");
-        }
+        teamMates.forEach(m => pickedItems.push({ playerId: m.id, cost: m.cost }));
+        showToast(`Blocco portieri ${player.team} assegnato!`);
     }
 
     // ── Applicazione Pick ───────────────────────────────────────────────
@@ -667,34 +655,20 @@ export async function autoPickForTimeout() {
         return await fallbackSkipTurn(room);
     }
 
-    // 5. Filtra per quelli che la squadra può permettersi (costo <= crediti residui)
-    let affordableCandidates = candidatePlayers.filter(p => p.cost <= team.credits);
-    if (affordableCandidates.length === 0) {
-        // Se non ci sono giocatori acquistabili coi crediti rimasti, usiamo tutti i candidati
-        // (assegnando comunque un giocatore, andando eventualmente in credito negativo come penalità)
-        affordableCandidates = candidatePlayers;
-    }
-
-    // 6. Ordina per costo decrescente per trovare il più caro (in caso di parità, ordina per nome per determinismo)
-    affordableCandidates.sort((a, b) => b.cost - a.cost || String(a.name).localeCompare(String(b.name)));
-    const player = affordableCandidates[0];
+    // 5. Ordina per costo decrescente per trovare il più caro (in caso di parità, ordina per nome per determinismo)
+    const sortedCandidates = [...candidatePlayers].sort((a, b) => b.cost - a.cost || String(a.name).localeCompare(String(b.name)));
+    const player = sortedCandidates[0];
     const cost = player.cost;
 
-    // 7. Prepara assegnazione (e blocco portieri se applicabile)
+    // 6. Prepara assegnazione (e blocco portieri se applicabile)
     const pickedItems = [{ playerId: player.id, cost: player.cost }];
     const useBlockGK = room.settings?.blockGK;
     if (targetRole === 'P' && useBlockGK && roles.P === 0) {
-        // Cerca gli altri portieri della stessa squadra
+        // Cerca gli altri portieri della stessa squadra ed assegnali
         const teamMates = state.players.filter(p =>
             p.team === player.team && p.role === 'P' && p.id !== player.id
         );
-
-        let extraCost = 0;
-        teamMates.forEach(m => extraCost += m.cost);
-
-        if (team.credits >= (cost + extraCost)) {
-            teamMates.forEach(m => pickedItems.push({ playerId: m.id, cost: m.cost }));
-        }
+        teamMates.forEach(m => pickedItems.push({ playerId: m.id, cost: m.cost }));
     }
 
     // 8. Applica modifiche

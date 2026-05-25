@@ -234,6 +234,10 @@ python scripts/update_players.py
 
 ## 📝 Changelog
 
+### v6.7.4 (2026-05-25) - **Bypass Limiti Budget nel Draft** 💸
+- ✅ **Bypass Limite Crediti**: Rimosso il blocco dei crediti/budget residui sia nei pick manuali che nell'assegnazione automatica (timeout) e blocco portieri, poiché nel draft puro non c'è un tetto massimo di budget all'acquisto dei giocatori (il costo influenza solo il valore rosa finale e l'ordine dei turni successivi).
+- ✅ **Version Bump**: Aggiornato `version.json` a `6.7.4`.
+
 ### v6.7.3 (2026-05-25) - **Auto-Pick d'Ufficio per Timeout & Nuovi Timer** ⏱️🤖
 - ✅ **Auto-Pick di Ufficio**: Quando scade il timer del turno, non si salta più il turno. Viene invece assegnato automaticamente il giocatore disponibile più caro per il ruolo corrente della squadra, penalizzandone i crediti per i turni successivi.
 - ✅ **Nuove Selezioni Timer**: Opzioni di scelta del timer aggiornate a: 1m, 5m, 10m, 20m, 30m, 1h, 2h, 4h.
