@@ -234,6 +234,11 @@ python scripts/update_players.py
 
 ## 📝 Changelog
 
+### v6.7.9 (2026-05-25) - **Priorità Ruoli in Asta & Salto Squadre Complete** 📋🔄
+- ✅ **Priorità Ruoli su Costo**: Quando la regola `strictRoles` è attiva, l'ordinamento dinamico delle chiamate (`compareTeamsSmart`) dà priorità assoluta alla copertura dei ruoli in ordine P -> D -> C -> A. Chi deve completare un reparto precedente sceglie sempre prima di chi si trova a un reparto successivo, a prescindere dal costo totale della rosa.
+- ✅ **Salto Automatico Squadre Complete**: Le squadre con rose completate (25/25 giocatori) vengono automaticamente saltate durante il draft, prevenendo blocchi o attese del timer inutili.
+- ✅ **Version Bump**: Aggiornato `version.json` a `6.7.9`.
+
 ### v6.7.8 (2026-05-25) - **Tooltip Crea Stanza Aggiornati** 💬ℹ️
 - ✅ **Tooltip Numero Squadre**: Aggiunto un tooltip esplicativo per specificare lo scopo del selettore del numero di partecipanti.
 - ✅ **Tooltip Timer Turno**: Aggiunto un tooltip esplicativo dettagliato che descrive il funzionamento del timer e l'assegnazione automatica d'ufficio alla scadenza del tempo.

@@ -211,6 +211,16 @@ export async function createRoomFromCSV(csvText) {
     // ── Creazione documento Firebase ────────────────────────────────────
     const roomRef = doc(db, 'rooms', roomId);
 
+    const draftOrder = teams.map(t => t.id);
+    let initialTurnIndex = 0;
+    while (initialTurnIndex < draftOrder.length) {
+        const team = teams.find(t => t.id === draftOrder[initialTurnIndex]);
+        if (team && team.roster && team.roster.length < 25) {
+            break;
+        }
+        initialTurnIndex++;
+    }
+
     const roomData = {
         hostId: state.user.uid,
         password: password,
@@ -221,9 +231,9 @@ export async function createRoomFromCSV(csvText) {
             [state.user.uid]: state.user.displayName || state.user.email
         },
         teams: teams,
-        currentTurnIndex: 0,
+        currentTurnIndex: initialTurnIndex,
         roundNumber: 1,
-        draftOrder: teams.map(t => t.id), // Ordine turni iniziale = ordine squadre
+        draftOrder: draftOrder, // Ordine turni iniziale = ordine squadre
         currentPick: null,
         settings: {
             blockGK: false,               // Blocco portieri disabilitato

@@ -48,10 +48,20 @@ export async function startDraft() {
     // Crea ordine turni iniziale = ordine squadre
     const teamIds = state.roomData.teams.map(t => t.id);
 
+    // Trova il primo indice di squadra incompleta
+    let initialTurnIndex = 0;
+    while (initialTurnIndex < teamIds.length) {
+        const team = state.roomData.teams.find(t => t.id === teamIds[initialTurnIndex]);
+        if (team && team.roster && team.roster.length < 25) {
+            break;
+        }
+        initialTurnIndex++;
+    }
+
     await updateDoc(doc(db, "rooms", state.currentRoomId), {
         status: "started",
         draftOrder: teamIds,
-        currentTurnIndex: 0,
+        currentTurnIndex: initialTurnIndex,
         roundNumber: 1,
         turnStartedAt: Date.now(),
         draftHistory: []
@@ -266,6 +276,35 @@ export async function confirmPick() {
         }
     }
 
+    // Salta le squadre che hanno completato tutti i 25 slot
+    const anyIncomplete = newTeams.some(t => (t.roster?.length || 0) < 25);
+    if (!anyIncomplete) {
+        nextTurnIndex = nextDraftOrder.length;
+    } else {
+        let attempts = 0;
+        const maxAttempts = nextDraftOrder.length * 2;
+        while (attempts < maxAttempts) {
+            if (nextTurnIndex >= nextDraftOrder.length) {
+                if (sortMode) {
+                    nextTurnIndex = 0;
+                    break;
+                }
+                nextRound++;
+                const sortedTeams = [...newTeams].sort(compareTeamsSmart);
+                nextDraftOrder = sortedTeams.map(t => t.id);
+                nextTurnIndex = 0;
+            }
+
+            const nextTeamId = nextDraftOrder[nextTurnIndex];
+            const nextTeam = newTeams.find(t => t.id === nextTeamId);
+            if (nextTeam && nextTeam.roster && nextTeam.roster.length < 25) {
+                break;
+            }
+            nextTurnIndex++;
+            attempts++;
+        }
+    }
+
     // ── Preparazione snapshot per Undo ───────────────────────────────
     const lastPickState = {
         teams: JSON.parse(JSON.stringify(room.teams)),
@@ -391,6 +430,32 @@ export function calculateDynamicOrder(teams, type) {
  * // Ritorna: 1 (Team B sceglie prima perché ha il giocatore più costoso più basso)
  */
 export function compareTeamsSmart(a, b) {
+    // Se la regola strictRoles è attiva, la precedenza va ai ruoli mancanti in ordine P -> D -> C -> A
+    if (state.roomData?.settings?.strictRoles) {
+        const getNextRoleNeeded = (team) => {
+            const roles = { P: 0, D: 0, C: 0, A: 0 };
+            if (team.roster) {
+                team.roster.forEach(r => {
+                    const p = state.players.find(pl => String(pl.id) === String(r.playerId));
+                    if (p) roles[p.role]++;
+                });
+            }
+            if (roles.P < 3) return 'P';
+            if (roles.D < 8) return 'D';
+            if (roles.C < 8) return 'C';
+            if (roles.A < 6) return 'A';
+            return 'Done';
+        };
+
+        const rolePriority = { P: 1, D: 2, C: 3, A: 4, Done: 5 };
+        const prioA = rolePriority[getNextRoleNeeded(a)];
+        const prioB = rolePriority[getNextRoleNeeded(b)];
+
+        if (prioA !== prioB) {
+            return prioA - prioB; // Chi ha priorità inferiore (più urgente, es. 'P' < 'D') sceglie prima
+        }
+    }
+
     const valA = a.totalValue || 0;
     const valB = b.totalValue || 0;
 
@@ -447,14 +512,21 @@ export async function applyDraftOrder(type) {
         return;
     }
 
-    // Calcola nuovo ordine
-    const newOrder = calculateDynamicOrder(state.roomData.teams, type);
+    // Trova il primo indice di squadra incompleta nel nuovo ordine
+    let initialTurnIndex = 0;
+    while (initialTurnIndex < newOrder.length) {
+        const team = state.roomData.teams.find(t => t.id === newOrder[initialTurnIndex]);
+        if (team && team.roster && team.roster.length < 25) {
+            break;
+        }
+        initialTurnIndex++;
+    }
 
     // Salva su Firebase
     const roomRef = doc(db, 'rooms', state.currentRoomId);
     await updateDoc(roomRef, {
         draftOrder: newOrder,
-        currentTurnIndex: 0,
+        currentTurnIndex: initialTurnIndex,
         orderSettingsApplied: true,
         "settings.sortMode": type  // Salva modalità per applicarla ad ogni turno
     });
@@ -700,6 +772,35 @@ export async function autoPickForTimeout() {
         }
     }
 
+    // Salta le squadre che hanno completato tutti i 25 slot
+    const anyIncomplete = newTeams.some(t => (t.roster?.length || 0) < 25);
+    if (!anyIncomplete) {
+        nextTurnIndex = nextDraftOrder.length;
+    } else {
+        let attempts = 0;
+        const maxAttempts = nextDraftOrder.length * 2;
+        while (attempts < maxAttempts) {
+            if (nextTurnIndex >= nextDraftOrder.length) {
+                if (sortMode) {
+                    nextTurnIndex = 0;
+                    break;
+                }
+                nextRound++;
+                const sortedTeams = [...newTeams].sort(compareTeamsSmart);
+                nextDraftOrder = sortedTeams.map(t => t.id);
+                nextTurnIndex = 0;
+            }
+
+            const nextTeamId = nextDraftOrder[nextTurnIndex];
+            const nextTeam = newTeams.find(t => t.id === nextTeamId);
+            if (nextTeam && nextTeam.roster && nextTeam.roster.length < 25) {
+                break;
+            }
+            nextTurnIndex++;
+            attempts++;
+        }
+    }
+
     // 10. Salva stato precedente per Undo
     const lastPickState = {
         teams: JSON.parse(JSON.stringify(room.teams)),
@@ -750,9 +851,47 @@ async function fallbackSkipTurn(room) {
     let nextDraftOrder = [...room.draftOrder];
     let nextRound = room.roundNumber;
 
+    const sortMode = room.settings?.sortMode;
+
     if (nextTurnIndex >= room.draftOrder.length) {
-        nextRound++;
-        nextTurnIndex = 0;
+        if (sortMode) {
+            nextDraftOrder = calculateDynamicOrder(room.teams, sortMode);
+            nextTurnIndex = 0;
+        } else {
+            nextRound++;
+            const sortedTeams = [...room.teams].sort(compareTeamsSmart);
+            nextDraftOrder = sortedTeams.map(t => t.id);
+            nextTurnIndex = 0;
+        }
+    }
+
+    // Salta le squadre che hanno completato tutti i 25 slot
+    const anyIncomplete = room.teams.some(t => (t.roster?.length || 0) < 25);
+    if (!anyIncomplete) {
+        nextTurnIndex = nextDraftOrder.length;
+    } else {
+        let attempts = 0;
+        const maxAttempts = nextDraftOrder.length * 2;
+        while (attempts < maxAttempts) {
+            if (nextTurnIndex >= nextDraftOrder.length) {
+                if (sortMode) {
+                    nextTurnIndex = 0;
+                    break;
+                }
+                nextRound++;
+                const sortedTeams = [...room.teams].sort(compareTeamsSmart);
+                nextDraftOrder = sortedTeams.map(t => t.id);
+                nextTurnIndex = 0;
+            }
+
+            const nextTeamId = nextDraftOrder[nextTurnIndex];
+            const nextTeam = room.teams.find(t => t.id === nextTeamId);
+            if (nextTeam && nextTeam.roster && nextTeam.roster.length < 25) {
+                break;
+            }
+            nextTurnIndex++;
+            attempts++;
+        }
     }
 
     try {
@@ -760,6 +899,7 @@ async function fallbackSkipTurn(room) {
         await updateDoc(roomRef, {
             currentTurnIndex: nextTurnIndex,
             roundNumber: nextRound,
+            draftOrder: nextDraftOrder,
             currentPick: null,
             turnStartedAt: Date.now()
         });
