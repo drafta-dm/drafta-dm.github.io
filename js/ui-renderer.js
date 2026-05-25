@@ -176,7 +176,7 @@ export function renderTeamsMatrix(data) {
         // Crea elemento colonna
         const col = document.createElement('div');
         col.className = `matrix-column ${isActive ? 'active-turn' : ''}`;
-        col.style.borderTopColor = getTeamColor(team.id);
+        col.style.borderTopColor = getTeamColor(team.id, data);
 
         // ── Calcolo ruoli attuali ──────────────────────────────────────
         const roles = { P: 0, D: 0, C: 0, A: 0 };

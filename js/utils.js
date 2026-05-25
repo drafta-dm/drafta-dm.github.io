@@ -10,7 +10,7 @@
 // - UI: utility varie per interfaccia
 // ============================================================================
 
-import { views } from './state.js';
+import { views, state } from './state.js';
 
 /**
  * Cambia la view attiva dell'applicazione con transizione CSS
@@ -139,30 +139,41 @@ export function generateRoomId() {
  * @example
  * const color = getTeamColor('team-1');  // "var(--bg-surface)"
  */
-export function getTeamColor(id) {
-    // Palette di 20 colori distinti e vivaci per le squadre
-    const TEAM_PALETTE = [
-        '#00ffc2', // Teal (primary)
-        '#7c3aed', // Viola
-        '#ff6b35', // Arancione
-        '#3b82f6', // Blu
-        '#ef4444', // Rosso
-        '#22c55e', // Verde
-        '#f59e0b', // Ambra
-        '#ec4899', // Rosa
-        '#06b6d4', // Cyan
-        '#a855f7', // Viola chiaro
-        '#f97316', // Arancione scuro
-        '#14b8a6', // Teal chiaro
-        '#e11d48', // Rosso rosa
-        '#8b5cf6', // Indaco
-        '#84cc16', // Lime
-        '#0ea5e9', // Azzurro
-        '#d946ef', // Magenta
-        '#facc15', // Giallo
-        '#64748b', // Grigio ardesia
-        '#fb923c', // Pesca
-    ];
+// Palette di 20 colori distinti e vivaci per le squadre
+export const TEAM_PALETTE = [
+    '#00ffc2', // Teal (primary)
+    '#7c3aed', // Viola
+    '#ff6b35', // Arancione
+    '#3b82f6', // Blu
+    '#ef4444', // Rosso
+    '#22c55e', // Verde
+    '#f59e0b', // Ambra
+    '#ec4899', // Rosa
+    '#06b6d4', // Cyan
+    '#a855f7', // Viola chiaro
+    '#f97316', // Arancione scuro
+    '#14b8a6', // Teal chiaro
+    '#e11d48', // Rosso rosa
+    '#8b5cf6', // Indaco
+    '#84cc16', // Lime
+    '#0ea5e9', // Azzurro
+    '#d946ef', // Magenta
+    '#facc15', // Giallo
+    '#64748b', // Grigio ardesia
+    '#fb923c', // Pesca
+];
+
+export function getTeamColor(id, roomData = null) {
+    let customColor = null;
+    if (roomData && roomData.teams) {
+        const team = roomData.teams.find(t => t.id === id);
+        if (team && team.color) customColor = team.color;
+    } else if (state && state.roomData && state.roomData.teams) {
+        const team = state.roomData.teams.find(t => t.id === id);
+        if (team && team.color) customColor = team.color;
+    }
+
+    if (customColor) return customColor;
 
     // Estrai indice dal team ID (es: "team-0" → 0, "team-15" → 15)
     const match = id?.match?.(/(\d+)/);

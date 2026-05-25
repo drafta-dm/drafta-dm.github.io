@@ -70,7 +70,7 @@ export function renderPlayerList(filterRole = 'all', searchTerm = '') {
         // Genera URL fantacalcio.it
         const playerUrl = getPlayerUrl(p);
         const infoHtml = playerUrl
-            ? `<a href="${playerUrl}" target="_blank" rel="noopener" class="p-info-link" title="Info su fantacalcio.it" onclick="event.stopPropagation()">ℹ️</a>`
+            ? `<a href="${playerUrl}" class="p-info-link" title="Info su fantacalcio.it" onclick="event.stopPropagation(); window.open(this.href, 'fc_player_info', 'width=1000,height=800,scrollbars=yes,resizable=yes'); return false;">ℹ️</a>`
             : '';
 
         li.innerHTML = `

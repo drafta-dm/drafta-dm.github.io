@@ -234,6 +234,11 @@ python scripts/update_players.py
 
 ## 📝 Changelog
 
+### v6.7.5 (2026-05-25) - **Selezione Colori Squadra & Player Info Popup** 🎨ℹ️
+- ✅ **Selezione Colori Squadra**: L'host può ora scegliere manualmente il colore di ogni squadra tramite una griglia di color bubble interattive presente nella modal di gestione squadra.
+- ✅ **Player Info Popup**: I link alle schede fantacalcio.it dei giocatori si aprono ora in un popup dedicato (`window.open` con dimensioni controllate) mantenendo l'utente all'interno della stessa finestra principale senza aprire nuove tab intere.
+- ✅ **Version Bump**: Aggiornato `version.json` a `6.7.5`.
+
 ### v6.7.4 (2026-05-25) - **Bypass Limiti Budget nel Draft** 💸
 - ✅ **Bypass Limite Crediti**: Rimosso il blocco dei crediti/budget residui sia nei pick manuali che nell'assegnazione automatica (timeout) e blocco portieri, poiché nel draft puro non c'è un tetto massimo di budget all'acquisto dei giocatori (il costo influenza solo il valore rosa finale e l'ordine dei turni successivi).
 - ✅ **Version Bump**: Aggiornato `version.json` a `6.7.4`.

@@ -80,8 +80,8 @@ function showDraftSummary(data) {
                 
                 <div class="summary-grid">
                     ${stats.map((s, i) => `
-                        <div class="summary-team-card" style="border-color: ${getTeamColor(s.id)}">
-                            <div class="summary-rank" style="background: ${getTeamColor(s.id)}">#${i + 1}</div>
+                        <div class="summary-team-card" style="border-color: ${getTeamColor(s.id, data)}">
+                            <div class="summary-rank" style="background: ${getTeamColor(s.id, data)}">#${i + 1}</div>
                             <h3>${s.name}</h3>
                             <div class="summary-stats">
                                 <div class="stat">

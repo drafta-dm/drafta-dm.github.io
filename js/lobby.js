@@ -16,7 +16,7 @@ import { db, doc, updateDoc } from './firebase-modules.js';
 
 // Import moduli interni
 import { state, views } from './state.js';                  // Stato globale e riferimenti view
-import { showToast, switchView } from './utils.js';         // Utility UI
+import { showToast, switchView, getTeamColor, TEAM_PALETTE } from './utils.js';         // Utility UI
 import { renderPlayerList } from './player-filters.js';    // Rendering lista giocatori
 import { updateDraftUI } from './ui-renderer.js';          // Aggiornamento UI draft
 
@@ -309,6 +309,7 @@ export async function saveTeamManager() {
     const teamId = document.getElementById('tm-team-id').value;
     const name = document.getElementById('tm-team-name').value;
     const userId = document.getElementById('tm-user-select').value;
+    const color = document.getElementById('tm-team-color').value;
 
     // Trova squadra da modificare
     const teamIndex = state.roomData.teams.findIndex(t => t.id === teamId);
@@ -316,6 +317,7 @@ export async function saveTeamManager() {
 
     const newTeams = [...state.roomData.teams];
     newTeams[teamIndex].name = name;
+    newTeams[teamIndex].color = color;
 
     // Assegna o rimuove proprietario
     if (userId) {
@@ -358,6 +360,42 @@ window.assignTeam = function (teamId) {
     // ── Popola campi modal ──────────────────────────────────────────────
     document.getElementById('tm-team-id').value = team.id;
     document.getElementById('tm-team-name').value = team.name;
+
+    // Colore squadra
+    const currentColor = team.color || getTeamColor(team.id);
+    document.getElementById('tm-team-color').value = currentColor;
+    const colorPickerContainer = document.getElementById('tm-color-picker');
+    colorPickerContainer.innerHTML = '';
+
+    TEAM_PALETTE.forEach(color => {
+        const bubble = document.createElement('div');
+        bubble.className = 'color-bubble';
+        bubble.style.background = color;
+        bubble.style.borderRadius = '50%';
+        bubble.style.aspectRatio = '1';
+        bubble.style.cursor = 'pointer';
+        bubble.style.border = color.toLowerCase() === currentColor.toLowerCase() ? '2px solid white' : '2px solid transparent';
+        bubble.style.transition = 'transform 0.2s, border-color 0.2s';
+        if (color.toLowerCase() === currentColor.toLowerCase()) {
+            bubble.style.boxShadow = '0 0 6px rgba(255,255,255,0.6)';
+        }
+
+        bubble.addEventListener('click', () => {
+            const bubbles = colorPickerContainer.querySelectorAll('.color-bubble');
+            bubbles.forEach(b => {
+                b.style.border = '2px solid transparent';
+                b.style.boxShadow = 'none';
+            });
+            bubble.style.border = '2px solid white';
+            bubble.style.boxShadow = '0 0 6px rgba(255,255,255,0.6)';
+            document.getElementById('tm-team-color').value = color;
+        });
+
+        bubble.addEventListener('mouseenter', () => bubble.style.transform = 'scale(1.15)');
+        bubble.addEventListener('mouseleave', () => bubble.style.transform = 'scale(1)');
+
+        colorPickerContainer.appendChild(bubble);
+    });
 
     const select = document.getElementById('tm-user-select');
     select.innerHTML = '<option value="">-- Seleziona Utente --</option>';
