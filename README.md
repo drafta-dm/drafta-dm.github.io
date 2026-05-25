@@ -234,6 +234,13 @@ python scripts/update_players.py
 
 ## 📝 Changelog
 
+### v6.7.6 (2026-05-25) - **Riepilogo Fine Draft Potenziato & Fix N/A** 🏆📊
+- ✅ **Fix Best Pick N/A**: Corretto il bug per cui il miglior acquisto (best pick) mostrava "N/A" invece del nome del giocatore (ora viene risolto correttamente tramite lookup dello stato giocatori globale).
+- ✅ **Bypass Crediti Rimasti**: Rimosso il dato sui crediti rimasti dal riepilogo (non significativo in modalità draft).
+- ✅ **Ripartizione Spesa per Ruolo**: Aggiunto sotto ogni squadra un grafico/dettaglio compatto con la spesa effettuata per ruolo (P, D, C, A) colorata a tema.
+- ✅ **Statistiche Globali del Draft**: Inserito un pannello di Highlights a inizio riepilogo che mostra il record dell'asta (Top Pick assoluto con relativa squadra), il giocatore più economico acquistato (Affare) e la spesa complessiva di tutta la lega con costo medio a giocatore.
+- ✅ **Version Bump**: Aggiornato `version.json` a `6.7.6`.
+
 ### v6.7.5 (2026-05-25) - **Selezione Colori Squadra & Player Info Popup** 🎨ℹ️
 - ✅ **Selezione Colori Squadra**: L'host può ora scegliere manualmente il colore di ogni squadra tramite una griglia di color bubble interattive presente nella modal di gestione squadra.
 - ✅ **Player Info Popup**: I link alle schede fantacalcio.it dei giocatori si aprono ora in un popup dedicato (`window.open` con dimensioni controllate) mantenendo l'utente all'interno della stessa finestra principale senza aprire nuove tab intere.
