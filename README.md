@@ -234,6 +234,10 @@ python scripts/update_players.py
 
 ## 📝 Changelog
 
+### v6.7.2 (2026-05-25) - **Supporto Link in Dashboard** ☕
+- ✅ **Support Button in Dashboard**: Aggiunto il pulsante "Buy me a beer! 🍺" anche nella schermata di dashboard (selezione stanza) oltre che alla login.
+- ✅ **Version Bump**: Aggiornato `version.json` a `6.7.2`.
+
 ### v6.7 (2026-05-25) - **Riepilogo, Mobile Nav & Final Polish** 🏆📱
 - ✅ **Riepilogo Fine Draft**: Overlay automatico a fine asta con ranking squadre, crediti spesi/rimasti, media costo, best pick per squadra.
 - ✅ **Mobile Bottom Nav**: Barra di navigazione fissa in basso su mobile con tabs rapide per Giocatori, Squadre, Chat e Log.
