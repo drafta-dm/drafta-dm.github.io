@@ -520,6 +520,9 @@ export async function applyDraftOrder(type) {
         return;
     }
 
+    // Calcola nuovo ordine
+    const newOrder = calculateDynamicOrder(state.roomData.teams, type);
+
     // Trova il primo indice di squadra incompleta nel nuovo ordine
     let initialTurnIndex = 0;
     while (initialTurnIndex < newOrder.length) {
