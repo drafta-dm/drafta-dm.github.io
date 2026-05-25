@@ -234,6 +234,10 @@ python scripts/update_players.py
 
 ## 📝 Changelog
 
+### v6.8.1 (2026-05-25) - **Fix Modal Impostazioni Ordine su Re-Import** 🛠️📋
+- ✅ **Fix Modal Ordine Turni**: Risolto il bug per cui la modal di scelta dell'ordine dei turni non appariva re-importando un CSV o rientrando in stanze differenti nella stessa sessione di navigazione (ora il flag di stato `state.hasShownOrderModal` viene correttamente resettato a `false` ad ogni ingresso stanza).
+- ✅ **Version Bump**: Aggiornato `version.json` a `6.8.1`.
+
 ### v6.8.0 (2026-05-25) - **Priorità Ruoli in Asta & Salto Squadre Complete** 📋🔄
 - ✅ **Priorità Ruoli su Costo**: Quando la regola `strictRoles` è attiva, l'ordinamento dinamico delle chiamate (`compareTeamsSmart`) dà priorità assoluta alla copertura dei ruoli in ordine P -> D -> C -> A. Chi deve completare un reparto precedente sceglie sempre prima di chi si trova a un reparto successivo, a prescindere dal costo totale della rosa.
 - ✅ **Salto Automatico Squadre Complete**: Le squadre con rose completate (25/25 giocatori) vengono automaticamente saltate durante il draft, prevenendo blocchi o attese del timer inutili.

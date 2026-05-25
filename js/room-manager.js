@@ -294,6 +294,7 @@ export function enterRoom(roomId, isHost, password = null) {
     // ── Inizializzazione stato ──────────────────────────────────────────
     state.currentRoomId = roomId;
     state.isHost = isHost;
+    state.hasShownOrderModal = false; // Reset flag modal per mostrare la modal dell'ordine nella nuova stanza
 
     // Mostra ID stanza nella lobby
     document.getElementById('lobby-room-id').textContent = roomId;
