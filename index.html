@@ -501,16 +501,16 @@
             <p>Scegli il criterio per stabilire i turni:</p>
             <div style="display:flex; flex-direction:column; gap:10px; margin-top:15px;">
                 <button id="btn-order-strict" class="btn btn-outline" style="text-align:left;">
-                    <b>🏷️ Per Ruolo Mancante</b><br>
-                    <small>Chi è più indietro coi ruoli sceglie SEMPRE per primo.</small>
+                    <b>🏷️ Per Ruolo Mancante (Consigliato per riparazione)</b><br>
+                    <small>Chi deve completare i reparti prima (P -> D -> C -> A) sceglie prima. A parità di reparto, sceglie chi ha speso meno.</small>
                 </button>
                 <button id="btn-order-count" class="btn btn-outline" style="text-align:left;">
-                    <b>🔢 Per Numero Giocatori</b><br>
-                    <small>Chi ha meno giocatori sceglie SEMPRE per primo.</small>
+                    <b>🔢 Per Numero Giocatori (In base agli svincolati)</b><br>
+                    <small>Chi ha meno giocatori in rosa (più slot liberi) sceglie prima, indipendentemente dal ruolo che gli manca.</small>
                 </button>
                 <button id="btn-order-value" class="btn btn-outline" style="text-align:left;">
-                    <b>💎 Per Valore Rosa</b><br>
-                    <small>Chi ha speso meno sceglie SEMPRE per primo.</small>
+                    <b>💎 Per Valore Rosa (Criterio standard)</b><br>
+                    <small>Chi ha speso meno crediti in totale sceglie prima, indipendentemente dai ruoli mancanti.</small>
                 </button>
             </div>
             <div style="margin-top:20px; text-align:right;">
