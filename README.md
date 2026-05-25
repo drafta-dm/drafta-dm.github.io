@@ -234,6 +234,9 @@ python scripts/update_players.py
 
 ## 📝 Changelog
 
+### v6.4.2 (2026-05-25) - **Pick confirmation logic** ⚙️
+- ✅ **Richiesta conferma pick per host**: Aggiunta una finestra di conferma quando l'host forza un pick per conto di un'altra squadra (evitando selezioni accidentali).
+
 ### v6.4.1 (2026-05-25) - **Firestore Rules Patch** 🔒
 - ✅ **Risolto bug di join ospiti**: Sostituita la logica di comparazione dei set nelle regole di sicurezza di Firestore con controlli nativi su liste (basati su `hasAll`, `size` e operatore `in`), eliminando il problema di permessi (`Missing or insufficient permissions`) che bloccava il primo accesso dei partecipanti non-host.
 

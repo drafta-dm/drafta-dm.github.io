@@ -170,6 +170,14 @@ export async function confirmPick() {
         return showToast(`Non è il tuo turno! Tocca a: ${currentTeam ? currentTeam.name : 'Altra Squadra'}`);
     }
 
+    // Se l'host forza il pick per un'altra squadra, chiedi conferma
+    if (state.isHost && state.user.uid !== currentTeam.ownerUid) {
+        const confirmMsg = `Confermi di fare il pick per la squadra "${currentTeam ? currentTeam.name : 'Altra Squadra'}"?`;
+        if (!confirm(confirmMsg)) {
+            return;
+        }
+    }
+
     const teamIndex = state.roomData.teams.findIndex(t => t.id === currentTeamId);
     const team = state.roomData.teams[teamIndex];
 
