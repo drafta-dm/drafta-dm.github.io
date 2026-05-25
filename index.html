@@ -43,8 +43,11 @@
                         </select>
                     </div>
                     <div style="margin-bottom:15px; text-align:left;">
-                        <label style="color:var(--text-muted); font-size:0.8rem; display:block; margin-bottom:8px;">Colore Squadra</label>
-                        <div id="tm-color-picker" style="display:grid; grid-template-columns: repeat(10, 1fr); gap: 8px;">
+                        <label
+                            style="color:var(--text-muted); font-size:0.8rem; display:block; margin-bottom:8px;">Colore
+                            Squadra</label>
+                        <div id="tm-color-picker"
+                            style="display:grid; grid-template-columns: repeat(10, 1fr); gap: 8px;">
                             <!-- JS populated color bubbles -->
                         </div>
                         <input type="hidden" id="tm-team-color">
@@ -78,7 +81,8 @@
                 <div style="text-align:center; font-size:3rem; margin-bottom:1rem;">🔔</div>
                 <h2 class="font-title" style="color:var(--primary); text-align:center;">Abilita Notifiche</h2>
                 <div class="modal-body">
-                    <p style="color:var(--text-muted); margin-bottom:1rem;">Ricevi notifiche quando è il tuo turno durante
+                    <p style="color:var(--text-muted); margin-bottom:1rem;">Ricevi notifiche quando è il tuo turno
+                        durante
                         il draft!</p>
                     <ul
                         style="text-align:left; color:var(--text-muted); font-size:0.9rem; margin-bottom:1.5rem; padding-left:20px;">
@@ -99,7 +103,8 @@
             <div class="modal-card">
                 <h2 class="font-title">Ordine Iniziale</h2>
                 <div class="modal-body">
-                    <p style="color:var(--text-muted); margin-bottom:1.5rem;">Genera l'ordine casuale per la prima tornata
+                    <p style="color:var(--text-muted); margin-bottom:1.5rem;">Genera l'ordine casuale per la prima
+                        tornata
                         di chiamate.</p>
                     <div class="order-preview" id="order-preview-list"
                         style="margin-bottom:15px; max-height:150px; overflow-y:auto; background:#111; padding:10px; border-radius:6px; font-size:0.85rem; text-align:left;">
@@ -108,7 +113,8 @@
                 </div>
                 <div style="display:flex; gap:10px;">
                     <button id="btn-gen-random-start" class="btn btn-outline" style="flex:1;">🎲 Genera Random</button>
-                    <button id="btn-confirm-start-order" class="btn btn-primary" style="flex:1;">Conferma & Inizia</button>
+                    <button id="btn-confirm-start-order" class="btn btn-primary" style="flex:1;">Conferma &
+                        Inizia</button>
                 </div>
             </div>
         </div>
@@ -118,13 +124,17 @@
             <div class="modal-card" style="max-width: 400px; text-align: center;">
                 <h2 class="font-title">Profilo Utente</h2>
                 <div class="modal-body" style="margin: 20px 0;">
-                    <img id="profile-modal-avatar" src="" alt="Avatar" style="width: 80px; height: 80px; border-radius: 50%; margin-bottom: 15px; border: 2px solid var(--primary); object-fit: cover;">
+                    <img id="profile-modal-avatar" src="" alt="Avatar"
+                        style="width: 80px; height: 80px; border-radius: 50%; margin-bottom: 15px; border: 2px solid var(--primary); object-fit: cover;">
                     <h3 id="profile-modal-name" style="margin: 5px 0; font-size: 1.2rem;">--</h3>
-                    <p id="profile-modal-email" style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">--</p>
+                    <p id="profile-modal-email"
+                        style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">--</p>
                 </div>
                 <div style="display:flex; gap:10px;">
-                    <button class="btn btn-outline" style="flex:1" onclick="document.getElementById('modal-profile').classList.add('hidden')">Chiudi</button>
-                    <button id="btn-profile-logout" class="btn" style="flex:1; background:#d9534f; color:white;">Disconnetti</button>
+                    <button class="btn btn-outline" style="flex:1"
+                        onclick="document.getElementById('modal-profile').classList.add('hidden')">Chiudi</button>
+                    <button id="btn-profile-logout" class="btn"
+                        style="flex:1; background:#d9534f; color:white;">Disconnetti</button>
                 </div>
             </div>
         </div>
@@ -132,7 +142,7 @@
         <!-- VIEW: LOGIN -->
         <section id="view-login" class="view active">
             <div class="login-card">
-                <h1>DRAFTA <small style="font-size:1rem; color:var(--text-muted); opacity:0.7;">v6.7</small></h1>
+                <h1>DRAFTA <small style="font-size:1rem; color:var(--text-muted); opacity:0.7;">v6.8</small></h1>
                 <p class="subtitle">Live Serie A Fantasy Draft</p>
 
                 <div class="login-actions">
@@ -143,7 +153,8 @@
 
                 <div class="support-link" style="margin-top: 24px; opacity: 0.85; transition: opacity 0.3s;">
                     <a href="https://www.buymeacoffee.com/davidemariotti_dev" target="_blank" rel="noopener">
-                        <img src="https://img.buymeacoffee.com/button-api/?text=Buy me a beer!&emoji=🍺&slug=davidemariotti_dev&button_colour=00ffc2&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=FFDD00" alt="Buy me a beer" style="height: 40px; border-radius: 8px;">
+                        <img src="https://img.buymeacoffee.com/button-api/?text=Buy me a beer!&emoji=🍺&slug=davidemariotti_dev&button_colour=00ffc2&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=FFDD00"
+                            alt="Buy me a beer" style="height: 40px; border-radius: 8px;">
                     </a>
                 </div>
             </div>
@@ -166,9 +177,11 @@
                     <!-- URL input removed - not needed -->
 
                     <div class="input-group" style="margin-top:10px;">
-                        <label for="input-team-count" style="font-size:0.8rem; color:var(--text-muted); display:flex; align-items:center;">
+                        <label for="input-team-count"
+                            style="font-size:0.8rem; color:var(--text-muted); display:flex; align-items:center;">
                             Numero Squadre
-                            <span class="info-icon" data-tooltip="Seleziona il numero totale di squadre partecipanti che prenderanno parte all'asta del draft.">?</span>
+                            <span class="info-icon"
+                                data-tooltip="Seleziona il numero totale di squadre partecipanti che prenderanno parte all'asta del draft.">?</span>
                         </label>
                         <select id="input-team-count"
                             style="padding:12px; background:var(--bg-surface); color:white; border:none; border-radius:6px; font-size:1rem;">
@@ -206,9 +219,11 @@
                     </div>
 
                     <div class="input-group" style="margin-top:10px;">
-                        <label for="input-timer-duration" style="font-size:0.8rem; color:var(--text-muted); display:flex; align-items:center;">
+                        <label for="input-timer-duration"
+                            style="font-size:0.8rem; color:var(--text-muted); display:flex; align-items:center;">
                             Timer Turno
-                            <span class="info-icon" data-tooltip="Tempo massimo a disposizione per ciascuna chiamata. Allo scadere del tempo, il sistema assegna automaticamente il giocatore disponibile più costoso nel ruolo richiesto.">?</span>
+                            <span class="info-icon"
+                                data-tooltip="Tempo massimo a disposizione per ciascuna chiamata. Allo scadere del tempo, il sistema assegna automaticamente il giocatore disponibile più costoso nel ruolo richiesto.">?</span>
                         </label>
                         <select id="input-timer-duration"
                             style="padding:12px; background:var(--bg-surface); color:white; border:none; border-radius:6px; font-size:1rem;">
@@ -249,9 +264,12 @@
                 </div>
             </div>
 
-            <div class="support-link" style="margin-top: 30px; text-align: center; opacity: 0.85; transition: opacity 0.3s;">
-                <a href="https://www.buymeacoffee.com/davidemariotti_dev" target="_blank" rel="noopener" style="display: inline-block;">
-                    <img src="https://img.buymeacoffee.com/button-api/?text=Buy me a beer!&emoji=🍺&slug=davidemariotti_dev&button_colour=00ffc2&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=FFDD00" alt="Buy me a beer" style="height: 40px; border-radius: 8px;">
+            <div class="support-link"
+                style="margin-top: 30px; text-align: center; opacity: 0.85; transition: opacity 0.3s;">
+                <a href="https://www.buymeacoffee.com/davidemariotti_dev" target="_blank" rel="noopener"
+                    style="display: inline-block;">
+                    <img src="https://img.buymeacoffee.com/button-api/?text=Buy me a beer!&emoji=🍺&slug=davidemariotti_dev&button_colour=00ffc2&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=FFDD00"
+                        alt="Buy me a beer" style="height: 40px; border-radius: 8px;">
                 </a>
             </div>
         </section>
@@ -305,8 +323,7 @@
             <!-- HEADER -->
             <header class="draft-header">
                 <div class="header-left" style="display:flex; align-items:center; gap:20px;">
-                    <h1 id="draft-logo-home" class="font-title"
-                        style="margin:0; cursor:pointer; user-select:none;"
+                    <h1 id="draft-logo-home" class="font-title" style="margin:0; cursor:pointer; user-select:none;"
                         title="Torna alla Home">DRAFT<span style="color:var(--primary)">A</span> <small
                             style="font-size:0.4em; color:var(--text-muted); font-weight:normal;">v6.5</small></h1>
                     <div id="turn-indicator-box"
@@ -322,7 +339,8 @@
                             <div id="timer-bar-fill" class="timer-bar-fill"></div>
                         </div>
                         <span id="timer-text" class="timer-text">--</span>
-                        <button id="btn-timer-pause" class="btn-timer-control hidden" title="Pausa/Riprendi Timer">⏸️</button>
+                        <button id="btn-timer-pause" class="btn-timer-control hidden"
+                            title="Pausa/Riprendi Timer">⏸️</button>
                     </div>
                 </div>
 
@@ -339,15 +357,18 @@
                             1</span>
                     </div>
                     <!-- Host-only Undo Pick -->
-                    <button id="btn-undo-pick" class="btn-header-action" style="display:none;" title="Annulla ultimo pick">↩️</button>
+                    <button id="btn-undo-pick" class="btn-header-action" style="display:none;"
+                        title="Annulla ultimo pick">↩️</button>
                     <!-- Draft History Toggle -->
                     <button id="btn-toggle-history" class="btn-header-action" title="Cronologia pick">📜</button>
                     <!-- Chat Toggle -->
-                    <button id="btn-toggle-chat" class="btn-header-action" title="Chat" style="position:relative;">💬<span id="chat-badge" class="chat-badge hidden">0</span></button>
+                    <button id="btn-toggle-chat" class="btn-header-action" title="Chat"
+                        style="position:relative;">💬<span id="chat-badge" class="chat-badge hidden">0</span></button>
                     <!-- Sound Toggle -->
                     <button id="btn-toggle-sound" class="btn-header-action" title="Suoni">🔊</button>
                     <!-- Host-only Export CSV (icona discreta durante il draft, visibile a fine asta) -->
-                    <button id="btn-export-csv" class="btn-csv-icon" style="display:none;" title="Esporta risultati CSV">
+                    <button id="btn-export-csv" class="btn-csv-icon" style="display:none;"
+                        title="Esporta risultati CSV">
                         📥 <span class="csv-label">Export CSV</span>
                     </button>
                     <img id="header-user-avatar" src=""
@@ -487,7 +508,8 @@
                         </div>
                     </div>
                 </div>
-                <button id="btn-copy-room-link" class="btn btn-outline btn-block" style="margin-bottom:8px;">📋 Copia Link Invito</button>
+                <button id="btn-copy-room-link" class="btn btn-outline btn-block" style="margin-bottom:8px;">📋 Copia
+                    Link Invito</button>
                 <button id="btn-modal-enter" class="btn btn-primary btn-block">Entra nella Stanza</button>
             </div>
         </div>
@@ -502,15 +524,18 @@
             <div style="display:flex; flex-direction:column; gap:10px; margin-top:15px;">
                 <button id="btn-order-strict" class="btn btn-outline" style="text-align:left;">
                     <b>🏷️ Per Ruolo Mancante (Consigliato per riparazione)</b><br>
-                    <small>Chi deve completare i reparti prima (P -> D -> C -> A) sceglie prima. A parità di reparto, sceglie chi ha speso meno.</small>
+                    <small>Chi deve completare i reparti prima (P -> D -> C -> A) sceglie prima. A parità di reparto,
+                        sceglie chi ha speso meno.</small>
                 </button>
                 <button id="btn-order-count" class="btn btn-outline" style="text-align:left;">
                     <b>🔢 Per Numero Giocatori (In base agli svincolati)</b><br>
-                    <small>Chi ha meno giocatori in rosa (più slot liberi) sceglie prima, indipendentemente dal ruolo che gli manca.</small>
+                    <small>Chi ha meno giocatori in rosa (più slot liberi) sceglie prima, indipendentemente dal ruolo
+                        che gli manca.</small>
                 </button>
                 <button id="btn-order-value" class="btn btn-outline" style="text-align:left;">
                     <b>💎 Per Valore Rosa (Criterio standard)</b><br>
-                    <small>Chi ha speso meno crediti in totale sceglie prima, indipendentemente dai ruoli mancanti.</small>
+                    <small>Chi ha speso meno crediti in totale sceglie prima, indipendentemente dai ruoli
+                        mancanti.</small>
                 </button>
             </div>
             <div style="margin-top:20px; text-align:right;">
