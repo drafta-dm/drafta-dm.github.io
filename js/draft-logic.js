@@ -385,11 +385,19 @@ export function calculateDynamicOrder(teams, type) {
         const valueComparison = compareTeamsSmart(a, b);
 
         if (type === 'strict') {
-            // Ordine per ruoli: P -> D -> C -> A
-            if (rA.P !== rB.P) return rA.P - rB.P;
-            if (rA.D !== rB.D) return rA.D - rB.D;
-            if (rA.C !== rB.C) return rA.C - rB.C;
-            if (rA.A !== rB.A) return rA.A - rB.A;
+            // Ordine per fase del ruolo corrente da completare: P -> D -> C -> A
+            const getNextRolePriority = (r) => {
+                if (r.P < 3) return 1;
+                if (r.D < 8) return 2;
+                if (r.C < 8) return 3;
+                if (r.A < 6) return 4;
+                return 5;
+            };
+            const prioA = getNextRolePriority(rA);
+            const prioB = getNextRolePriority(rB);
+            if (prioA !== prioB) {
+                return prioA - prioB;
+            }
             return valueComparison;  // Tie-breaker
         } else if (type === 'count') {
             // Ordine per numero totale giocatori
