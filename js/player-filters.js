@@ -10,7 +10,8 @@
 // ============================================================================
 
 // Import moduli interni
-import { state } from './state.js';                          // Stato globale (players, roomData)
+import { state } from './state.js';
+import { getPlayerUrl } from './player-utils.js';                          // Stato globale (players, roomData)
 import { selectPlayerForAuction } from './draft-logic.js';   // Funzione per selezionare giocatore
 import { playerService } from './player-service.js';         // Servizio giocatori (timestamp DB)
 
@@ -66,6 +67,12 @@ export function renderPlayerList(filterRole = 'all', searchTerm = '') {
         // Determina il colore CSS del badge ruolo
         const roleColorClass = p.role === 'P' ? 'gk' : p.role === 'D' ? 'def' : p.role === 'C' ? 'mid' : 'att';
 
+        // Genera URL fantacalcio.it
+        const playerUrl = getPlayerUrl(p);
+        const infoHtml = playerUrl
+            ? `<a href="${playerUrl}" target="_blank" rel="noopener" class="p-info-link" title="Info su fantacalcio.it" onclick="event.stopPropagation()">ℹ️</a>`
+            : '';
+
         li.innerHTML = `
             <span class="p-role-badge role-${p.role}" style="background:var(--role-${roleColorClass})">${p.role}</span>
             <div class="p-info">
@@ -73,6 +80,7 @@ export function renderPlayerList(filterRole = 'all', searchTerm = '') {
                 <span class="p-team">${p.team}</span>
             </div>
             <span class="p-value">${p.cost}</span>
+            ${infoHtml}
         `;
 
         // Event listener per selezione giocatore

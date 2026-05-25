@@ -234,6 +234,16 @@ python scripts/update_players.py
 
 ## 📝 Changelog
 
+### v6.6 (2026-05-25) - **Colori, Info Link & Condivisione** 🎨ℹ️🔗
+- ✅ **Colori Squadra**: Palette di 20 colori vivaci assegnati automaticamente ad ogni squadra. Bordo colorato sulle colonne della matrice.
+- ✅ **Player Info Link**: Icona ℹ️ accanto ad ogni giocatore nella lista, link diretto alla pagina fantacalcio.it del giocatore.
+- ✅ **Share via Link**: Pulsante "📋 Copia Link Invito" nella modal di creazione stanza. Link con auto-join (parametri URL room + pass).
+- ✅ **Deep Link Auto-Join**: Gli ospiti che aprono il link vengono automaticamente uniti alla stanza dopo il login.
+
+### v6.5.2 (2026-05-25) - **Chat & Effetti Sonori** 💬🔊
+- ✅ **Chat in Stanza**: Messaggi real-time via Firestore sub-collection. Emoji rapide, badge unread, XSS sanitization.
+- ✅ **Effetti Sonori**: Feedback audio via Web Audio API (turn chime, pick success, nudge, timer tick, chat pop). Toggle mute persistente in localStorage.
+
 ### v6.5 (2026-05-25) - **Timer, Undo & Draft History** ⏱️↩️📜
 - ✅ **Timer Turno**: Countdown configurabile per ogni turno (30s, 60s, 90s, 120s, illimitato). Barra animata con transizione colore verde→giallo→rosso. Auto-skip se scaduto. Host può mettere in pausa/riprendere.
 - ✅ **Undo Pick (solo host)**: Pulsante ↩️ per annullare l'ultimo pick. Ripristina completamente roster, crediti, turno e round. Disponibile solo dopo il primo pick.

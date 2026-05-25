@@ -403,6 +403,20 @@
     margin-top: 1rem;
 }
 
+/* Player Info Link */
+.p-info-link {
+    text-decoration: none;
+    font-size: 0.75rem;
+    opacity: 0.4;
+    transition: opacity 0.2s;
+    margin-left: 4px;
+    flex-shrink: 0;
+}
+
+.p-info-link:hover {
+    opacity: 1;
+}
+
 /* ============================================================================
    TIMER COUNTDOWN
    ============================================================================ */

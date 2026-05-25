@@ -736,6 +736,21 @@ export function setupRoomListeners() {
             showToast("Errore pulsante: " + e.message);
         }
     });
+
+    // ── Modal Stanza Creata: Copia Link Invito ──────────────────────────
+    document.getElementById('btn-copy-room-link').addEventListener('click', () => {
+        const roomId = document.getElementById('modal-room-id').innerText.trim();
+        const password = document.getElementById('modal-room-pass').innerText.trim();
+        const baseUrl = window.location.origin + window.location.pathname;
+        const link = `${baseUrl}?room=${roomId}&pass=${password}`;
+
+        navigator.clipboard.writeText(link).then(() => {
+            showToast('📋 Link copiato negli appunti!');
+        }).catch(() => {
+            // Fallback per browser che non supportano Clipboard API
+            prompt('Copia questo link:', link);
+        });
+    });
 }
 
 /**

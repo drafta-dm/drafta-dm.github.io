@@ -16,7 +16,7 @@ import { state } from './state.js';                                             
 import { showToast, switchView } from './utils.js';                              // Utilità UI
 import { verifyAppVersion } from './version-check.js';                           // Controllo versione
 import { initializeFCM, checkAndShowNotificationModal } from './notifications.js'; // Sistema notifiche
-import { loadRecentRooms, leaveRoom } from './room-manager.js';                             // Gestione stanze
+import { loadRecentRooms, leaveRoom, joinRoom } from './room-manager.js';                             // Gestione stanze
 
 /**
  * Inizializza il sistema di autenticazione Firebase
@@ -67,6 +67,22 @@ export function initAuth() {
 
             // Mostra la modal per richiedere i permessi di notifica (solo al primo accesso)
             checkAndShowNotificationModal();
+
+            // ── Auto-join da URL deep link ──────────────────────────────────
+            const urlParams = new URLSearchParams(window.location.search);
+            const roomParam = urlParams.get('room');
+            const passParam = urlParams.get('pass');
+            if (roomParam) {
+                // Pre-compila e auto-join
+                const roomInput = document.getElementById('input-room-id');
+                const passInput = document.getElementById('input-room-pass');
+                if (roomInput) roomInput.value = roomParam.toUpperCase();
+                if (passInput && passParam) passInput.value = passParam;
+                // Pulisci URL per evitare re-join al refresh
+                window.history.replaceState({}, document.title, window.location.pathname);
+                // Auto-join dopo breve delay per permettere rendering dashboard
+                setTimeout(() => joinRoom(), 500);
+            }
 
         } else {
             // ── Utente non autenticato ──────────────────────────────────────

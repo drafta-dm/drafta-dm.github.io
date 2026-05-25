@@ -140,9 +140,35 @@ export function generateRoomId() {
  * const color = getTeamColor('team-1');  // "var(--bg-surface)"
  */
 export function getTeamColor(id) {
-    // Placeholder: colore neutro per tutte le squadre
-    // Possibile estensione: hash ID per selezionare da palette
-    return 'var(--bg-surface)';
+    // Palette di 20 colori distinti e vivaci per le squadre
+    const TEAM_PALETTE = [
+        '#00ffc2', // Teal (primary)
+        '#7c3aed', // Viola
+        '#ff6b35', // Arancione
+        '#3b82f6', // Blu
+        '#ef4444', // Rosso
+        '#22c55e', // Verde
+        '#f59e0b', // Ambra
+        '#ec4899', // Rosa
+        '#06b6d4', // Cyan
+        '#a855f7', // Viola chiaro
+        '#f97316', // Arancione scuro
+        '#14b8a6', // Teal chiaro
+        '#e11d48', // Rosso rosa
+        '#8b5cf6', // Indaco
+        '#84cc16', // Lime
+        '#0ea5e9', // Azzurro
+        '#d946ef', // Magenta
+        '#facc15', // Giallo
+        '#64748b', // Grigio ardesia
+        '#fb923c', // Pesca
+    ];
+
+    // Estrai indice dal team ID (es: "team-0" → 0, "team-15" → 15)
+    const match = id?.match?.(/(\d+)/);
+    const index = match ? parseInt(match[1]) : 0;
+
+    return TEAM_PALETTE[index % TEAM_PALETTE.length];
 }
 
 /**
