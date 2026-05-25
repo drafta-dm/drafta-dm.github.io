@@ -25,6 +25,7 @@ import { playerService } from './player-service.js';            // Servizio cari
 import { renderLobbyOrDraft } from './lobby.js';                 // Routing lobby/draft
 import { renderPlayerList } from './player-filters.js';          // Rendering lista giocatori
 import { renderOrderPreview } from './draft-logic.js';           // Preview ordine turni
+import { renderDraftHistory } from './draft-history.js';         // Cronologia pick
 
 // ── Variabili modulo ────────────────────────────────────────────────────
 // Unsubscribe function per il listener real-time della stanza corrente
@@ -66,6 +67,7 @@ export async function createRoom() {
     const teamCount = parseInt(document.getElementById('input-team-count').value);
     const blockGK = document.getElementById('input-block-gk').checked;
     const strictRoles = document.getElementById('input-strict-roles').checked;
+    const timerDuration = parseInt(document.getElementById('input-timer-duration').value) || 0;
 
     // ── Creazione struttura squadre vuote ───────────────────────────────
     const teams = [];
@@ -100,7 +102,8 @@ export async function createRoom() {
         currentPick: null,                    // Giocatore selezionato per preview
         settings: {
             blockGK: blockGK,                 // Se true, prende automaticamente tutti 3 GK della squadra
-            strictRoles: strictRoles          // Se true, ordine obbligatorio P->D->C->A
+            strictRoles: strictRoles,         // Se true, ordine obbligatorio P->D->C->A
+            timerDuration: timerDuration      // Secondi per turno (0 = illimitato)
         },
         createdAt: serverTimestamp()
     };
@@ -405,12 +408,39 @@ export function enterRoom(roomId, isHost, password = null) {
             if (btnCsv) btnCsv.style.display = 'none';
         }
 
+        // Mostra/nascondi pulsante Undo per host
+        const btnUndo = document.getElementById('btn-undo-pick');
+        if (btnUndo) {
+            btnUndo.style.display = (state.isHost && data.lastPickState) ? 'inline-block' : 'none';
+        }
+
+        // Timer: mostra/nascondi in base a settings
+        const timerContainer = document.getElementById('timer-container');
+        const timerDuration = data.settings?.timerDuration || 0;
+        if (timerContainer) {
+            if (timerDuration > 0 && data.status === 'started') {
+                timerContainer.classList.remove('hidden');
+                updateTimerUI(data);
+            } else {
+                timerContainer.classList.add('hidden');
+            }
+        }
+
+        // Pulsante pausa timer solo per host
+        const btnTimerPause = document.getElementById('btn-timer-pause');
+        if (btnTimerPause) {
+            btnTimerPause.classList.toggle('hidden', !state.isHost || timerDuration === 0);
+        }
+
         // Aggiorna avatar utente nell'header
         const avatarEl = document.getElementById('header-user-avatar');
         avatarEl.src = state.user.photoURL || 'https://via.placeholder.com/32';
 
         // ── Sincronizzazione lista giocatori ────────────────────────────
         syncPlayersIfNeeded(data);
+
+        // ── Rendering Draft History ────────────────────────────────────
+        renderDraftHistory(data);
 
         // ── Routing automatico tra Lobby e Draft ───────────────────────
         renderLobbyOrDraft(data);
@@ -739,3 +769,103 @@ export async function sendNudge(targetUid, teamName) {
 // ── Esposizione Globale ─────────────────────────────────────────────────
 // Espone sendNudge globalmente per poterla chiamare da onclick handler nell'HTML
 window.sendNudge = sendNudge;
+
+// ── Timer Turno ─────────────────────────────────────────────────────────
+// Gestione countdown timer per turno. Sincronizzato tramite turnStartedAt.
+
+let timerInterval = null;
+
+/**
+ * Aggiorna la UI del timer basandosi su turnStartedAt e timerDuration
+ * 
+ * @param {Object} data - Dati della stanza
+ */
+function updateTimerUI(data) {
+    const duration = data.settings?.timerDuration || 0;
+    if (duration === 0) return;
+
+    const turnStartedAt = data.turnStartedAt;
+    if (!turnStartedAt) return;
+
+    // Pulisci interval precedente
+    if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
+
+    // Se timer è in pausa
+    if (data.timerPaused) {
+        const timerBar = document.getElementById('timer-bar-fill');
+        const timerText = document.getElementById('timer-text');
+        if (timerBar) timerBar.style.width = '100%';
+        if (timerText) timerText.textContent = '⏸️';
+        return;
+    }
+
+    const tick = () => {
+        const now = Date.now();
+        const elapsed = (now - turnStartedAt) / 1000;
+        const remaining = Math.max(0, duration - elapsed);
+        const pct = (remaining / duration) * 100;
+
+        const timerBar = document.getElementById('timer-bar-fill');
+        const timerText = document.getElementById('timer-text');
+
+        if (timerBar) {
+            timerBar.style.width = `${pct}%`;
+            // Colore: verde > giallo > rosso
+            if (remaining > duration * 0.4) {
+                timerBar.style.background = 'var(--primary)';
+            } else if (remaining > 10) {
+                timerBar.style.background = '#ffcc00';
+            } else {
+                timerBar.style.background = '#ff4444';
+            }
+        }
+
+        if (timerText) {
+            timerText.textContent = `${Math.ceil(remaining)}s`;
+        }
+
+        // Auto-skip se scaduto (solo host)
+        if (remaining <= 0 && state.isHost) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            autoSkipTurn();
+        }
+    };
+
+    tick(); // Esegui subito
+    timerInterval = setInterval(tick, 250); // Aggiorna ogni 250ms per fluidità
+}
+
+/**
+ * Auto-skip del turno quando il timer scade
+ * Avanza al turno successivo senza assegnare nessun giocatore
+ */
+async function autoSkipTurn() {
+    if (!state.isHost || !state.roomData) return;
+
+    const room = state.roomData;
+    let nextTurnIndex = room.currentTurnIndex + 1;
+    let nextDraftOrder = [...room.draftOrder];
+    let nextRound = room.roundNumber;
+
+    if (nextTurnIndex >= room.draftOrder.length) {
+        nextRound++;
+        nextTurnIndex = 0;
+    }
+
+    try {
+        const roomRef = doc(db, 'rooms', state.currentRoomId);
+        await updateDoc(roomRef, {
+            currentTurnIndex: nextTurnIndex,
+            roundNumber: nextRound,
+            currentPick: null,
+            turnStartedAt: Date.now()
+        });
+        showToast('⏱️ Tempo scaduto! Turno saltato.');
+    } catch (e) {
+        console.error('Auto-skip error:', e);
+    }
+}

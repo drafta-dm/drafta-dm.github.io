@@ -1,4 +1,4 @@
-<!-- Force Deploy 2026-05-25 v6.4.2 -->
+<!-- Force Deploy 2026-05-25 v6.5 -->
 <!DOCTYPE html>
 <html lang="it">
 
@@ -125,7 +125,7 @@
         <!-- VIEW: LOGIN -->
         <section id="view-login" class="view active">
             <div class="login-card">
-                <h1>DRAFTA <small style="font-size:1rem; color:var(--text-muted); opacity:0.7;">v6.4.2</small></h1>
+                <h1>DRAFTA <small style="font-size:1rem; color:var(--text-muted); opacity:0.7;">v6.5</small></h1>
                 <p class="subtitle">Live Serie A Fantasy Draft</p>
 
                 <div class="login-actions">
@@ -188,6 +188,19 @@
                             <span class="info-icon"
                                 data-tooltip="Obbliga a completare i reparti in ordine: Portieri > Difensori > Centrocampisti > Attaccanti.">?</span>
                         </label>
+                    </div>
+
+                    <div class="input-group" style="margin-top:10px;">
+                        <label for="input-timer-duration" style="font-size:0.8rem; color:var(--text-muted);">Timer
+                            Turno</label>
+                        <select id="input-timer-duration"
+                            style="padding:12px; background:var(--bg-surface); color:white; border:none; border-radius:6px; font-size:1rem;">
+                            <option value="0" selected>♾️ Illimitato</option>
+                            <option value="30">⏱️ 30 secondi</option>
+                            <option value="60">⏱️ 60 secondi</option>
+                            <option value="90">⏱️ 90 secondi</option>
+                            <option value="120">⏱️ 120 secondi</option>
+                        </select>
                     </div>
 
                     <button id="btn-create-room" class="btn btn-accent" style="margin-top:10px;">Crea Nuova
@@ -268,7 +281,7 @@
                     <h1 id="draft-logo-home" class="font-title"
                         style="margin:0; cursor:pointer; user-select:none;"
                         title="Torna alla Home">DRAFT<span style="color:var(--primary)">A</span> <small
-                            style="font-size:0.4em; color:var(--text-muted); font-weight:normal;">v6.4.2</small></h1>
+                            style="font-size:0.4em; color:var(--text-muted); font-weight:normal;">v6.5</small></h1>
                     <div id="turn-indicator-box"
                         style="display:flex; align-items:baseline; gap:10px; padding-left:20px; border-left:1px solid #333;">
                         <span class="label"
@@ -276,9 +289,15 @@
                         <span id="txt-current-turn-team"
                             style="font-size:1.3rem; font-weight:bold; color:white;">--</span>
                     </div>
+                    <!-- Timer Countdown -->
+                    <div id="timer-container" class="timer-container hidden">
+                        <div class="timer-bar-container">
+                            <div id="timer-bar-fill" class="timer-bar-fill"></div>
+                        </div>
+                        <span id="timer-text" class="timer-text">--</span>
+                        <button id="btn-timer-pause" class="btn-timer-control hidden" title="Pausa/Riprendi Timer">⏸️</button>
+                    </div>
                 </div>
-
-                <!-- Timer removed - not used -->
 
                 <div class="header-right" id="room-info-display" style="display:flex; gap:15px; align-items:center;">
                     <div style="text-align:right;">
@@ -292,6 +311,10 @@
                             style="display:block; font-size:0.8rem; color:#666; text-transform:uppercase;">Round
                             1</span>
                     </div>
+                    <!-- Host-only Undo Pick -->
+                    <button id="btn-undo-pick" class="btn-header-action" style="display:none;" title="Annulla ultimo pick">↩️</button>
+                    <!-- Draft History Toggle -->
+                    <button id="btn-toggle-history" class="btn-header-action" title="Cronologia pick">📜</button>
                     <!-- Host-only Export CSV (icona discreta durante il draft, visibile a fine asta) -->
                     <button id="btn-export-csv" class="btn-csv-icon" style="display:none;" title="Esporta risultati CSV">
                         📥 <span class="csv-label">Export CSV</span>
@@ -360,6 +383,16 @@
 
                 <!-- RIGHT PANEL: Teams Queue -->
                 <div class="draft-right-panel">
+                    <!-- Draft History Panel (collapsible) -->
+                    <div id="draft-history-panel" class="draft-history-panel hidden">
+                        <div class="history-header">
+                            <h3>📜 Cronologia Pick</h3>
+                            <button id="btn-close-history" class="btn-close-panel">✕</button>
+                        </div>
+                        <div id="draft-history-list" class="draft-history-list">
+                            <!-- JS populated -->
+                        </div>
+                    </div>
                     <div id="teams-matrix" class="teams-matrix">
                         <!-- JS populated Columns -->
                     </div>
@@ -390,7 +423,7 @@
         </div>
     </div>
 
-    <script type="module" src="js/app.js?v=6.4.2"></script>
+    <script type="module" src="js/app.js?v=6.5"></script>
     <!-- MODAL: Order Settings -->
     <div id="modal-order-settings" class="modal-overlay hidden">
         <div class="modal-card" style="max-width: 400px;">

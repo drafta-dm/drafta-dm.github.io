@@ -234,6 +234,12 @@ python scripts/update_players.py
 
 ## 📝 Changelog
 
+### v6.5 (2026-05-25) - **Timer, Undo & Draft History** ⏱️↩️📜
+- ✅ **Timer Turno**: Countdown configurabile per ogni turno (30s, 60s, 90s, 120s, illimitato). Barra animata con transizione colore verde→giallo→rosso. Auto-skip se scaduto. Host può mettere in pausa/riprendere.
+- ✅ **Undo Pick (solo host)**: Pulsante ↩️ per annullare l'ultimo pick. Ripristina completamente roster, crediti, turno e round. Disponibile solo dopo il primo pick.
+- ✅ **Draft History Log**: Cronologia in tempo reale di tutti i pick effettuati. Feed scrollabile con round, ruolo, giocatore e costo. Toggle dal pulsante 📜 nell'header.
+- ✅ **Timer nella creazione stanza**: Nuovo selettore "Timer Turno" nella configurazione stanza (default: Illimitato).
+
 ### v6.4.2 (2026-05-25) - **Pick confirmation logic** ⚙️
 - ✅ **Richiesta conferma pick per host**: Aggiunta una finestra di conferma quando l'host forza un pick per conto di un'altra squadra (evitando selezioni accidentali).
 

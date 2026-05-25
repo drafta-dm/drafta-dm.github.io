@@ -31,6 +31,7 @@ import { setupFilters } from './player-filters.js';
 import { setupDraftListeners } from './draft-logic.js';
 import { setupCSVListeners } from './csv-handler.js';
 import { initTeamsMatrixDragScroll } from './drag-scroll.js';
+import { setupHistoryListeners } from './draft-history.js';
 
 /**
  * Application initialization sequence
@@ -61,6 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupDraftListeners();           // Draft start and player selection
     setupCSVListeners();             // Import/export functionality
     initTeamsMatrixDragScroll();     // Enable mouse drag-to-scroll on teams matrix
+    setupHistoryListeners();         // Draft history toggle panel
 
     // Initialization complete
     console.log('✅ Drafta initialized successfully!');

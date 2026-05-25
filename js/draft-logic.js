@@ -51,7 +51,9 @@ export async function startDraft() {
         status: "started",
         draftOrder: teamIds,
         currentTurnIndex: 0,
-        roundNumber: 1
+        roundNumber: 1,
+        turnStartedAt: Date.now(),
+        draftHistory: []
     });
 }
 
@@ -275,13 +277,37 @@ export async function confirmPick() {
         }
     }
 
-    // ── Salvataggio su Firebase ─────────────────────────────────────────
+    // ── Preparazione snapshot per Undo ───────────────────────────────
+    const lastPickState = {
+        teams: JSON.parse(JSON.stringify(room.teams)),
+        currentTurnIndex: room.currentTurnIndex,
+        roundNumber: room.roundNumber,
+        draftOrder: [...room.draftOrder],
+        draftHistory: room.draftHistory ? [...room.draftHistory] : []
+    };
+
+    // ── Salvataggio su Firebase ─────────────────────────────────
+    const historyEntry = {
+        teamId: currentTeamId,
+        teamName: team.name,
+        playerId: playerId,
+        playerName: player.name,
+        role: player.role,
+        cost: cost,
+        round: room.roundNumber,
+        timestamp: Date.now()
+    };
+    const newHistory = [...(room.draftHistory || []), historyEntry];
+
     await updateDoc(roomRef, {
         teams: newTeams,
         currentTurnIndex: nextTurnIndex,
         roundNumber: nextRound,
         draftOrder: nextDraftOrder,
-        currentPick: null
+        currentPick: null,
+        turnStartedAt: Date.now(),
+        lastPickState: lastPickState,
+        draftHistory: newHistory
     });
 
     showToast(`Assegnato ${player.name} (+${pickedItems.length - 1}) a ${team.name}`);
@@ -501,4 +527,89 @@ export function setupDraftListeners() {
             });
         }
     });
+
+    // ── Pulsante Undo Pick (solo host) ─────────────────────────────
+    const btnUndo = document.getElementById('btn-undo-pick');
+    if (btnUndo) {
+        btnUndo.addEventListener('click', undoPick);
+    }
+
+    // ── Pulsante Pausa Timer (solo host) ───────────────────────────
+    const btnTimerPause = document.getElementById('btn-timer-pause');
+    if (btnTimerPause) {
+        btnTimerPause.addEventListener('click', toggleTimerPause);
+    }
+}
+
+/**
+ * Annulla l'ultimo pick effettuato (solo host)
+ * 
+ * Ripristina lo stato della stanza al momento precedente l'ultimo pick:
+ * - Ripristina teams (roster, crediti, totalValue)
+ * - Ripristina turno e round precedenti
+ * - Ripristina draftOrder e draftHistory
+ * - Rimuove lastPickState per disabilitare ulteriori undo
+ * 
+ * @function undoPick
+ * @returns {Promise<void>}
+ */
+export async function undoPick() {
+    if (!state.isHost) return;
+    if (!state.roomData?.lastPickState) {
+        return showToast('Nessun pick da annullare');
+    }
+
+    if (!confirm('Sei sicuro di voler annullare l\'ultimo pick?')) return;
+
+    const snapshot = state.roomData.lastPickState;
+    const roomRef = doc(db, 'rooms', state.currentRoomId);
+
+    try {
+        await updateDoc(roomRef, {
+            teams: snapshot.teams,
+            currentTurnIndex: snapshot.currentTurnIndex,
+            roundNumber: snapshot.roundNumber,
+            draftOrder: snapshot.draftOrder,
+            draftHistory: snapshot.draftHistory || [],
+            currentPick: null,
+            lastPickState: null,
+            turnStartedAt: Date.now()
+        });
+        showToast('↩️ Ultimo pick annullato!');
+    } catch (e) {
+        console.error('Undo error:', e);
+        showToast('Errore durante l\'annullamento');
+    }
+}
+
+/**
+ * Toggle pausa/riprendi timer (solo host)
+ * 
+ * @function toggleTimerPause
+ * @returns {Promise<void>}
+ */
+export async function toggleTimerPause() {
+    if (!state.isHost) return;
+
+    const roomRef = doc(db, 'rooms', state.currentRoomId);
+    const isPaused = state.roomData?.timerPaused || false;
+
+    try {
+        if (isPaused) {
+            // Riprendi: setta nuovo turnStartedAt con il tempo rimanente
+            await updateDoc(roomRef, {
+                timerPaused: false,
+                turnStartedAt: Date.now()
+            });
+            showToast('▶️ Timer ripreso');
+        } else {
+            // Pausa
+            await updateDoc(roomRef, {
+                timerPaused: true
+            });
+            showToast('⏸️ Timer in pausa');
+        }
+    } catch (e) {
+        console.error('Timer pause error:', e);
+    }
 }
