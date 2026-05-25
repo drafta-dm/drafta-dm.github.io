@@ -234,6 +234,9 @@ python scripts/update_players.py
 
 ## 📝 Changelog
 
+### v6.4 (2026-05-25) - **Supporto per Asta a 4 Squadre** 👥
+- ✅ **Aggiunto supporto a 4 squadre**: Permesso agli host di scegliere un minimo di 4 squadre quando creano una stanza (mantenendo solo il conteggio delle squadre pari: 4, 6, 8, ecc.).
+
 ### v6.3 (2026-05-20) - **Draft Navigation, Profile Menu & Excel Automation** 🚀
 - ✅ **Draft Navigation**: Added a `← Home` exit button inside the draft header to allow leaving the draft and returning to the dashboard cleanly (with a confirmation prompt to prevent accidental exits).
 - ✅ **Unified User Profile Modal**: Introduced a modal displaying Google account information (Name, Email, Avatar) and a "Logout" action, accessible by clicking the user avatar from both the dashboard and draft header.
