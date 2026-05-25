@@ -234,6 +234,12 @@ python scripts/update_players.py
 
 ## 📝 Changelog
 
+### v6.7.7 (2026-05-25) - **Top 2 per Ruolo & Condivisione Email/Clipboard** 🏆✉️📋
+- ✅ **Top 2 per Ruolo**: Ciascuna card squadra nel riepilogo ora mostra i 2 migliori acquisti per ciascun ruolo (D, C, A) invece che un unico best pick.
+- ✅ **Invia per Email**: Aggiunto un pulsante che genera automaticamente un'email pre-compilata (tramite link `mailto`) con l'intero report testuale ordinato dell'asta per tutti i partecipanti.
+- ✅ **Copia Report Testo**: Aggiunto un pulsante per copiare negli appunti il report strutturato in formato testo pulito (ideale da incollare su WhatsApp, Telegram o fogli di calcolo).
+- ✅ **Version Bump**: Aggiornato `version.json` a `6.7.7`.
+
 ### v6.7.6 (2026-05-25) - **Riepilogo Fine Draft Potenziato & Fix N/A** 🏆📊
 - ✅ **Fix Best Pick N/A**: Corretto il bug per cui il miglior acquisto (best pick) mostrava "N/A" invece del nome del giocatore (ora viene risolto correttamente tramite lookup dello stato giocatori globale).
 - ✅ **Bypass Crediti Rimasti**: Rimosso il dato sui crediti rimasti dal riepilogo (non significativo in modalità draft).

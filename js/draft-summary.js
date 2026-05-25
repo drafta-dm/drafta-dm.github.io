@@ -6,7 +6,7 @@
 // ============================================================================
 
 import { state } from './state.js';
-import { getTeamColor } from './utils.js';
+import { getTeamColor, showToast } from './utils.js';
 
 const ROSTER_SLOTS = 25; // Slot totali per squadra (3P + 8D + 8C + 6A)
 
@@ -56,15 +56,22 @@ function showDraftSummary(data) {
         const totalSpent = roster.reduce((sum, r) => sum + (r.cost || 0), 0);
         const avgCost = roster.length > 0 ? (totalSpent / roster.length).toFixed(1) : 0;
         
-        // Trova il best pick della squadra
-        let bestPickItem = null;
-        let bestPickPlayer = null;
-        roster.forEach(r => {
-            if (!bestPickItem || (r.cost || 0) > (bestPickItem.cost || 0)) {
-                bestPickItem = r;
-                bestPickPlayer = state.players.find(p => p.id === r.playerId);
-            }
-        });
+        // Trova i migliori 2 acquisti per ruolo (D, C, A)
+        const getBestOfRole = (role) => {
+            const rolePicks = roster
+                .map(r => {
+                    const p = state.players.find(pl => pl.id === r.playerId);
+                    return p ? { name: p.name, cost: r.cost || 0, role: p.role } : null;
+                })
+                .filter(p => p && p.role === role);
+
+            rolePicks.sort((a, b) => b.cost - a.cost);
+            return rolePicks.slice(0, 2);
+        };
+
+        const bestD = getBestOfRole('D');
+        const bestC = getBestOfRole('C');
+        const bestA = getBestOfRole('A');
 
         // Calcola spesa per ruolo
         const roleSpent = { P: 0, D: 0, C: 0, A: 0 };
@@ -80,7 +87,9 @@ function showDraftSummary(data) {
             id: t.id,
             totalSpent,
             avgCost,
-            bestPick: bestPickPlayer ? { name: bestPickPlayer.name, cost: bestPickItem.cost } : null,
+            bestD,
+            bestC,
+            bestA,
             roleSpent,
             rosterCount: roster.length,
             totalValue: t.totalValue || totalSpent
@@ -126,6 +135,21 @@ function showDraftSummary(data) {
     });
 
     const avgDraftCost = totalDraftCount > 0 ? (totalDraftSpent / totalDraftCount).toFixed(1) : 0;
+
+    // Genera report di testo per email e copia negli appunti
+    let reportText = `🏆 RIEPILOGO ASTA DRAFTA 🏆\n\n`;
+    reportText += `HIGHLIGHTS GENERALE:\n`;
+    reportText += `🔥 Chiamata Record: ${topPickOverall ? `${topPickOverall.name} (${topPickOverall.cost})` : 'N/A'} - Squadra: ${topPickOverall ? topPickOverall.teamName : '--'}\n`;
+    reportText += `💸 Giocatore più Economico: ${cheapestPickOverall ? `${cheapestPickOverall.name} (${cheapestPickOverall.cost})` : 'N/A'} - Squadra: ${cheapestPickOverall ? cheapestPickOverall.teamName : '--'}\n`;
+    reportText += `📊 Valore Totale Draft: ${totalDraftSpent} crediti (Media: ${avgDraftCost})\n\n`;
+    reportText += `--- CLASSIFICA ROSE ---\n\n`;
+    stats.forEach((s, i) => {
+        reportText += `#${i + 1} - ${s.name} (Valore: ${s.totalValue})\n`;
+        reportText += `   Spesa per ruolo -> P: ${s.roleSpent.P} | D: ${s.roleSpent.D} | C: ${s.roleSpent.C} | A: ${s.roleSpent.A}\n`;
+        reportText += `   🛡️ Top D: ${s.bestD.map(p => `${p.name} (${p.cost})`).join(', ') || '--'}\n`;
+        reportText += `   🔮 Top C: ${s.bestC.map(p => `${p.name} (${p.cost})`).join(', ') || '--'}\n`;
+        reportText += `   🎯 Top A: ${s.bestA.map(p => `${p.name} (${p.cost})`).join(', ') || '--'}\n\n`;
+    });
 
     container.innerHTML = `
         <div class="summary-overlay">
@@ -176,12 +200,28 @@ function showDraftSummary(data) {
                                 <span>A: <strong style="color:var(--role-att, #ffcc00)">${s.roleSpent.A}</strong></span>
                             </div>
 
-                            ${s.bestPick ? `<div class="summary-best-pick" style="margin-top:10px; padding-top:10px; border-top:1px solid #333;">💎 Best: ${s.bestPick.name} (${s.bestPick.cost})</div>` : ''}
+                            <!-- Migliori acquisti per ruolo (top 2) -->
+                            <div class="summary-best-role-picks" style="margin-top:10px; padding-top:10px; border-top:1px solid #333; font-size:0.72rem; color:var(--text-muted); text-align:left;">
+                                <div style="margin-bottom:3px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                                    🛡️ <strong>Top D:</strong> <span style="color:white">${s.bestD.map(p => `${p.name} (${p.cost})`).join(', ') || '--'}</span>
+                                </div>
+                                <div style="margin-bottom:3px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                                    🔮 <strong>Top C:</strong> <span style="color:white">${s.bestC.map(p => `${p.name} (${p.cost})`).join(', ') || '--'}</span>
+                                </div>
+                                <div style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                                    🎯 <strong>Top A:</strong> <span style="color:white">${s.bestA.map(p => `${p.name} (${p.cost})`).join(', ') || '--'}</span>
+                                </div>
+                            </div>
                         </div>
                     `).join('')}
                 </div>
 
-                <button id="btn-close-summary" class="btn btn-primary" style="margin-top:10px; padding: 12px 30px;">Chiudi Riepilogo</button>
+                <!-- AZIONI ADMIN -->
+                <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:15px;">
+                    <button id="btn-email-summary" class="btn btn-outline" style="padding: 12px 24px; font-weight: 500;">✉️ Invia per Email</button>
+                    <button id="btn-copy-summary" class="btn btn-outline" style="padding: 12px 24px; font-weight: 500;">📋 Copia Report Testo</button>
+                    <button id="btn-close-summary" class="btn btn-primary" style="padding: 12px 24px;">Chiudi Riepilogo</button>
+                </div>
             </div>
         </div>
     `;
@@ -190,6 +230,21 @@ function showDraftSummary(data) {
 
     document.getElementById('btn-close-summary')?.addEventListener('click', () => {
         container.classList.add('hidden');
+    });
+
+    document.getElementById('btn-email-summary')?.addEventListener('click', () => {
+        const mailtoUrl = `mailto:?subject=${encodeURIComponent("Riepilogo Asta Drafta!")}&body=${encodeURIComponent(reportText)}`;
+        window.location.href = mailtoUrl;
+    });
+
+    document.getElementById('btn-copy-summary')?.addEventListener('click', async () => {
+        try {
+            await navigator.clipboard.writeText(reportText);
+            showToast('📋 Report copiato negli appunti!');
+        } catch (err) {
+            console.error('Copy report failed:', err);
+            showToast('Impossibile copiare il report.');
+        }
     });
 }
 
