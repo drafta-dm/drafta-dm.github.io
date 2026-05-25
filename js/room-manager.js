@@ -24,7 +24,7 @@ import { showToast, switchView, generateRoomId, showDashboard } from './utils.js
 import { playerService } from './player-service.js';            // Servizio caricamento giocatori
 import { renderLobbyOrDraft } from './lobby.js';                 // Routing lobby/draft
 import { renderPlayerList } from './player-filters.js';          // Rendering lista giocatori
-import { renderOrderPreview } from './draft-logic.js';           // Preview ordine turni
+import { renderOrderPreview, autoPickForTimeout } from './draft-logic.js';           // Preview ordine turni e auto-pick
 import { renderDraftHistory } from './draft-history.js';         // Cronologia pick
 import { playSound } from './sounds.js';                        // Effetti sonori
 import { initChat, cleanupChat } from './chat.js';              // Chat
@@ -844,7 +844,7 @@ function updateTimerUI(data) {
             // Colore: verde > giallo > rosso
             if (remaining > duration * 0.4) {
                 timerBar.style.background = 'var(--primary)';
-            } else if (remaining > 10) {
+            } else if (remaining > Math.max(10, duration * 0.1)) {
                 timerBar.style.background = '#ffcc00';
             } else {
                 timerBar.style.background = '#ff4444';
@@ -852,48 +852,30 @@ function updateTimerUI(data) {
         }
 
         if (timerText) {
-            timerText.textContent = `${Math.ceil(remaining)}s`;
+            const remSec = Math.ceil(remaining);
+            if (remSec < 60) {
+                timerText.textContent = `${remSec}s`;
+            } else {
+                const hrs = Math.floor(remSec / 3600);
+                const mins = Math.floor((remSec % 3600) / 60);
+                const secs = remSec % 60;
+                const pad = (num) => String(num).padStart(2, '0');
+                if (hrs > 0) {
+                    timerText.textContent = `${hrs}:${pad(mins)}:${pad(secs)}`;
+                } else {
+                    timerText.textContent = `${mins}:${pad(secs)}`;
+                }
+            }
         }
 
-        // Auto-skip se scaduto (solo host)
+        // Auto-pick di ufficio se scaduto (solo host)
         if (remaining <= 0 && state.isHost) {
             clearInterval(timerInterval);
             timerInterval = null;
-            autoSkipTurn();
+            autoPickForTimeout();
         }
     };
 
     tick(); // Esegui subito
     timerInterval = setInterval(tick, 250); // Aggiorna ogni 250ms per fluidità
-}
-
-/**
- * Auto-skip del turno quando il timer scade
- * Avanza al turno successivo senza assegnare nessun giocatore
- */
-async function autoSkipTurn() {
-    if (!state.isHost || !state.roomData) return;
-
-    const room = state.roomData;
-    let nextTurnIndex = room.currentTurnIndex + 1;
-    let nextDraftOrder = [...room.draftOrder];
-    let nextRound = room.roundNumber;
-
-    if (nextTurnIndex >= room.draftOrder.length) {
-        nextRound++;
-        nextTurnIndex = 0;
-    }
-
-    try {
-        const roomRef = doc(db, 'rooms', state.currentRoomId);
-        await updateDoc(roomRef, {
-            currentTurnIndex: nextTurnIndex,
-            roundNumber: nextRound,
-            currentPick: null,
-            turnStartedAt: Date.now()
-        });
-        showToast('⏱️ Tempo scaduto! Turno saltato.');
-    } catch (e) {
-        console.error('Auto-skip error:', e);
-    }
 }

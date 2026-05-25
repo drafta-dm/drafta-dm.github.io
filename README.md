@@ -234,6 +234,12 @@ python scripts/update_players.py
 
 ## 📝 Changelog
 
+### v6.7.3 (2026-05-25) - **Auto-Pick d'Ufficio per Timeout & Nuovi Timer** ⏱️🤖
+- ✅ **Auto-Pick di Ufficio**: Quando scade il timer del turno, non si salta più il turno. Viene invece assegnato automaticamente il giocatore disponibile più caro per il ruolo corrente della squadra, penalizzandone i crediti per i turni successivi.
+- ✅ **Nuove Selezioni Timer**: Opzioni di scelta del timer aggiornate a: 1m, 5m, 10m, 20m, 30m, 1h, 2h, 4h.
+- ✅ **Format Countdown**: I timer lunghi sono formattati elegantemente in formato `MM:SS` o `H:MM:SS`.
+- ✅ **Version Bump**: Aggiornato `version.json` a `6.7.3`.
+
 ### v6.7.2 (2026-05-25) - **Supporto Link in Dashboard** ☕
 - ✅ **Support Button in Dashboard**: Aggiunto il pulsante "Buy me a beer! 🍺" anche nella schermata di dashboard (selezione stanza) oltre che alla login.
 - ✅ **Version Bump**: Aggiornato `version.json` a `6.7.2`.

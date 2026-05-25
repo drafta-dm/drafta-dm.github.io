@@ -615,3 +615,182 @@ export async function toggleTimerPause() {
         console.error('Timer pause error:', e);
     }
 }
+
+/**
+ * Assegna automaticamente di ufficio il giocatore più caro per il ruolo corrente
+ * quando il timer del turno scade.
+ * 
+ * @function autoPickForTimeout
+ * @returns {Promise<void>}
+ */
+export async function autoPickForTimeout() {
+    if (!state.isHost || !state.roomData) return;
+
+    const room = state.roomData;
+    const currentTeamId = room.draftOrder[room.currentTurnIndex];
+    if (!currentTeamId) return;
+
+    const teamIndex = room.teams.findIndex(t => t.id === currentTeamId);
+    const team = room.teams[teamIndex];
+
+    // 1. Calcola ruoli attuali squadra
+    const roles = { P: 0, D: 0, C: 0, A: 0 };
+    team.roster.forEach(r => {
+        const pState = state.players.find(pl => pl.id === r.playerId);
+        if (pState) roles[pState.role]++;
+    });
+
+    // 2. Determina targetRole (il primo ruolo non completo in ordine P->D->C->A)
+    let targetRole = null;
+    if (roles.P < 3) targetRole = 'P';
+    else if (roles.D < 8) targetRole = 'D';
+    else if (roles.C < 8) targetRole = 'C';
+    else if (roles.A < 6) targetRole = 'A';
+
+    if (!targetRole) {
+        // Nessun ruolo mancante (squadra completa), salta il turno
+        return await fallbackSkipTurn(room);
+    }
+
+    // 3. Trova ID dei giocatori già assegnati
+    const takenIds = new Set();
+    room.teams.forEach(t => {
+        if (t.roster) {
+            t.roster.forEach(r => takenIds.add(String(r.playerId)));
+        }
+    });
+
+    // 4. Trova i candidati disponibili per quel ruolo
+    const candidatePlayers = state.players.filter(p => p.role === targetRole && !takenIds.has(String(p.id)));
+    if (candidatePlayers.length === 0) {
+        console.warn(`Nessun giocatore disponibile trovato per il ruolo ${targetRole}`);
+        return await fallbackSkipTurn(room);
+    }
+
+    // 5. Filtra per quelli che la squadra può permettersi (costo <= crediti residui)
+    let affordableCandidates = candidatePlayers.filter(p => p.cost <= team.credits);
+    if (affordableCandidates.length === 0) {
+        // Se non ci sono giocatori acquistabili coi crediti rimasti, usiamo tutti i candidati
+        // (assegnando comunque un giocatore, andando eventualmente in credito negativo come penalità)
+        affordableCandidates = candidatePlayers;
+    }
+
+    // 6. Ordina per costo decrescente per trovare il più caro (in caso di parità, ordina per nome per determinismo)
+    affordableCandidates.sort((a, b) => b.cost - a.cost || String(a.name).localeCompare(String(b.name)));
+    const player = affordableCandidates[0];
+    const cost = player.cost;
+
+    // 7. Prepara assegnazione (e blocco portieri se applicabile)
+    const pickedItems = [{ playerId: player.id, cost: player.cost }];
+    const useBlockGK = room.settings?.blockGK;
+    if (targetRole === 'P' && useBlockGK && roles.P === 0) {
+        // Cerca gli altri portieri della stessa squadra
+        const teamMates = state.players.filter(p =>
+            p.team === player.team && p.role === 'P' && p.id !== player.id
+        );
+
+        let extraCost = 0;
+        teamMates.forEach(m => extraCost += m.cost);
+
+        if (team.credits >= (cost + extraCost)) {
+            teamMates.forEach(m => pickedItems.push({ playerId: m.id, cost: m.cost }));
+        }
+    }
+
+    // 8. Applica modifiche
+    const newTeams = JSON.parse(JSON.stringify(room.teams));
+    let totalCost = 0;
+    pickedItems.forEach(item => {
+        newTeams[teamIndex].roster.push(item);
+        totalCost += item.cost;
+    });
+    newTeams[teamIndex].credits -= totalCost;
+    newTeams[teamIndex].totalValue = (newTeams[teamIndex].totalValue || 0) + totalCost;
+
+    // 9. Calcola Turno Successivo
+    let nextTurnIndex = room.currentTurnIndex + 1;
+    let nextDraftOrder = [...room.draftOrder];
+    let nextRound = room.roundNumber;
+
+    const sortMode = room.settings?.sortMode;
+
+    if (sortMode) {
+        nextDraftOrder = calculateDynamicOrder(newTeams, sortMode);
+        nextTurnIndex = 0;
+    } else {
+        if (nextTurnIndex >= room.draftOrder.length) {
+            nextRound++;
+            const sortedTeams = [...newTeams].sort(compareTeamsSmart);
+            nextDraftOrder = sortedTeams.map(t => t.id);
+            nextTurnIndex = 0;
+        }
+    }
+
+    // 10. Salva stato precedente per Undo
+    const lastPickState = {
+        teams: JSON.parse(JSON.stringify(room.teams)),
+        currentTurnIndex: room.currentTurnIndex,
+        roundNumber: room.roundNumber,
+        draftOrder: [...room.draftOrder],
+        draftHistory: room.draftHistory ? [...room.draftHistory] : []
+    };
+
+    // 11. Scrivi storico
+    const historyEntry = {
+        teamId: currentTeamId,
+        teamName: team.name,
+        playerId: player.id,
+        playerName: player.name,
+        role: player.role,
+        cost: cost,
+        round: room.roundNumber,
+        timestamp: Date.now(),
+        isAutoPick: true
+    };
+    const newHistory = [...(room.draftHistory || []), historyEntry];
+
+    // 12. Update Firebase
+    try {
+        const roomRef = doc(db, 'rooms', state.currentRoomId);
+        await updateDoc(roomRef, {
+            teams: newTeams,
+            currentTurnIndex: nextTurnIndex,
+            roundNumber: nextRound,
+            draftOrder: nextDraftOrder,
+            currentPick: null,
+            turnStartedAt: Date.now(),
+            lastPickState: lastPickState,
+            draftHistory: newHistory
+        });
+
+        showToast(`⏱️ Tempo scaduto! Assegnato di ufficio ${player.name} (+${pickedItems.length - 1}) a ${team.name}`);
+        playSound('pick');
+    } catch (e) {
+        console.error('Error in autoPickForTimeout:', e);
+        await fallbackSkipTurn(room);
+    }
+}
+
+async function fallbackSkipTurn(room) {
+    let nextTurnIndex = room.currentTurnIndex + 1;
+    let nextDraftOrder = [...room.draftOrder];
+    let nextRound = room.roundNumber;
+
+    if (nextTurnIndex >= room.draftOrder.length) {
+        nextRound++;
+        nextTurnIndex = 0;
+    }
+
+    try {
+        const roomRef = doc(db, 'rooms', state.currentRoomId);
+        await updateDoc(roomRef, {
+            currentTurnIndex: nextTurnIndex,
+            roundNumber: nextRound,
+            currentPick: null,
+            turnStartedAt: Date.now()
+        });
+        showToast('⏱️ Tempo scaduto! Turno saltato.');
+    } catch (e) {
+        console.error('Fallback skip error:', e);
+    }
+}
