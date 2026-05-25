@@ -234,6 +234,12 @@ python scripts/update_players.py
 
 ## 📝 Changelog
 
+### v6.7.8 (2026-05-25) - **Tooltip Crea Stanza Aggiornati** 💬ℹ️
+- ✅ **Tooltip Numero Squadre**: Aggiunto un tooltip esplicativo per specificare lo scopo del selettore del numero di partecipanti.
+- ✅ **Tooltip Timer Turno**: Aggiunto un tooltip esplicativo dettagliato che descrive il funzionamento del timer e l'assegnazione automatica d'ufficio alla scadenza del tempo.
+- ✅ **Tooltip Esistenti Aggiornati**: Riformulati i tooltip di *Blocco Portieri* e *Ordine Ruoli* per riflettere le regole in modo più chiaro e corretto.
+- ✅ **Version Bump**: Aggiornato `version.json` a `6.7.8`.
+
 ### v6.7.7 (2026-05-25) - **Top 2 per Ruolo & Condivisione Email/Clipboard** 🏆✉️📋
 - ✅ **Top 2 per Ruolo**: Ciascuna card squadra nel riepilogo ora mostra i 2 migliori acquisti per ciascun ruolo (D, C, A) invece che un unico best pick.
 - ✅ **Invia per Email**: Aggiunto un pulsante che genera automaticamente un'email pre-compilata (tramite link `mailto`) con l'intero report testuale ordinato dell'asta per tutti i partecipanti.

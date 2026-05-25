@@ -166,8 +166,10 @@
                     <!-- URL input removed - not needed -->
 
                     <div class="input-group" style="margin-top:10px;">
-                        <label for="input-team-count" style="font-size:0.8rem; color:var(--text-muted);">Numero
-                            Squadre</label>
+                        <label for="input-team-count" style="font-size:0.8rem; color:var(--text-muted); display:flex; align-items:center;">
+                            Numero Squadre
+                            <span class="info-icon" data-tooltip="Seleziona il numero totale di squadre partecipanti che prenderanno parte all'asta del draft.">?</span>
+                        </label>
                         <select id="input-team-count"
                             style="padding:12px; background:var(--bg-surface); color:white; border:none; border-radius:6px; font-size:1rem;">
                             <option value="4">4 Squadre</option>
@@ -190,7 +192,7 @@
                             </div>
                             Blocco Portieri
                             <span class="info-icon"
-                                data-tooltip="Se acquisti un portiere, il sistema prova ad assegnarti automaticamente gli altri portieri della stessa squadra.">?</span>
+                                data-tooltip="Se acquisti un portiere, il sistema ti assegna automaticamente e senza costi aggiuntivi gli altri portieri della stessa squadra (consigliato per completare il blocco squadra).">?</span>
                         </label>
                         <label class="switch-label">
                             <div class="toggle-switch">
@@ -199,13 +201,15 @@
                             </div>
                             Ordine Ruoli (P→D→C→A)
                             <span class="info-icon"
-                                data-tooltip="Obbliga a completare i reparti in ordine: Portieri > Difensori > Centrocampisti > Attaccanti.">?</span>
+                                data-tooltip="Obbliga a completare ciascun reparto prima di poter acquistare giocatori del reparto successivo (Portieri ➔ Difensori ➔ Centrocampisti ➔ Attaccanti).">?</span>
                         </label>
                     </div>
 
                     <div class="input-group" style="margin-top:10px;">
-                        <label for="input-timer-duration" style="font-size:0.8rem; color:var(--text-muted);">Timer
-                            Turno</label>
+                        <label for="input-timer-duration" style="font-size:0.8rem; color:var(--text-muted); display:flex; align-items:center;">
+                            Timer Turno
+                            <span class="info-icon" data-tooltip="Tempo massimo a disposizione per ciascuna chiamata. Allo scadere del tempo, il sistema assegna automaticamente il giocatore disponibile più costoso nel ruolo richiesto.">?</span>
+                        </label>
                         <select id="input-timer-duration"
                             style="padding:12px; background:var(--bg-surface); color:white; border:none; border-radius:6px; font-size:1rem;">
                             <option value="0" selected>♾️ Illimitato</option>
