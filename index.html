@@ -315,6 +315,10 @@
                     <button id="btn-undo-pick" class="btn-header-action" style="display:none;" title="Annulla ultimo pick">↩️</button>
                     <!-- Draft History Toggle -->
                     <button id="btn-toggle-history" class="btn-header-action" title="Cronologia pick">📜</button>
+                    <!-- Chat Toggle -->
+                    <button id="btn-toggle-chat" class="btn-header-action" title="Chat" style="position:relative;">💬<span id="chat-badge" class="chat-badge hidden">0</span></button>
+                    <!-- Sound Toggle -->
+                    <button id="btn-toggle-sound" class="btn-header-action" title="Suoni">🔊</button>
                     <!-- Host-only Export CSV (icona discreta durante il draft, visibile a fine asta) -->
                     <button id="btn-export-csv" class="btn-csv-icon" style="display:none;" title="Esporta risultati CSV">
                         📥 <span class="csv-label">Export CSV</span>
@@ -395,6 +399,24 @@
                     </div>
                     <div id="teams-matrix" class="teams-matrix">
                         <!-- JS populated Columns -->
+                    </div>
+                </div>
+
+                <!-- CHAT PANEL (Sidebar) -->
+                <div id="chat-panel" class="chat-panel hidden">
+                    <div class="chat-header">
+                        <h3>💬 Chat</h3>
+                        <button id="btn-close-chat" class="btn-close-panel">✕</button>
+                    </div>
+                    <div id="chat-messages" class="chat-messages">
+                        <!-- JS populated -->
+                    </div>
+                    <div id="chat-emoji-bar" class="chat-emoji-bar">
+                        <!-- JS populated with quick emojis -->
+                    </div>
+                    <div class="chat-input-bar">
+                        <input type="text" id="chat-input" placeholder="Scrivi un messaggio..." autocomplete="off">
+                        <button id="btn-send-chat" class="btn-send-chat">➤</button>
                     </div>
                 </div>
 

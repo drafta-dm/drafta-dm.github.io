@@ -18,6 +18,7 @@ import { db, doc, updateDoc } from './firebase-modules.js';
 // Import moduli interni
 import { state } from './state.js';                    // Stato globale
 import { showToast, showBigError } from './utils.js';  // Notifiche UI
+import { playSound } from './sounds.js';               // Effetti sonori
 
 /**
  * Avvia il draft cambiando lo stato della stanza da 'lobby' a 'started'
@@ -311,6 +312,7 @@ export async function confirmPick() {
     });
 
     showToast(`Assegnato ${player.name} (+${pickedItems.length - 1}) a ${team.name}`);
+    playSound('pick');
 }
 
 /**

@@ -32,6 +32,8 @@ import { setupDraftListeners } from './draft-logic.js';
 import { setupCSVListeners } from './csv-handler.js';
 import { initTeamsMatrixDragScroll } from './drag-scroll.js';
 import { setupHistoryListeners } from './draft-history.js';
+import { setupChatListeners } from './chat.js';
+import { setupSoundListeners } from './sounds.js';
 
 /**
  * Application initialization sequence
@@ -63,6 +65,8 @@ document.addEventListener('DOMContentLoaded', () => {
     setupCSVListeners();             // Import/export functionality
     initTeamsMatrixDragScroll();     // Enable mouse drag-to-scroll on teams matrix
     setupHistoryListeners();         // Draft history toggle panel
+    setupChatListeners();            // Chat messaging
+    setupSoundListeners();           // Sound effects toggle
 
     // Initialization complete
     console.log('✅ Drafta initialized successfully!');

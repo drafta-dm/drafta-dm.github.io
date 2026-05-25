@@ -16,6 +16,7 @@ import { state } from './state.js';
 import { getTeamColor } from './utils.js';
 import { sendTurnNotification } from './notifications.js';
 import { updatePlayerListVisuals } from './player-filters.js';
+import { playSound } from './sounds.js';
 
 /**
  * Aggiorna l'intera interfaccia del draft in risposta a cambiamenti
@@ -65,6 +66,7 @@ export function updateDraftUI(data) {
             // Notifica se il turno è appena cambiato a me
             if (state.lastTurnOwner !== state.user.uid) {
                 sendTurnNotification("È il tuo turno! Fai la tua scelta.");
+                playSound('turn');
             }
         } else {
             // Stile normale per turno di altri

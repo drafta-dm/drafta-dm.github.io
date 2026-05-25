@@ -26,6 +26,8 @@ import { renderLobbyOrDraft } from './lobby.js';                 // Routing lobb
 import { renderPlayerList } from './player-filters.js';          // Rendering lista giocatori
 import { renderOrderPreview } from './draft-logic.js';           // Preview ordine turni
 import { renderDraftHistory } from './draft-history.js';         // Cronologia pick
+import { playSound } from './sounds.js';                        // Effetti sonori
+import { initChat, cleanupChat } from './chat.js';              // Chat
 
 // ── Variabili modulo ────────────────────────────────────────────────────
 // Unsubscribe function per il listener real-time della stanza corrente
@@ -215,6 +217,9 @@ export function leaveRoom() {
         roomUnsubscribe = null;
     }
 
+    // Cleanup chat
+    cleanupChat();
+
     // Torna alla dashboard
     switchView('dashboard');
 }
@@ -359,6 +364,9 @@ export function enterRoom(roomId, isHost, password = null) {
     state.presenceCleanup = removePresence;
     state.heartbeatInterval = heartbeatInterval;
 
+    // ── Inizializzazione Chat ───────────────────────────────────────────
+    initChat(roomId);
+
     // ── Listener Real-Time Firebase ─────────────────────────────────────
     // Si attiva ad ogni modifica del documento stanza
     roomUnsubscribe = onSnapshot(doc(db, "rooms", roomId), (docSnap) => {
@@ -487,6 +495,7 @@ export function enterRoom(roomId, isHost, password = null) {
 
                 // Mostra anche toast in-app
                 showToast(`📲 ${data.notification.sender}: ${data.notification.msg}`);
+                playSound('nudge');
             }
         }
     });
