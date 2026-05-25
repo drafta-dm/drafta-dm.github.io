@@ -13,16 +13,17 @@ service cloud.firestore {
         resource.data.hostId == request.auth.uid || 
         // I partecipanti possono solo aggiornare lo stato senza modificare i metadati critici della stanza
         (
-          request.resource.data.hostId == resource.data.hostId &&
-          request.resource.data.password == resource.data.password &&
-          request.resource.data.settings == resource.data.settings &&
+          request.resource.data.get('hostId', null) == resource.data.get('hostId', null) &&
+          request.resource.data.get('password', null) == resource.data.get('password', null) &&
+          request.resource.data.get('settings', null) == resource.data.get('settings', null) &&
           (
             // Se sono già partecipanti
             request.auth.uid in resource.data.participantIds ||
             // Oppure si stanno unendo alla stanza aggiungendo unicamente il proprio UID
             (
               request.resource.data.participantIds.hasAll(resource.data.participantIds) &&
-              request.resource.data.participantIds.toSet().difference(resource.data.participantIds.toSet()) == [request.auth.uid].toSet()
+              request.resource.data.participantIds.size() == resource.data.participantIds.size() + 1 &&
+              request.auth.uid in request.resource.data.participantIds
             )
           )
         )
