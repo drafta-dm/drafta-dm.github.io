@@ -234,6 +234,9 @@ python scripts/update_players.py
 
 ## 📝 Changelog
 
+### v6.4.1 (2026-05-25) - **Firestore Rules Patch** 🔒
+- ✅ **Risolto bug di join ospiti**: Sostituita la logica di comparazione dei set nelle regole di sicurezza di Firestore con controlli nativi su liste (basati su `hasAll`, `size` e operatore `in`), eliminando il problema di permessi (`Missing or insufficient permissions`) che bloccava il primo accesso dei partecipanti non-host.
+
 ### v6.4 (2026-05-25) - **Supporto per Asta a 4 Squadre** 👥
 - ✅ **Aggiunto supporto a 4 squadre**: Permesso agli host di scegliere un minimo di 4 squadre quando creano una stanza (mantenendo solo il conteggio delle squadre pari: 4, 6, 8, ecc.).
 
