@@ -15,6 +15,7 @@ import { db, doc, setDoc, serverTimestamp } from './firebase-modules.js';
 import { state } from './state.js';                    // Stato globale con user e players
 import { showToast, generateRoomId } from './utils.js'; // Utilità varie
 import { enterRoom } from './room-manager.js';          // Ingresso in stanza
+import { getInitialPickForTeam } from './draft-logic.js';
 
 /**
  * Esporta tutte le squadre della stanza corrente in un file CSV
@@ -221,19 +222,10 @@ export async function createRoomFromCSV(csvText) {
         initialTurnIndex++;
     }
 
-    // Trova il portiere più costoso disponibile per pre-selezionarlo ed avviare l'asta in modo pulito
-    const takenIds = new Set();
-    teams.forEach(t => {
-        if (t.roster) {
-            t.roster.forEach(r => takenIds.add(String(r.playerId)));
-        }
-    });
-    const goalkeepers = state.players.filter(p => p.role === 'P' && !takenIds.has(String(p.id)));
-    let initialPick = null;
-    if (goalkeepers.length > 0) {
-        goalkeepers.sort((a, b) => b.cost - a.cost);
-        initialPick = { playerId: goalkeepers[0].id };
-    }
+    // Trova il giocatore intelligente per pre-selezionarlo ed avviare l'asta in modo pulito
+    const activeTeamId = draftOrder[initialTurnIndex];
+    const activeTeam = teams.find(t => t.id === activeTeamId);
+    const initialPick = getInitialPickForTeam(teams, activeTeam, true);
 
     const roomData = {
         hostId: state.user.uid,

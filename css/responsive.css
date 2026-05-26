@@ -50,8 +50,13 @@
         gap: 5px !important;
     }
 
-    /* Nascondi il logo su smartphone piccoli per salvare spazio */
+    /* Logo su mobile compatto */
     #draft-logo-home {
+        display: flex !important;
+        font-size: 1.15rem !important;
+        margin: 0 !important;
+    }
+    #draft-logo-home small {
         display: none !important;
     }
 
@@ -62,11 +67,15 @@
         gap: 8px !important;
     }
 
-    /* Rimuovi i bordi di separazione desktop */
+    /* Rimuovi i bordi di separazione desktop e nascondi la label "Turno:" su mobile */
     #turn-indicator-box {
         border-left: none !important;
         padding-left: 0 !important;
         align-items: center !important;
+        display: flex !important;
+    }
+    #turn-indicator-box .label {
+        display: none !important;
     }
 
     /* Rendi il box del turno più pulito e compatto */
@@ -79,7 +88,7 @@
         border-radius: 6px !important;
         display: inline-block !important;
         text-align: left !important;
-        max-width: 120px !important;
+        max-width: 160px !important; /* Spazio aumentato per evitare troncamenti */
         overflow: hidden !important;
         text-overflow: ellipsis !important;
         white-space: nowrap !important;
@@ -331,15 +340,18 @@
 @media (max-width: 768px) {
     .mobile-bottom-nav {
         display: flex !important;
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: var(--bg-card);
-        border-top: 1px solid var(--bg-surface);
-        z-index: 90;
-        padding: 4px 0;
-        justify-content: space-around;
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        height: 60px !important;
+        background: var(--bg-card) !important;
+        border-top: 1px solid var(--bg-surface) !important;
+        z-index: 9999 !important; /* Molto alto per evitare che sia coperto */
+        padding: 4px 0 !important;
+        padding-bottom: calc(4px + env(safe-area-inset-bottom, 0px)) !important;
+        justify-content: space-around !important;
+        box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.3) !important;
     }
 
     .mobile-bottom-nav.hidden {

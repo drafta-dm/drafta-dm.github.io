@@ -21,6 +21,73 @@ import { showToast, showBigError } from './utils.js';  // Notifiche UI
 import { playSound } from './sounds.js';               // Effetti sonori
 
 /**
+ * Determina il ruolo target richiesto per una squadra
+ * Rispettando l'ordine P -> D -> C -> A
+ * @param {Object} team - La squadra di cui verificare il roster
+ * @param {boolean} strictRoles - Se true applica il vincolo rigido
+ * @returns {string|null} Il ruolo target ('P', 'D', 'C', 'A') o null se completa
+ */
+export function getTeamTargetRole(team, strictRoles) {
+    const roles = { P: 0, D: 0, C: 0, A: 0 };
+    if (team && team.roster) {
+        team.roster.forEach(r => {
+            const p = state.players.find(pl => String(pl.id) === String(r.playerId));
+            if (p) roles[p.role]++;
+        });
+    }
+    
+    // Se strictRoles è attivo, dobbiamo rispettare rigorosamente l'ordine P -> D -> C -> A
+    if (strictRoles) {
+        if (roles.P < 3) return 'P';
+        if (roles.D < 8) return 'D';
+        if (roles.C < 8) return 'C';
+        if (roles.A < 6) return 'A';
+        return null;
+    }
+    
+    // Se non è strict, restituiamo il primo ruolo incompleto partendo da P -> D -> C -> A come fallback intelligente
+    if (roles.P < 3) return 'P';
+    if (roles.D < 8) return 'D';
+    if (roles.C < 8) return 'C';
+    if (roles.A < 6) return 'A';
+    return null;
+}
+
+/**
+ * Ottiene il pick iniziale per una squadra selezionando il giocatore disponibile più costoso
+ * per il ruolo target richiesto
+ * @param {Array} teams - Elenco di tutte le squadre per verificare i giocatori già presi
+ * @param {Object} team - La squadra per cui calcolare il pick iniziale
+ * @param {boolean} strictRoles - Se true applica la logica rigida dei ruoli
+ * @returns {Object|null} Oggetto { playerId } o null
+ */
+export function getInitialPickForTeam(teams, team, strictRoles) {
+    const takenIds = new Set();
+    teams.forEach(t => {
+        if (t.roster) {
+            t.roster.forEach(r => takenIds.add(String(r.playerId)));
+        }
+    });
+
+    const targetRole = getTeamTargetRole(team, strictRoles);
+    if (!targetRole) return null;
+
+    const availableCandidates = state.players.filter(p => p.role === targetRole && !takenIds.has(String(p.id)));
+    if (availableCandidates.length > 0) {
+        availableCandidates.sort((a, b) => b.cost - a.cost);
+        return { playerId: String(availableCandidates[0].id) };
+    }
+    
+    // Fallback: se per quel ruolo non ci sono giocatori disponibili (es. finiti!), prendiamo il primo disponibile in assoluto più caro
+    const anyAvailable = state.players.filter(p => !takenIds.has(String(p.id)));
+    if (anyAvailable.length > 0) {
+        anyAvailable.sort((a, b) => b.cost - a.cost);
+        return { playerId: String(anyAvailable[0].id) };
+    }
+    return null;
+}
+
+/**
  * Avvia il draft cambiando lo stato della stanza da 'lobby' a 'started'
  * 
  * Operazioni eseguite:
@@ -58,19 +125,11 @@ export async function startDraft() {
         initialTurnIndex++;
     }
 
-    // Trova il portiere più costoso disponibile per pre-selezionarlo ed avviare l'asta in modo pulito
-    const takenIds = new Set();
-    state.roomData.teams.forEach(t => {
-        if (t.roster) {
-            t.roster.forEach(r => takenIds.add(String(r.playerId)));
-        }
-    });
-    const goalkeepers = state.players.filter(p => p.role === 'P' && !takenIds.has(String(p.id)));
-    let initialPick = null;
-    if (goalkeepers.length > 0) {
-        goalkeepers.sort((a, b) => b.cost - a.cost);
-        initialPick = { playerId: goalkeepers[0].id };
-    }
+    // Trova il giocatore intelligente per pre-selezionarlo ed avviare l'asta in modo pulito
+    const activeTeamId = teamIds[initialTurnIndex];
+    const activeTeam = state.roomData.teams.find(t => t.id === activeTeamId);
+    const strictRoles = !!state.roomData.settings?.strictRoles;
+    const initialPick = getInitialPickForTeam(state.roomData.teams, activeTeam, strictRoles);
 
     await updateDoc(doc(db, "rooms", state.currentRoomId), {
         status: "started",
@@ -213,7 +272,7 @@ export async function confirmPick() {
     const team = state.roomData.teams[teamIndex];
 
     const playerId = room.currentPick.playerId;
-    const player = state.players.find(p => p.id === playerId);
+    const player = state.players.find(p => String(p.id) === String(playerId));
     const cost = player.cost;
 
     // (Nessuna limitazione budget/crediti per pick manuale in modalità draft)
@@ -221,7 +280,7 @@ export async function confirmPick() {
     // ── Calcolo ruoli attuali squadra ───────────────────────────────────
     const roles = { P: 0, D: 0, C: 0, A: 0 };
     team.roster.forEach(r => {
-        const pState = state.players.find(pl => pl.id === r.playerId);
+        const pState = state.players.find(pl => String(pl.id) === String(r.playerId));
         if (pState) roles[pState.role]++;
     });
 
@@ -559,19 +618,11 @@ export async function applyDraftOrder(type) {
         initialTurnIndex++;
     }
 
-    // Trova il portiere più costoso disponibile per pre-selezionarlo ed avviare l'asta in modo pulito
-    const takenIds = new Set();
-    state.roomData.teams.forEach(t => {
-        if (t.roster) {
-            t.roster.forEach(r => takenIds.add(String(r.playerId)));
-        }
-    });
-    const goalkeepers = state.players.filter(p => p.role === 'P' && !takenIds.has(String(p.id)));
-    let initialPick = null;
-    if (goalkeepers.length > 0) {
-        goalkeepers.sort((a, b) => b.cost - a.cost);
-        initialPick = { playerId: goalkeepers[0].id };
-    }
+    // Trova il giocatore intelligente per pre-selezionarlo ed avviare l'asta in modo pulito
+    const activeTeamId = newOrder[initialTurnIndex];
+    const activeTeam = state.roomData.teams.find(t => t.id === activeTeamId);
+    const strictRoles = !!state.roomData.settings?.strictRoles;
+    const initialPick = getInitialPickForTeam(state.roomData.teams, activeTeam, strictRoles);
 
     // Salva su Firebase
     const roomRef = doc(db, 'rooms', state.currentRoomId);
@@ -748,7 +799,7 @@ export async function autoPickForTimeout() {
     // 1. Calcola ruoli attuali squadra
     const roles = { P: 0, D: 0, C: 0, A: 0 };
     team.roster.forEach(r => {
-        const pState = state.players.find(pl => pl.id === r.playerId);
+        const pState = state.players.find(pl => String(pl.id) === String(r.playerId));
         if (pState) roles[pState.role]++;
     });
 

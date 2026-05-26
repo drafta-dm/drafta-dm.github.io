@@ -234,6 +234,13 @@ python scripts/update_players.py
 
 ## 📝 Changelog
 
+### v6.8.5 (2026-05-26) - **Fix Mobile Bottom Nav, Logo, Turno & Smart Pre-selection** 📱🧤
+- ✅ **Risoluzione Visibilità Bottom Nav Mobile**: Alzato il `z-index` a `9999`, impostata altezza fissa a `60px`, background solido, ombra e supporto per le safe-area (iPhone/Android con notch/home indicators) per garantire che i tab in basso non siano mai coperti o nascosti.
+- ✅ **Ripristino Logo Drafta su Mobile**: Il logo Drafta è ora sempre visibile su mobile in modo compatto (nascondendo la versione).
+- ✅ **Fix Testo Turno Tagliato**: Rimossa la label duplicata `"Turno:"` su mobile per risparmiare spazio e aumentata la larghezza massima del box del turno a `160px`, assicurando che la dicitura `"Tocca a TE! 🫵"` e i nomi delle squadre siano interamente visibili.
+- ✅ **Pre-selezione Intelligente del Pick**: Corretto l'avvio e re-ordinamento dell'asta. Invece di selezionare ciecamente un portiere, il sistema pre-seleziona dinamicamente il giocatore libero più costoso corrispondente all'esatto ruolo attualmente richiesto per la squadra di turno (es. se la squadra ha già i portieri completi e ha i difensori come ruolo attivo, viene pre-selezionato il difensore più costoso).
+- ✅ **Fix Mismatch ID Giocatore**: Risolti i type mismatch degli ID giocatore in `draft-logic.js`, `ui-renderer.js` e `draft-summary.js` convertendo sempre gli ID in stringhe durante la ricerca per evitare malfunzionamenti o card vuote durante il primo pick.
+
 ### v6.8.4 (2026-05-26) - **Semplificazione Header & Integrazione Profilo** 🚪Header
 - ✅ **Header Mobile a Riga Singola**: Riorganizzato l'header mobile su un'unica riga orizzontale di 60px contenente solo il Turno, il Timer capsula, il Round e l'avatar del profilo.
 - ✅ **Integrazione Profilo Utente**: Rimossi i pulsanti Annulla Pick, Suoni, Esporta CSV e le credenziali dall'header e spostati tutti all'interno della modal del Profilo (accessibile cliccando sull'avatar).

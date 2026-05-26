@@ -181,7 +181,7 @@ export function renderTeamsMatrix(data) {
         // ── Calcolo ruoli attuali ──────────────────────────────────────
         const roles = { P: 0, D: 0, C: 0, A: 0 };
         team.roster.forEach(r => {
-            const p = state.players.find(pl => pl.id === r.playerId);
+            const p = state.players.find(pl => String(pl.id) === String(r.playerId));
             if (p) roles[p.role]++;
         });
 
@@ -289,7 +289,7 @@ export function renderMatrixRosterFixed(roster) {
     // ── Assegnazione giocatori a slot ───────────────────────────────────
     roster.forEach(item => {
         // Recupera dati completi giocatore
-        const p = state.players.find(x => x.id === item.playerId);
+        const p = state.players.find(x => String(x.id) === String(item.playerId));
         if (!p) return;  // Giocatore non trovato (non dovrebbe succedere)
 
         const role = p.role;
@@ -452,14 +452,14 @@ export function renderRoster(userData) {
     // ── Ordinamento per ruolo (P > D > C > A) ───────────────────────────
     const order = { 'P': 1, 'D': 2, 'C': 3, 'A': 4 };
     const sorted = [...userData.roster].sort((a, b) => {
-        const pA = state.players.find(p => p.id === a.playerId) || { role: '?' };
-        const pB = state.players.find(p => p.id === b.playerId) || { role: '?' };
+        const pA = state.players.find(p => String(p.id) === String(a.playerId)) || { role: '?' };
+        const pB = state.players.find(p => String(p.id) === String(b.playerId)) || { role: '?' };
         return order[pA.role] - order[pB.role];
     });
 
     // ── Rendering lista ─────────────────────────────────────────────────
     sorted.forEach((item) => {
-        const player = state.players.find(p => p.id === item.playerId);
+        const player = state.players.find(p => String(p.id) === String(item.playerId));
         const div = document.createElement('div');
         div.className = 'roster-slot';
         div.innerHTML = `

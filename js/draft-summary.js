@@ -60,7 +60,7 @@ function showDraftSummary(data) {
         const getBestOfRole = (role) => {
             const rolePicks = roster
                 .map(r => {
-                    const p = state.players.find(pl => pl.id === r.playerId);
+                    const p = state.players.find(pl => String(pl.id) === String(r.playerId));
                     return p ? { name: p.name, cost: r.cost || 0, role: p.role } : null;
                 })
                 .filter(p => p && p.role === role);
@@ -76,7 +76,7 @@ function showDraftSummary(data) {
         // Calcola spesa per ruolo
         const roleSpent = { P: 0, D: 0, C: 0, A: 0 };
         roster.forEach(r => {
-            const p = state.players.find(pl => pl.id === r.playerId);
+            const p = state.players.find(pl => String(pl.id) === String(r.playerId));
             if (p) {
                 roleSpent[p.role] += r.cost || 0;
             }
@@ -108,7 +108,7 @@ function showDraftSummary(data) {
     teams.forEach(t => {
         const roster = t.roster || [];
         roster.forEach(r => {
-            const p = state.players.find(pl => pl.id === r.playerId);
+            const p = state.players.find(pl => String(pl.id) === String(r.playerId));
             if (p) {
                 totalDraftSpent += r.cost || 0;
                 totalDraftCount++;
