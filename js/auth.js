@@ -147,17 +147,29 @@ export function updateUserInfo(user) {
  */
 export function setupAuthListeners() {
     // ── Pulsante Login con Google ───────────────────────────────────────
-    document.getElementById('btn-login-google').addEventListener('click', async () => {
-        try {
-            // Usa il popup standard sia su desktop che su mobile.
-            // Il redirect su mobile fallisce a causa del blocco dei cookie di terze parti
-            // (cross-origin storage block) quando l'app è ospitata su GitHub Pages.
-            await signInWithPopup(auth, googleProvider);
-        } catch (error) {
-            // Gestione errori (popup chiuso, permessi negati, rete offline, ecc.)
-            console.error(error);
-            showToast('Errore Login: ' + error.message);
-        }
+    document.getElementById('btn-login-google').addEventListener('click', () => {
+        // Usa il popup standard sia su desktop che su mobile.
+        // La chiamata deve avvenire in modo sincrono all'evento click dell'utente per evitare che 
+        // i browser mobili (come iOS Safari) blocchino la finestra considerandola non autorizzata.
+        signInWithPopup(auth, googleProvider)
+            .catch((error) => {
+                console.warn("Popup login blocked or failed. Trying redirect fallback...", error);
+                
+                // Se il popup è bloccato o non è supportato dall'ambiente (es. in-app webviews),
+                // proviamo il redirect come fallback di emergenza.
+                if (error.code === 'auth/popup-blocked' || 
+                    error.code === 'auth/operation-not-supported-in-this-environment' ||
+                    error.code === 'auth/cancelled-popup-request') {
+                    
+                    signInWithRedirect(auth, googleProvider).catch((redirectError) => {
+                        console.error("Redirect fallback error:", redirectError);
+                        showToast('Errore Login: ' + redirectError.message);
+                    });
+                } else {
+                    console.error("Google Login popup error:", error);
+                    showToast('Errore Login: ' + error.message);
+                }
+            });
     });
 
     // ── Pulsante Logout ─────────────────────────────────────────────────

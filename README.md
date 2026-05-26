@@ -234,9 +234,12 @@ python scripts/update_players.py
 
 ## 📝 Changelog
 
+### v6.8.10 (2026-05-26) - **Robust Hybrid Google Login for Mobile** 🔑📱
+- ✅ **Gestione Ibrida Login con Fallback**: Modificato il gestore di login con Google in [auth.js](file:///c:/Users/mariotti/repos/drafta-dm.github.io/js/auth.js) per avviare `signInWithPopup` in modo strettamente sincrono all'evento `click`. Se il browser mobile blocca il popup o l'ambiente non lo supporta (es. in-app webviews di WhatsApp, Telegram o Instagram), il sistema intercetta l'errore ed esegue immediatamente un fallback automatico su `signInWithRedirect`. Questo garantisce la massima compatibilità su tutte le piattaforme e browser mobili.
+
 ### v6.8.9 (2026-05-26) - **Fix iOS Safe Area & Bottom Nav Visibility** 📱🛠️
 - ✅ **Supporto iOS Safe Area / Home Indicator**: Aggiunta la proprietà `viewport-fit=cover` al tag viewport in `index.html` per forzare l'app a utilizzare l'intera area dello schermo.
-- ✅ **Fix Taglio Bottom Nav su iOS**: Modificato il posizionamento in [responsive.css](file:///c:/Users/mariotti/repos/drafta-dm.github.io/css/responsive.css) calcolando l'altezza del menu inferiore come `calc(60px + env(safe-area-inset-bottom, 0px))`. In questo modo, su dispositivi iOS con notch e home indicator, l'altezza della barra di navigazione cresce proporzionalmente per fare spazio ai bottoni, evitando che vengano compressi e resi invisibili.
+- ✅ **Fix Taglio Bottom Nav su iOS**: Modificato il posizionamento in [responsive.css] calcolando l'altezza del menu inferiore come `calc(60px + env(safe-area-inset-bottom, 0px))`. In questo modo, su dispositivi iOS con notch e home indicator, l'altezza della barra di navigazione cresce proporzionalmente per fare spazio ai bottoni, evitando che vengano compressi e resi invisibili.
 - ✅ **Dynamic Heights e Padding**: Utilizzata l'unità `dvh` (Dynamic Viewport Height) per tutti i calcoli di altezza mobili (come chat, history e stage del draft) e aggiornati i padding di compensazione inferiori.
 
 ### v6.8.8 (2026-05-26) - **Fix Google Login Popup & Mobile Scroll Layout** 🔑📱
