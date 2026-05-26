@@ -1,4 +1,4 @@
-<!-- Force Deploy 2026-05-26 v6.9.4 -->
+<!-- Force Deploy 2026-05-26 v6.9.5 -->
 <!DOCTYPE html>
 <html lang="it">
 
@@ -8,7 +8,7 @@
     <title>Drafta | Live Serie A Fantasy Draft</title>
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="icons/icon-192x192.png">
-    <link rel="stylesheet" href="css/style.css?v=6.9.4">
+    <link rel="stylesheet" href="css/style.css?v=6.9.5">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -179,13 +179,46 @@
         <!-- VIEW: LOGIN -->
         <section id="view-login" class="view active">
             <div class="login-card">
-                <h1>DRAFTA <small style="font-size:1rem; color:var(--text-muted); opacity:0.7;">v6.9.4</small></h1>
+                <h1>DRAFTA <small style="font-size:1rem; color:var(--text-muted); opacity:0.7;">v6.9.5</small></h1>
                 <p class="subtitle">Live Serie A Fantasy Draft</p>
 
                 <div class="login-actions">
                     <button id="btn-login-google" class="btn btn-primary">
                         <span class="icon">G</span> Accedi con Google
                     </button>
+                </div>
+
+                <!-- ISTRUZIONI INSTALLAZIONE APP & NOTIFICHE -->
+                <div style="margin-top: 25px; padding-top: 15px; border-top: 1px solid var(--bg-surface); text-align: left;">
+                    <button id="btn-toggle-install-info" class="btn btn-outline btn-block" 
+                        style="font-size: 0.85rem; padding: 8px 12px; display: flex; align-items: center; justify-content: center; gap: 8px;"
+                        onclick="document.getElementById('install-info-box').classList.toggle('hidden')">
+                        📲 Guida Installazione App & Notifiche
+                    </button>
+                    <div id="install-info-box" class="hidden" 
+                        style="margin-top: 12px; font-size: 0.85rem; line-height: 1.5; color: var(--text-muted); background: rgba(0,0,0,0.25); padding: 12px; border-radius: 8px; border: 1px solid var(--bg-surface);">
+                        <p style="margin-bottom: 8px; color: var(--primary); font-weight: bold; font-size: 0.9rem;">Per ricevere le notifiche push in tempo reale tocca a te:</p>
+                        
+                        <div style="margin-bottom: 12px;">
+                            <b style="color: white; display: block; margin-bottom: 4px;">🍎 iOS (Apple iPhone/iPad):</b>
+                            <ol style="margin-left: 18px; margin-top: 2px; padding-left: 0; display: flex; flex-direction: column; gap: 2px;">
+                                <li>Apri il sito in <b>Safari</b> (non Chrome o in-app WhatsApp/Telegram)</li>
+                                <li>Tocca l'icona <b>Condividi</b> (il quadratino con la freccia in alto 📤)</li>
+                                <li>Seleziona <b>"Aggiungi alla schermata Home"</b></li>
+                                <li>Apri l'app installata sulla Home ed effettua l'accesso</li>
+                            </ol>
+                        </div>
+                        
+                        <div>
+                            <b style="color: white; display: block; margin-bottom: 4px;">🤖 Android (Samsung, Xiaomi, Pixel, etc.):</b>
+                            <ol style="margin-left: 18px; margin-top: 2px; padding-left: 0; display: flex; flex-direction: column; gap: 2px;">
+                                <li>Apri il sito in <b>Chrome</b> o <b>Samsung Internet</b></li>
+                                <li>Tocca i 3 puntini di menù (in alto o in basso a destra)</li>
+                                <li>Seleziona <b>"Installa applicazione"</b> o <b>"Aggiungi a schermata Home"</b></li>
+                                <li>Apri l'app installata ed abilita le notifiche al primo accesso</li>
+                            </ol>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="support-link" style="margin-top: 24px; opacity: 0.85; transition: opacity 0.3s;">
@@ -360,7 +393,7 @@
             <!-- HEADER -->
             <header class="draft-header">
                 <div class="header-left">
-                    <h1 id="draft-logo-home" class="font-title" title="Torna alla Home">DRAFT<span style="color:var(--primary)">A</span> <small>v6.9.4</small></h1>
+                    <h1 id="draft-logo-home" class="font-title" title="Torna alla Home">DRAFT<span style="color:var(--primary)">A</span> <small>v6.9.5</small></h1>
                     <div id="turn-indicator-box" class="turn-indicator-box">
                         <span class="label">Turno:</span>
                         <span id="txt-current-turn-team">--</span>
@@ -534,7 +567,7 @@
         </div>
     </div>
 
-    <script type="module" src="js/app.js?v=6.9.4"></script>
+    <script type="module" src="js/app.js?v=6.9.5"></script>
     <!-- MODAL: Order Settings -->
     <div id="modal-order-settings" class="modal-overlay hidden">
         <div class="modal-card" style="max-width: 400px;">

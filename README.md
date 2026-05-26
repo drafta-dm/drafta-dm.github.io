@@ -234,6 +234,9 @@ python scripts/update_players.py
 
 ## 📝 Changelog
 
+### v6.9.5 (2026-05-26) - **Add PWA Installation & Push Notification Guide on Login Screen** 📲🔔
+- ✅ **Guida all'installazione dell'App**: Aggiunto un widget collassabile interattivo direttamente sotto il pulsante di login con Google. Spiega dettagliatamente come aggiungere l'applicazione alla schermata Home (installazione PWA) sia su dispositivi iOS (Safari) che Android (Chrome o Samsung Internet). L'installazione è un pre-requisito essenziale per abilitare la ricezione delle notifiche push in tempo reale su dispositivi iOS.
+
 ### v6.9.4 (2026-05-26) - **Prevent iOS Google Auth "Cannot Open Page" Crash** 🔑📱
 - ✅ **Pre-intercettazione Browser iOS non-Safari**: Aggiunto un controllo preventivo all'avvio del login Google su dispositivi iOS. Se l'utente si trova in un browser diverso da Safari (es. Chrome per iOS, Firefox o WebView in-app di WhatsApp/Telegram), l'app mostra immediatamente la modal con le istruzioni chiare su come copiare il link e aprirlo in Safari, senza lanciare il metodo `signInWithPopup` di Firebase. Questo previene il crash nativo di WebKit che genera l'errore bloccante "Impossibile aprire questa pagina".
 
