@@ -234,6 +234,9 @@ python scripts/update_players.py
 
 ## 📝 Changelog
 
+### v6.9.4 (2026-05-26) - **Prevent iOS Google Auth "Cannot Open Page" Crash** 🔑📱
+- ✅ **Pre-intercettazione Browser iOS non-Safari**: Aggiunto un controllo preventivo all'avvio del login Google su dispositivi iOS. Se l'utente si trova in un browser diverso da Safari (es. Chrome per iOS, Firefox o WebView in-app di WhatsApp/Telegram), l'app mostra immediatamente la modal con le istruzioni chiare su come copiare il link e aprirlo in Safari, senza lanciare il metodo `signInWithPopup` di Firebase. Questo previene il crash nativo di WebKit che genera l'errore bloccante "Impossibile aprire questa pagina".
+
 ### v6.9.3 (2026-05-26) - **Fix Mobile User Profile Modal Stack & Height Adjustments** 👤📱
 - ✅ **Z-Index Modali Assoluto a 999999**: Impostato `z-index: 999999 !important` per `.modal-overlay` su mobile, con `#toast-container` elevato a `1000000 !important`. Questo assicura che il profilo utente e le altre modali si trovino sempre sopra qualsiasi elemento del layout (compresi i tab di navigazione inferiore).
 - ✅ **Ridotta Altezza Massima a 75dvh**: Ridotto il limite massimo di altezza delle modali a `75dvh !important` su schermi mobili. Insieme a `height: 100dvh` sull'overlay, questo previene che i pulsanti inferiori della modali (es. "Chiudi" e "Disconnetti") vengano spinti fuori dallo schermo o coperti dalle barre degli strumenti del browser/safe area.

@@ -162,20 +162,33 @@ export function showAuthInstructionModal() {
 export function setupAuthListeners() {
     // ── Pulsante Login con Google ───────────────────────────────────────
     document.getElementById('btn-login-google').addEventListener('click', () => {
-        // Usa il popup standard sia su desktop che su mobile.
-        // La chiamata deve avvenire in modo sincrono all'evento click dell'utente per evitare che 
-        // i browser mobili (come iOS Safari) blocchino la finestra considerandola non autorizzata.
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+                      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) ||
+                      /iPhone|iPad|iPod/i.test(navigator.platform);
+                      
+        const isSafari = isIOS && 
+                         /Apple/.test(navigator.vendor) && 
+                         !/CriOS/i.test(navigator.userAgent) && 
+                         !/FxiOS/i.test(navigator.userAgent) &&
+                         !/EdgiOS/i.test(navigator.userAgent) &&
+                         !/OPiOS/i.test(navigator.userAgent) &&
+                         !/FBAN/i.test(navigator.userAgent) &&
+                         !/FBAV/i.test(navigator.userAgent) &&
+                         !/Instagram/i.test(navigator.userAgent);
+
+        if (isIOS && !isSafari) {
+            // Su iOS non-Safari (Chrome, Firefox, WebView in-app), il login Firebase fallirà
+            // mostrando "Impossibile aprire questa pagina" o bloccandosi. Mostriamo subito le istruzioni.
+            showAuthInstructionModal();
+            return;
+        }
+
+        // Altrimenti (iOS Safari, Android o Desktop), proviamo signInWithPopup
         signInWithPopup(auth, googleProvider)
             .catch((error) => {
                 console.warn("Popup login blocked or failed. Checking fallback...", error);
                 
-                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
-                              (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) ||
-                              /iPhone|iPad|iPod/i.test(navigator.platform);
-
-                // Se siamo su iOS, il redirect fallirà con "Impossibile aprire questa pagina" (Chrome)
-                // o non recupererà la sessione (Safari) a causa dei blocchi di storage cross-origin.
-                // Quindi non facciamo redirect ma mostriamo la modal con le istruzioni chiare per l'utente.
+                // Se siamo su iOS Safari e il popup è stato bloccato
                 if (isIOS) {
                     if (error.code === 'auth/popup-blocked' || 
                         error.code === 'auth/operation-not-supported-in-this-environment' ||
