@@ -234,6 +234,11 @@ python scripts/update_players.py
 
 ## 📝 Changelog
 
+### v6.8.9 (2026-05-26) - **Fix iOS Safe Area & Bottom Nav Visibility** 📱🛠️
+- ✅ **Supporto iOS Safe Area / Home Indicator**: Aggiunta la proprietà `viewport-fit=cover` al tag viewport in `index.html` per forzare l'app a utilizzare l'intera area dello schermo.
+- ✅ **Fix Taglio Bottom Nav su iOS**: Modificato il posizionamento in [responsive.css](file:///c:/Users/mariotti/repos/drafta-dm.github.io/css/responsive.css) calcolando l'altezza del menu inferiore come `calc(60px + env(safe-area-inset-bottom, 0px))`. In questo modo, su dispositivi iOS con notch e home indicator, l'altezza della barra di navigazione cresce proporzionalmente per fare spazio ai bottoni, evitando che vengano compressi e resi invisibili.
+- ✅ **Dynamic Heights e Padding**: Utilizzata l'unità `dvh` (Dynamic Viewport Height) per tutti i calcoli di altezza mobili (come chat, history e stage del draft) e aggiornati i padding di compensazione inferiori.
+
 ### v6.8.8 (2026-05-26) - **Fix Google Login Popup & Mobile Scroll Layout** 🔑📱
 - ✅ **Google Login con Popup su Mobile**: Utilizzato `signInWithPopup` per tutte le piattaforme. Il redirect (`signInWithRedirect`) fallisce sui browser mobili a causa del blocco dei cookie di terze parti (cross-origin storage block) quando il sito è ospitato su domini esterni (come GitHub Pages).
 - ✅ **Ripristino Scroll Verticale da Mobile**: Impostata la posizione delle viste (`.view`) a `position: relative !important` e altezza automatica per `#app` e `.view` su dispositivi mobili. Questo inserisce la vista attiva nel normale flusso di layout (mentre quelle inattive sono `display: none`), ripristinando il corretto scorrimento nativo delle pagine di login, dashboard e lobby da mobile.

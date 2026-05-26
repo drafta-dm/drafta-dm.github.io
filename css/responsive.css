@@ -20,12 +20,14 @@
     #app {
         height: auto !important;
         min-height: 100vh !important;
+        min-height: 100dvh !important;
         position: relative !important;
     }
 
     .view {
         position: relative !important; /* Put back in normal flow on mobile */
         min-height: 100vh !important;
+        min-height: 100dvh !important;
         height: auto !important;
         width: 100% !important;
         overflow-y: visible !important; /* Allow normal body scrolling */
@@ -39,7 +41,9 @@
         left: 0 !important;
         right: 0 !important;
         height: 100vh !important;
+        height: 100dvh !important;
         min-height: 100vh !important;
+        min-height: 100dvh !important;
         overflow: hidden !important;
     }
 
@@ -366,7 +370,7 @@
         bottom: 0 !important;
         left: 0 !important;
         right: 0 !important;
-        height: 60px !important;
+        height: calc(60px + env(safe-area-inset-bottom, 0px)) !important;
         background: var(--bg-card) !important;
         border-top: 1px solid var(--bg-surface) !important;
         z-index: 9999 !important; /* Molto alto per evitare che sia coperto */
@@ -410,7 +414,7 @@
 
     /* Padding bottom per evitare sovrapposizione con la nav */
     #view-draft .draft-view-container {
-        padding-bottom: 70px !important;
+        padding-bottom: calc(70px + env(safe-area-inset-bottom, 0px)) !important;
     }
 
     /* Mobile Chat & History Panel integrated in grid */
@@ -423,8 +427,8 @@
         box-shadow: none !important;
         border: none !important;
         animation: none !important;
-        height: calc(100vh - 120px) !important;
-        max-height: calc(100vh - 120px) !important;
+        height: calc(100dvh - 120px - env(safe-area-inset-bottom, 0px)) !important;
+        max-height: calc(100dvh - 120px - env(safe-area-inset-bottom, 0px)) !important;
     }
     .chat-panel.hidden {
         display: none !important;
@@ -436,8 +440,8 @@
         flex: 1 !important;
         display: flex !important;
         flex-direction: column !important;
-        max-height: calc(100vh - 120px) !important;
-        height: calc(100vh - 120px) !important;
+        max-height: calc(100dvh - 120px - env(safe-area-inset-bottom, 0px)) !important;
+        height: calc(100dvh - 120px - env(safe-area-inset-bottom, 0px)) !important;
         box-shadow: none !important;
         border: none !important;
         animation: none !important;
