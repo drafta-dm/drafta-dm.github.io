@@ -234,6 +234,14 @@ python scripts/update_players.py
 
 ## 📝 Changelog
 
+### v6.9.3 (2026-05-26) - **Fix Mobile User Profile Modal Stack & Height Adjustments** 👤📱
+- ✅ **Z-Index Modali Assoluto a 999999**: Impostato `z-index: 999999 !important` per `.modal-overlay` su mobile, con `#toast-container` elevato a `1000000 !important`. Questo assicura che il profilo utente e le altre modali si trovino sempre sopra qualsiasi elemento del layout (compresi i tab di navigazione inferiore).
+- ✅ **Ridotta Altezza Massima a 75dvh**: Ridotto il limite massimo di altezza delle modali a `75dvh !important` su schermi mobili. Insieme a `height: 100dvh` sull'overlay, questo previene che i pulsanti inferiori della modali (es. "Chiudi" e "Disconnetti") vengano spinti fuori dallo schermo o coperti dalle barre degli strumenti del browser/safe area.
+
+### v6.9.2 (2026-05-26) - **Fix Mobile User Profile Modal: Maximum Stacking & Scrollable Height** 👤📱
+- ✅ **Z-Index Modali Massimo su Mobile**: Impostato `z-index: 20000 !important` per `.modal-overlay` e `z-index: 20001 !important` per `#toast-container` su mobile. Questo forza le modal (incluso il Profilo Utente) ad essere visualizzate sempre sopra qualsiasi altro elemento (inclusa la barra dei tab inferiori mobile-bottom-nav che aveva z-index 9999).
+- ✅ **Corretto Cut-off del Profilo Utente**: Impostata l'altezza massima per `.modal-card` a `85dvh` su mobile, accoppiata a un layout flex e `overflow-y: auto !important` sul corpo `.modal-body`. Ora, in caso di schermi piccoli, il corpo della modal (avatar, credenziali, impostazioni audio, CSV ed undo) scorre internamente in modo fluido, lasciando i pulsanti di chiusura e disconnessione in fondo fissi e sempre cliccabili.
+
 ### v6.9.1 (2026-05-26) - **Fix Mobile Tab Alternation & Clean Full-Screen Tabs** 📱🧹
 - ✅ **Risolto Alternarsi dei Tab Mobile**: Rimosso l'override `!important` dal CSS sulla proprietà `display` per `.draft-left-panel`, `.draft-right-panel` e `#teams-matrix`. In questo modo, le istruzioni JavaScript che modificano inline il `display` (nascondendo o mostrando i pannelli) funzionano correttamente e l'alternarsi tra la scheda Giocatori e la scheda Squadre (o il Log storico) è ripristinato.
 - ✅ **Eliminati Bottoni Chiudi su Mobile**: Nascosto il pulsante di chiusura "✕" (`.btn-close-panel`) per le schede Chat e Log storico solo quando visualizzate da mobile. Ora questi pannelli si comportano come pulite schede a schermo intero integrate nel flusso dei tab inferiori, rendendo l'esperienza utente molto più coerente.

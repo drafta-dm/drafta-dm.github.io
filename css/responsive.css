@@ -479,4 +479,30 @@
         width: 14px !important;
         height: 14px !important;
     }
+
+    /* Modal adjustments for mobile to prevent content cut-off and ensure z-index priority */
+    .modal-overlay {
+        z-index: 999999 !important;
+        height: 100vh !important;
+        height: 100dvh !important;
+    }
+    
+    .modal-card {
+        max-height: 75dvh !important;
+        display: flex !important;
+        flex-direction: column !important;
+        padding: 1.25rem !important;
+    }
+    
+    .modal-body {
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch;
+        flex: 1 !important;
+        margin: 1rem 0 !important;
+        padding-right: 4px; /* small spacing for scrollbar */
+    }
+
+    #toast-container {
+        z-index: 1000000 !important;
+    }
 }
