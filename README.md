@@ -234,8 +234,12 @@ python scripts/update_players.py
 
 ## 📝 Changelog
 
+### v6.8.11 (2026-05-26) - **Prevent iOS Chrome Google Login Crash & Instructions Modal** 📱⚠️
+- ✅ **Prevenzione Crash Redirect su iOS Chrome**: Disattivato completamente il redirect automatico `signInWithRedirect` per i dispositivi iOS. Su iOS, i browser basati su WebKit che non sono Safari (es. Chrome per iOS) bloccano la redirezione ed i cookie cross-origin, provocando la schermata di errore di sistema *"Impossibile aprire questa pagina"*.
+- ✅ **Modal di Istruzioni per Accesso Bloccato**: Introdotta la modal informativa `#modal-auth-instructions` su iOS. Se la finestra popup viene bloccata o l'ambiente non la supporta (come nelle webview in-app), viene mostrato un pannello che spiega all'utente come procedere (es. cliccare su "Consenti sempre" in basso o copiare l'indirizzo per aprirlo manualmente in **Safari**, dove il login è supportato nativamente).
+
 ### v6.8.10 (2026-05-26) - **Robust Hybrid Google Login for Mobile** 🔑📱
-- ✅ **Gestione Ibrida Login con Fallback**: Modificato il gestore di login con Google in [auth.js](file:///c:/Users/mariotti/repos/drafta-dm.github.io/js/auth.js) per avviare `signInWithPopup` in modo strettamente sincrono all'evento `click`. Se il browser mobile blocca il popup o l'ambiente non lo supporta (es. in-app webviews di WhatsApp, Telegram o Instagram), il sistema intercetta l'errore ed esegue immediatamente un fallback automatico su `signInWithRedirect`. Questo garantisce la massima compatibilità su tutte le piattaforme e browser mobili.
+- ✅ **Gestione Ibrida Login con Fallback**: Modificato il gestore di login con Google in [auth.js] per avviare `signInWithPopup` in modo strettamente sincrono all'evento `click`. Se il browser mobile blocca il popup o l'ambiente non lo supporta (es. in-app webviews di WhatsApp, Telegram o Instagram), il sistema intercetta l'errore ed esegue immediatamente un fallback automatico su `signInWithRedirect`. Questo garantisce la massima compatibilità su tutte le piattaforme e browser mobili.
 
 ### v6.8.9 (2026-05-26) - **Fix iOS Safe Area & Bottom Nav Visibility** 📱🛠️
 - ✅ **Supporto iOS Safe Area / Home Indicator**: Aggiunta la proprietà `viewport-fit=cover` al tag viewport in `index.html` per forzare l'app a utilizzare l'intera area dello schermo.

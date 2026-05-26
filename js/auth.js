@@ -129,6 +129,20 @@ export function updateUserInfo(user) {
 }
 
 /**
+ * Mostra la modal con le istruzioni di accesso per iOS / Mobile
+ * quando il popup o il re-indirizzamento viene bloccato dal browser.
+ * 
+ * @function showAuthInstructionModal
+ * @returns {void}
+ */
+export function showAuthInstructionModal() {
+    const modalAuth = document.getElementById('modal-auth-instructions');
+    if (modalAuth) {
+        modalAuth.classList.remove('hidden');
+    }
+}
+
+/**
  * Configura gli event listener per i pulsanti di autenticazione
  * 
  * Collega i gestori di eventi ai pulsanti HTML per:
@@ -153,24 +167,66 @@ export function setupAuthListeners() {
         // i browser mobili (come iOS Safari) blocchino la finestra considerandola non autorizzata.
         signInWithPopup(auth, googleProvider)
             .catch((error) => {
-                console.warn("Popup login blocked or failed. Trying redirect fallback...", error);
+                console.warn("Popup login blocked or failed. Checking fallback...", error);
                 
-                // Se il popup è bloccato o non è supportato dall'ambiente (es. in-app webviews),
-                // proviamo il redirect come fallback di emergenza.
-                if (error.code === 'auth/popup-blocked' || 
-                    error.code === 'auth/operation-not-supported-in-this-environment' ||
-                    error.code === 'auth/cancelled-popup-request') {
-                    
-                    signInWithRedirect(auth, googleProvider).catch((redirectError) => {
-                        console.error("Redirect fallback error:", redirectError);
-                        showToast('Errore Login: ' + redirectError.message);
-                    });
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+                              (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) ||
+                              /iPhone|iPad|iPod/i.test(navigator.platform);
+
+                // Se siamo su iOS, il redirect fallirà con "Impossibile aprire questa pagina" (Chrome)
+                // o non recupererà la sessione (Safari) a causa dei blocchi di storage cross-origin.
+                // Quindi non facciamo redirect ma mostriamo la modal con le istruzioni chiare per l'utente.
+                if (isIOS) {
+                    if (error.code === 'auth/popup-blocked' || 
+                        error.code === 'auth/operation-not-supported-in-this-environment' ||
+                        error.code === 'auth/cancelled-popup-request') {
+                        
+                        showAuthInstructionModal();
+                    } else {
+                        console.error("Google Login popup error (iOS):", error);
+                        showToast('Errore Login: ' + error.message);
+                    }
                 } else {
-                    console.error("Google Login popup error:", error);
-                    showToast('Errore Login: ' + error.message);
+                    // Su Android / Desktop, proviamo il redirect come fallback di emergenza.
+                    if (error.code === 'auth/popup-blocked' || 
+                        error.code === 'auth/operation-not-supported-in-this-environment' ||
+                        error.code === 'auth/cancelled-popup-request') {
+                        
+                        signInWithRedirect(auth, googleProvider).catch((redirectError) => {
+                            console.error("Redirect fallback error:", redirectError);
+                            showToast('Errore Login: ' + redirectError.message);
+                        });
+                    } else {
+                        console.error("Google Login popup error:", error);
+                        showToast('Errore Login: ' + error.message);
+                    }
                 }
             });
     });
+
+    // ── Dialog Istruzioni Auth (iOS/Mobile Popup Blocks) ────────────────
+    const modalAuth = document.getElementById('modal-auth-instructions');
+    const btnCloseAuth = document.getElementById('btn-close-auth-instructions');
+    const btnCopyAppLink = document.getElementById('btn-copy-app-link');
+
+    if (btnCloseAuth && modalAuth) {
+        btnCloseAuth.addEventListener('click', () => {
+            modalAuth.classList.add('hidden');
+        });
+    }
+
+    if (btnCopyAppLink) {
+        btnCopyAppLink.addEventListener('click', () => {
+            navigator.clipboard.writeText(window.location.href)
+                .then(() => {
+                    showToast("Link copiato! Incollalo su Safari per accedere.");
+                })
+                .catch((err) => {
+                    console.error("Copy link failed:", err);
+                    showToast("Impossibile copiare. Copia l'URL manualmente.");
+                });
+        });
+    }
 
     // ── Pulsante Logout ─────────────────────────────────────────────────
     const handleLogout = () => {

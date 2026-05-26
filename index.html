@@ -1,4 +1,4 @@
-<!-- Force Deploy 2026-05-26 v6.8.10 -->
+<!-- Force Deploy 2026-05-26 v6.8.11 -->
 <!DOCTYPE html>
 <html lang="it">
 
@@ -8,7 +8,7 @@
     <title>Drafta | Live Serie A Fantasy Draft</title>
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="icons/icon-192x192.png">
-    <link rel="stylesheet" href="css/style.css?v=6.8.10">
+    <link rel="stylesheet" href="css/style.css?v=6.8.11">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -179,7 +179,7 @@
         <!-- VIEW: LOGIN -->
         <section id="view-login" class="view active">
             <div class="login-card">
-                <h1>DRAFTA <small style="font-size:1rem; color:var(--text-muted); opacity:0.7;">v6.8.10</small></h1>
+                <h1>DRAFTA <small style="font-size:1rem; color:var(--text-muted); opacity:0.7;">v6.8.11</small></h1>
                 <p class="subtitle">Live Serie A Fantasy Draft</p>
 
                 <div class="login-actions">
@@ -360,7 +360,7 @@
             <!-- HEADER -->
             <header class="draft-header">
                 <div class="header-left">
-                    <h1 id="draft-logo-home" class="font-title" title="Torna alla Home">DRAFT<span style="color:var(--primary)">A</span> <small>v6.8.10</small></h1>
+                    <h1 id="draft-logo-home" class="font-title" title="Torna alla Home">DRAFT<span style="color:var(--primary)">A</span> <small>v6.8.11</small></h1>
                     <div id="turn-indicator-box" class="turn-indicator-box">
                         <span class="label">Turno:</span>
                         <span id="txt-current-turn-team">--</span>
@@ -534,7 +534,7 @@
         </div>
     </div>
 
-    <script type="module" src="js/app.js?v=6.8.10"></script>
+    <script type="module" src="js/app.js?v=6.8.11"></script>
     <!-- MODAL: Order Settings -->
     <div id="modal-order-settings" class="modal-overlay hidden">
         <div class="modal-card" style="max-width: 400px;">
@@ -559,6 +559,25 @@
             </div>
             <div style="margin-top:20px; text-align:right;">
                 <button id="btn-close-order-modal" class="btn btn-text">Annulla</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Auth Instructions for iOS/Mobile -->
+    <div id="modal-auth-instructions" class="modal-overlay hidden">
+        <div class="modal-card" style="max-width: 400px;">
+            <h3 class="font-title">⚠️ Accesso Bloccato</h3>
+            <div class="modal-body" style="text-align: left; font-size: 0.95rem; line-height: 1.5; margin-top: 15px; color: var(--text);">
+                <p>I sistemi di sicurezza di iOS o del tuo browser hanno bloccato la finestra di accesso di Google.</p>
+                <ul style="margin-left: 20px; margin-top: 12px; display: flex; flex-direction: column; gap: 10px; list-style-type: disc; padding-left: 5px;">
+                    <li>Se vedi un avviso in basso <b>"Popup bloccato"</b>, clicca su <b>"Consenti sempre"</b>.</li>
+                    <li>Se usi Chrome o ti trovi all'interno di una chat (WhatsApp/Telegram), premi l'icona in basso a destra e seleziona <b>"Apri in Safari"</b>.</li>
+                    <li>In alternativa, copia il link dell'app e incollalo manualmente in <b>Safari</b>.</li>
+                </ul>
+            </div>
+            <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: flex-end;">
+                <button id="btn-copy-app-link" class="btn btn-outline btn-sm">📋 Copia Link</button>
+                <button id="btn-close-auth-instructions" class="btn btn-primary btn-sm">Ho capito</button>
             </div>
         </div>
     </div>
