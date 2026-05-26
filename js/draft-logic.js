@@ -28,6 +28,7 @@ import { playSound } from './sounds.js';               // Effetti sonori
  * @returns {string|null} Il ruolo target ('P', 'D', 'C', 'A') o null se completa
  */
 export function getTeamTargetRole(team, strictRoles) {
+    console.log("[Drafta Debug] getTeamTargetRole for team:", team ? team.name : 'null', "strict:", strictRoles);
     const roles = { P: 0, D: 0, C: 0, A: 0 };
     if (team && team.roster) {
         team.roster.forEach(r => {
@@ -35,6 +36,7 @@ export function getTeamTargetRole(team, strictRoles) {
             if (p) roles[p.role]++;
         });
     }
+    console.log("[Drafta Debug] Current team roster counts:", JSON.stringify(roles));
     
     // Se strictRoles è attivo, dobbiamo rispettare rigorosamente l'ordine P -> D -> C -> A
     if (strictRoles) {
@@ -62,6 +64,7 @@ export function getTeamTargetRole(team, strictRoles) {
  * @returns {Object|null} Oggetto { playerId } o null
  */
 export function getInitialPickForTeam(teams, team, strictRoles) {
+    console.log("[Drafta Debug] getInitialPickForTeam called. players count:", state.players ? state.players.length : 0);
     const takenIds = new Set();
     teams.forEach(t => {
         if (t.roster) {
@@ -70,20 +73,28 @@ export function getInitialPickForTeam(teams, team, strictRoles) {
     });
 
     const targetRole = getTeamTargetRole(team, strictRoles);
+    console.log("[Drafta Debug] getInitialPickForTeam: targetRole is", targetRole);
     if (!targetRole) return null;
 
     const availableCandidates = state.players.filter(p => p.role === targetRole && !takenIds.has(String(p.id)));
+    console.log(`[Drafta Debug] getInitialPickForTeam: found ${availableCandidates.length} available candidates for role ${targetRole}`);
     if (availableCandidates.length > 0) {
         availableCandidates.sort((a, b) => b.cost - a.cost);
-        return { playerId: String(availableCandidates[0].id) };
+        const selected = availableCandidates[0];
+        console.log("[Drafta Debug] getInitialPickForTeam: selected player:", selected.name, "ID:", selected.id, "cost:", selected.cost);
+        return { playerId: String(selected.id) };
     }
     
     // Fallback: se per quel ruolo non ci sono giocatori disponibili (es. finiti!), prendiamo il primo disponibile in assoluto più caro
     const anyAvailable = state.players.filter(p => !takenIds.has(String(p.id)));
+    console.log(`[Drafta Debug] getInitialPickForTeam fallback: found ${anyAvailable.length} players overall`);
     if (anyAvailable.length > 0) {
         anyAvailable.sort((a, b) => b.cost - a.cost);
-        return { playerId: String(anyAvailable[0].id) };
+        const selected = anyAvailable[0];
+        console.log("[Drafta Debug] getInitialPickForTeam fallback selected player:", selected.name, "ID:", selected.id, "cost:", selected.cost);
+        return { playerId: String(selected.id) };
     }
+    console.warn("[Drafta Debug] getInitialPickForTeam: no players available at all!");
     return null;
 }
 

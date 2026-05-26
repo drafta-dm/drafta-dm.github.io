@@ -9,16 +9,18 @@
 
 @media (max-width: 768px) {
 
-    /* Fix body scroll on mobile */
+    /* Enforce full-screen web app behavior on mobile (no body scroll, fixed bottom nav) */
     body {
-        overflow-y: auto !important;
-        height: auto !important;
+        overflow: hidden !important;
+        height: 100vh !important;
+        position: fixed !important;
+        width: 100vw !important;
     }
 
     .view {
-        min-height: 100vh;
-        height: auto;
-        overflow-y: auto;
+        height: 100% !important;
+        min-height: 100% !important;
+        overflow: hidden !important;
     }
 
     /* Dashboard - padding for avatar/logo */

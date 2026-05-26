@@ -234,6 +234,10 @@ python scripts/update_players.py
 
 ## 📝 Changelog
 
+### v6.8.6 (2026-05-26) - **Fix Mobile Viewport & Pre-selection Logs** 📱🪵
+- ✅ **Fix Layout a Schermo Intero su Mobile**: Forzato il body e le views a `height: 100vh; overflow: hidden; position: fixed;` su mobile, eliminando lo scrolling del body. Le aree interne dell'applicazione (lista giocatori, squadre, chat, history) scorrono autonomamente. Questo garantisce che la bottom navigation rimanga fissa a fondo schermo e non possa mai scivolare fuori dal viewport o essere coperta.
+- ✅ **Console Logs per Asta / Pre-selezione**: Aggiunti messaggi di log diagnostici dettagliati nel modulo `getInitialPickForTeam` e `getTeamTargetRole` per monitorare in console la scelta automatica dei giocatori all'inizio e al re-ordinamento.
+
 ### v6.8.5 (2026-05-26) - **Fix Mobile Bottom Nav, Logo, Turno & Smart Pre-selection** 📱🧤
 - ✅ **Risoluzione Visibilità Bottom Nav Mobile**: Alzato il `z-index` a `9999`, impostata altezza fissa a `60px`, background solido, ombra e supporto per le safe-area (iPhone/Android con notch/home indicators) per garantire che i tab in basso non siano mai coperti o nascosti.
 - ✅ **Ripristino Logo Drafta su Mobile**: Il logo Drafta è ora sempre visibile su mobile in modo compatto (nascondendo la versione).
