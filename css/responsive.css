@@ -45,6 +45,8 @@
         min-height: 100vh !important;
         min-height: 100dvh !important;
         overflow: hidden !important;
+        z-index: 100 !important; /* Force it on top of other views */
+        background: var(--bg-dark) !important; /* Ensure it is opaque and hides previous screens */
     }
 
     /* Dashboard - padding for avatar/logo */
@@ -192,15 +194,18 @@
         min-height: 95px;
     }
 
-    /* Player List - max height for mobile */
+    /* Player List - expanded to avoid nested scroll inside the scrollable left panel */
     .player-list-container {
-        max-height: 50vh !important;
-        overflow-y: auto;
-        min-height: 420px;
+        max-height: none !important;
+        height: auto !important;
+        overflow-y: visible !important;
+        min-height: 0 !important;
     }
 
     #player-list {
-        max-height: 45vh;
+        max-height: none !important;
+        height: auto !important;
+        overflow-y: visible !important;
     }
 
     /* Teams Matrix - Horizontal scroll, single row on mobile */
@@ -253,30 +258,38 @@
     }
 
     .draft-view-container {
-        flex-direction: column;
-        overflow-y: auto;
+        height: calc(100dvh - 120px - env(safe-area-inset-bottom, 0px)) !important;
+        min-height: 0 !important;
+        overflow: hidden !important;
+        display: flex !important;
+        flex-direction: column !important;
+        padding: 10px !important;
+        gap: 10px !important;
     }
 
-    /* Draft Panels - Ensure minimum height */
+    /* Draft Panels - Bounded heights and direct vertical scrolls for mobile tabs */
     .draft-left-panel {
-        flex: 0 0 auto;
-        width: 100%;
-        height: auto;
-        min-height: 400px;
+        width: 100% !important;
+        height: 100% !important;
+        min-height: 0 !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 10px !important;
+        flex: 1 !important;
     }
 
     .draft-right-panel {
-        width: 100%;
-        min-height: 500px !important;
-        height: auto !important;
-        overflow-y: auto;
-    }
-
-    .draft-view-container {
-        min-height: 100vh;
-        height: auto;
-        display: flex;
-        flex-direction: column;
+        width: 100% !important;
+        height: 100% !important;
+        min-height: 0 !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 10px !important;
+        flex: 1 !important;
     }
 
     /* Active Player Panel - Full width on mobile */
@@ -288,8 +301,8 @@
 
     /* Player Database */
     .player-database {
-        height: 550px;
-        flex: none;
+        height: auto !important;
+        flex: none !important;
     }
 }
 
@@ -414,7 +427,7 @@
 
     /* Padding bottom per evitare sovrapposizione con la nav */
     #view-draft .draft-view-container {
-        padding-bottom: calc(70px + env(safe-area-inset-bottom, 0px)) !important;
+        padding-bottom: 10px !important;
     }
 
     /* Mobile Chat & History Panel integrated in grid */
@@ -427,8 +440,8 @@
         box-shadow: none !important;
         border: none !important;
         animation: none !important;
-        height: calc(100dvh - 120px - env(safe-area-inset-bottom, 0px)) !important;
-        max-height: calc(100dvh - 120px - env(safe-area-inset-bottom, 0px)) !important;
+        height: 100% !important;
+        max-height: 100% !important;
     }
     .chat-panel.hidden {
         display: none !important;
@@ -440,8 +453,8 @@
         flex: 1 !important;
         display: flex !important;
         flex-direction: column !important;
-        max-height: calc(100dvh - 120px - env(safe-area-inset-bottom, 0px)) !important;
-        height: calc(100dvh - 120px - env(safe-area-inset-bottom, 0px)) !important;
+        max-height: 100% !important;
+        height: 100% !important;
         box-shadow: none !important;
         border: none !important;
         animation: none !important;

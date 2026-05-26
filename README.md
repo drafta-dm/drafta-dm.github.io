@@ -234,6 +234,11 @@ python scripts/update_players.py
 
 ## 📝 Changelog
 
+### v6.8.12 (2026-05-26) - **Fix iOS Draft View Rendering & Mobile Scroll Layout** 📱🛠️
+- ✅ **Risoluzione Sovrapposizione e Trasparenza su iOS**: Impostato `z-index: 100 !important` e un background solido (`background: var(--bg-dark) !important`) per la vista attiva del draft (`#view-draft`) su mobile. Questo previene che altre viste in background si sovrappongano o che la schermata dell'asta appaia trasparente o invisibile.
+- ✅ **Correzione Altezza Viewport e Scroll dei Tab**: Vincolata l'altezza del contenitore del draft su mobile (`.draft-view-container`) all'area utile effettiva tra header e bottom nav (`calc(100dvh - 120px - safe-area)`). Questo permette ai singoli pannelli di sinistra e destra di scorrere verticalmente in modo indipendente e fluido, senza più bloccarsi.
+- ✅ **Rimozione Scorrimenti Annidati (Giocatori)**: Disattivato lo scroll interno e l'altezza massima limitata del database giocatori (`.player-database`) e della lista dei giocatori (`.player-list-container`) su mobile. La lista ora si espande interamente all'interno del pannello sinistro, consentendo uno scorrimento nativo unico e fluido.
+
 ### v6.8.11 (2026-05-26) - **Prevent iOS Chrome Google Login Crash & Instructions Modal** 📱⚠️
 - ✅ **Prevenzione Crash Redirect su iOS Chrome**: Disattivato completamente il redirect automatico `signInWithRedirect` per i dispositivi iOS. Su iOS, i browser basati su WebKit che non sono Safari (es. Chrome per iOS) bloccano la redirezione ed i cookie cross-origin, provocando la schermata di errore di sistema *"Impossibile aprire questa pagina"*.
 - ✅ **Modal di Istruzioni per Accesso Bloccato**: Introdotta la modal informativa `#modal-auth-instructions` su iOS. Se la finestra popup viene bloccata o l'ambiente non la supporta (come nelle webview in-app), viene mostrato un pannello che spiega all'utente come procedere (es. cliccare su "Consenti sempre" in basso o copiare l'indirizzo per aprirlo manualmente in **Safari**, dove il login è supportato nativamente).
