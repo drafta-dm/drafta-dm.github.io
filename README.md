@@ -234,6 +234,20 @@ python scripts/update_players.py
 
 ## 📝 Changelog
 
+### v6.8.4 (2026-05-26) - **Semplificazione Header & Integrazione Profilo** 🚪Header
+- ✅ **Header Mobile a Riga Singola**: Riorganizzato l'header mobile su un'unica riga orizzontale di 60px contenente solo il Turno, il Timer capsula, il Round e l'avatar del profilo.
+- ✅ **Integrazione Profilo Utente**: Rimossi i pulsanti Annulla Pick, Suoni, Esporta CSV e le credenziali dall'header e spostati tutti all'interno della modal del Profilo (accessibile cliccando sull'avatar).
+- ✅ **Copia Link Asta**: Aggiunto un pulsante all'interno della modal del profilo per copiare rapidamente il link d'invito pre-compilato con ID e password per auto-join.
+- ✅ **Dynamic Sound Label**: Il pulsante dei suoni nel profilo mostra ora etichette dinamiche in base allo stato (`Suoni Attivi` / `Suoni Disattivati`).
+- ✅ **Fix Definitivo Primo Pick**: Pre-selezionato automaticamente il portiere disponibile più costoso all'avvio o re-ordinamento dell'asta, in modo che la card sia subito popolata al primo turno.
+
+### v6.8.3 (2026-05-26) - **Bugfix Mobile UX & Auto-Pick Portieri** 💬🧤
+- ✅ **Notifiche Filtrate Chat**: Il badge delle notifiche non conta più i messaggi inviati dall'utente corrente e si azzera alla lettura.
+- ✅ **Altezza Chat & History Mobile**: Ridotta l'altezza dei pannelli a `calc(100vh - 120px)` per prevenire overflow e mantenere l'input di testo a portata di mano.
+- ✅ **Fix Primo Pick Type Mismatch**: Corretto il type mismatch degli ID giocatore (string vs number) forzando la conversione in stringa durante il rendering.
+- ✅ **Tab Predefinita Mobile**: Mostrata solo la lista giocatori all'ingresso nel draft su schermi mobili.
+- ✅ **Limite Portieri Auto-Pick**: Limitata la scelta automatica a massimo 3 portieri totali (esclusi quelli già presi).
+
 ### v6.8.2 (2026-05-26) - **Allineamento Layout Mobile & UX Polish** 📱✨
 - ✅ **Header Mobile Riordinato**: Riorganizzato l'header su mobile in due righe ordinate: la prima dedicata alle credenziali stanza ed azioni rapide, la seconda interamente a turno e timer (compresso in formato capsula senza barra di progresso).
 - ✅ **Pulizia Elementi Duplicati**: Rimossi i pulsanti chat e cronologia dall'header su mobile, lasciandoli accessibili esclusivamente dal bottom nav mobile per evitare disallineamenti.
