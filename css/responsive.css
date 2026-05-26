@@ -210,7 +210,7 @@
 
     /* Teams Matrix - Horizontal scroll, single row on mobile */
     #teams-matrix {
-        display: flex !important;
+        display: flex;
         flex-direction: row;
         overflow-x: auto;
         overflow-y: visible;
@@ -274,7 +274,7 @@
         min-height: 0 !important;
         overflow-y: auto !important;
         -webkit-overflow-scrolling: touch;
-        display: flex !important;
+        display: flex;
         flex-direction: column !important;
         gap: 10px !important;
         flex: 1 !important;
@@ -286,7 +286,7 @@
         min-height: 0 !important;
         overflow-y: auto !important;
         -webkit-overflow-scrolling: touch;
-        display: flex !important;
+        display: flex;
         flex-direction: column !important;
         gap: 10px !important;
         flex: 1 !important;
@@ -461,6 +461,12 @@
         margin-bottom: 0 !important;
     }
     .draft-history-panel.hidden {
+        display: none !important;
+    }
+
+    /* Nascondi i bottoni di chiusura sui tab a tutto schermo su mobile */
+    .chat-panel .btn-close-panel,
+    .draft-history-panel .btn-close-panel {
         display: none !important;
     }
 

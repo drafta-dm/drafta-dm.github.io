@@ -234,6 +234,10 @@ python scripts/update_players.py
 
 ## 📝 Changelog
 
+### v6.9.1 (2026-05-26) - **Fix Mobile Tab Alternation & Clean Full-Screen Tabs** 📱🧹
+- ✅ **Risolto Alternarsi dei Tab Mobile**: Rimosso l'override `!important` dal CSS sulla proprietà `display` per `.draft-left-panel`, `.draft-right-panel` e `#teams-matrix`. In questo modo, le istruzioni JavaScript che modificano inline il `display` (nascondendo o mostrando i pannelli) funzionano correttamente e l'alternarsi tra la scheda Giocatori e la scheda Squadre (o il Log storico) è ripristinato.
+- ✅ **Eliminati Bottoni Chiudi su Mobile**: Nascosto il pulsante di chiusura "✕" (`.btn-close-panel`) per le schede Chat e Log storico solo quando visualizzate da mobile. Ora questi pannelli si comportano come pulite schede a schermo intero integrate nel flusso dei tab inferiori, rendendo l'esperienza utente molto più coerente.
+
 ### v6.9 (2026-05-26) - **Fix iOS Draft View Rendering & Mobile Scroll Layout** 📱🛠️
 - ✅ **Risoluzione Sovrapposizione e Trasparenza su iOS**: Impostato `z-index: 100 !important` e un background solido (`background: var(--bg-dark) !important`) per la vista attiva del draft (`#view-draft`) su mobile. Questo previene che altre viste in background si sovrappongano o che la schermata dell'asta appaia trasparente o invisibile.
 - ✅ **Correzione Altezza Viewport e Scroll dei Tab**: Vincolata l'altezza del contenitore del draft su mobile (`.draft-view-container`) all'area utile effettiva tra header e bottom nav (`calc(100dvh - 120px - safe-area)`). Questo permette ai singoli pannelli di sinistra e destra di scorrere verticalmente in modo indipendente e fluido, senza più bloccarsi.
