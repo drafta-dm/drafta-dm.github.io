@@ -139,13 +139,22 @@ export function toggleChatPanel() {
  */
 function updateBadge() {
     const badge = document.getElementById('chat-badge');
-    if (!badge) return;
+    const badgeMobile = document.getElementById('chat-badge-mobile');
+
+    const text = unreadCount > 9 ? '9+' : unreadCount;
 
     if (unreadCount > 0) {
-        badge.textContent = unreadCount > 9 ? '9+' : unreadCount;
-        badge.classList.remove('hidden');
+        if (badge) {
+            badge.textContent = text;
+            badge.classList.remove('hidden');
+        }
+        if (badgeMobile) {
+            badgeMobile.textContent = text;
+            badgeMobile.classList.remove('hidden');
+        }
     } else {
-        badge.classList.add('hidden');
+        if (badge) badge.classList.add('hidden');
+        if (badgeMobile) badgeMobile.classList.add('hidden');
     }
 }
 

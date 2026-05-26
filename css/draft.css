@@ -17,16 +17,71 @@
     background: var(--bg-card);
 }
 
-.header-top {
+.header-left {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 20px;
+}
+
+#draft-logo-home {
+    margin: 0;
+    cursor: pointer;
+    user-select: none;
+}
+
+#draft-logo-home small {
+    font-size: 0.4em;
+    color: var(--text-muted);
+    font-weight: normal;
+}
+
+.turn-indicator-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-left: 20px;
+    border-left: 1px solid #333;
+}
+
+.turn-indicator-box .label {
+    color: #666;
+    font-size: 0.9rem;
+    text-transform: uppercase;
 }
 
 .header-right {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 15px;
+}
+
+.header-info-group {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.room-credentials {
+    text-align: right;
+}
+
+.room-credentials code {
+    display: block;
+}
+
+.round-display {
+    text-align: center;
+    margin-right: 15px;
+}
+
+.round-display span {
+    display: block;
+}
+
+.header-actions-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .timer-display {

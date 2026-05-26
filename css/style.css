@@ -11,35 +11,35 @@
 /* ============================================================================
    CORE - Variabili e Reset
    ============================================================================ */
-@import './variables.css';
+@import './variables.css?v=6.8.2';
 /* Variabili CSS custom properties */
-@import './reset.css';
+@import './reset.css?v=6.8.2';
 /* Reset globale e stili base */
 
 /* ============================================================================
    TYPOGRAPHY & UI ELEMENTS
    ============================================================================ */
-@import './typography.css';
+@import './typography.css?v=6.8.2';
 /* Font, headings, utilità testo */
-@import './buttons.css';
+@import './buttons.css?v=6.8.2';
 /* Pulsanti e varianti */
-@import './forms.css';
+@import './forms.css?v=6.8.2';
 /* Input, select, toggle, stepper */
 
 /* ============================================================================
    COMPONENTS & LAYOUT
    ============================================================================ */
-@import './components.css';
+@import './components.css?v=6.8.2';
 /* Card, modal, toast, badge, tabs, liste */
-@import './views.css';
+@import './views.css?v=6.8.2';
 /* Login, Dashboard, Lobby */
-@import './draft.css';
+@import './draft.css?v=6.8.2';
 /* Vista Draft completa */
 
 /* ============================================================================
    RESPONSIVE
    ============================================================================ */
-@import './responsive.css';
+@import './responsive.css?v=6.8.2';
 /* Media queries mobile/tablet/desktop */
 
 /* ============================================================================

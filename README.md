@@ -234,6 +234,14 @@ python scripts/update_players.py
 
 ## 📝 Changelog
 
+### v6.8.2 (2026-05-26) - **Allineamento Layout Mobile & UX Polish** 📱✨
+- ✅ **Header Mobile Riordinato**: Riorganizzato l'header su mobile in due righe ordinate: la prima dedicata alle credenziali stanza ed azioni rapide, la seconda interamente a turno e timer (compresso in formato capsula senza barra di progresso).
+- ✅ **Pulizia Elementi Duplicati**: Rimossi i pulsanti chat e cronologia dall'header su mobile, lasciandoli accessibili esclusivamente dal bottom nav mobile per evitare disallineamenti.
+- ✅ **Pannelli Chat & Log Migliorati**: Chat e Cronologia si integrano fluidamente come pannelli centrali a altezza piena su mobile senza coprire l'header e il navigatore.
+- ✅ **Sincronizzazione Badge Chat**: Aggiunto il supporto e la sincronizzazione del badge di notifica messaggi non letti sul bottom nav mobile.
+- ✅ **Fix Cache-Busting**: Aggiornata la query string delle risorse principali in `index.html` alla versione `v6.8.2`.
+- ✅ **Version Bump**: Aggiornato `version.json` a `6.8.2`.
+
 ### v6.8.1 (2026-05-25) - **Fix Modal Impostazioni Ordine su Re-Import** 🛠️📋
 - ✅ **Fix Modal Ordine Turni**: Risolto il bug per cui la modal di scelta dell'ordine dei turni non appariva re-importando un CSV o rientrando in stanze differenti nella stessa sessione di navigazione (ora il flag di stato `state.hasShownOrderModal` viene correttamente resettato a `false` ad ogni ingresso stanza).
 - ✅ **Version Bump**: Aggiornato `version.json` a `6.8.1`.

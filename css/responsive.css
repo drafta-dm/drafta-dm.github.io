@@ -41,36 +41,119 @@
 
     /* Draft View - Header spacing */
     .draft-header {
-        padding: 15px 10px !important;
+        flex-direction: column !important;
+        height: auto !important;
+        padding: 8px 12px !important;
+        gap: 8px !important;
+        align-items: stretch !important;
+    }
+
+    /* Nascondi il logo su smartphone piccoli per salvare spazio */
+    #draft-logo-home {
+        display: none !important;
+    }
+
+    .header-left {
+        display: flex !important;
+        width: 100% !important;
+        justify-content: space-between !important;
+        align-items: center !important;
         gap: 10px !important;
-        flex-wrap: wrap !important;
-        height: max-content;
     }
 
-    .header-top {
-        flex-direction: column;
-        align-items: flex-start !important;
-        gap: 8px;
+    /* Rimuovi i bordi di separazione desktop */
+    #turn-indicator-box {
+        border-left: none !important;
+        padding-left: 0 !important;
+        align-items: center !important;
     }
 
+    /* Rendi il box del turno più pulito e compatto */
+    #txt-current-turn-team {
+        font-size: 1.1rem !important;
+        font-weight: bold !important;
+        padding: 4px 10px !important;
+        margin: 0 !important;
+        background: var(--bg-surface) !important;
+        border-radius: 6px !important;
+        display: inline-block !important;
+        text-align: left !important;
+    }
+
+    /* Timer compatto */
+    .timer-container {
+        border-left: none !important;
+        padding-left: 0 !important;
+        margin-left: 0 !important;
+        background: var(--bg-surface) !important;
+        padding: 4px 8px !important;
+        border-radius: 20px !important;
+        gap: 4px !important;
+    }
+
+    .timer-bar-container {
+        display: none !important; /* Nascondi la barra di progresso su mobile */
+    }
+
+    .timer-text {
+        font-size: 0.95rem !important;
+    }
+
+    .btn-timer-control {
+        font-size: 0.75rem !important;
+        padding: 1px 4px !important;
+    }
+
+    /* Riga inferiore dell'header */
     .header-right {
-        margin: 0 auto;
+        display: flex !important;
+        width: 100% !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        margin: 0 !important;
+        gap: 10px !important;
+        border-top: 1px solid var(--bg-surface) !important;
+        padding-top: 8px !important;
+    }
+
+    /* Raggruppa ID stanza e Round a sinistra */
+    .header-info-group {
+        display: flex !important;
+        gap: 10px !important;
+        align-items: center !important;
+    }
+
+    .room-credentials {
+        text-align: left !important;
+    }
+
+    .round-display {
+        margin-right: 0 !important;
+    }
+
+    .round-display span {
+        font-size: 0.8rem !important;
+    }
+
+    /* Azioni a destra */
+    #btn-toggle-chat,
+    #btn-toggle-history {
+        display: none !important; /* Nascondi perché duplicati nel bottom nav */
+    }
+
+    .header-actions-group {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+    }
+
+    .btn-header-action {
+        font-size: 1rem !important;
+        padding: 4px !important;
     }
 
     .filters {
         min-height: 95px;
-    }
-
-    /* Turn Indicator - Make it more visible */
-    #txt-current-turn-team {
-        font-size: 1.3rem !important;
-        font-weight: bold !important;
-        padding: 8px 15px;
-        background: var(--bg-surface);
-        border-radius: 8px;
-        display: block;
-        text-align: center;
-        margin: 10px 0;
     }
 
     /* Player List - max height for mobile */
@@ -291,7 +374,50 @@
     }
 
     /* Padding bottom per evitare sovrapposizione con la nav */
-    #section-draft .draft-view-container {
-        padding-bottom: 60px;
+    #view-draft .draft-view-container {
+        padding-bottom: 70px !important;
+    }
+
+    /* Mobile Chat & History Panel integrated in grid */
+    .chat-panel {
+        position: static !important;
+        width: 100% !important;
+        flex: 1 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        box-shadow: none !important;
+        border: none !important;
+        animation: none !important;
+        height: 550px !important;
+    }
+    .chat-panel.hidden {
+        display: none !important;
+    }
+
+    .draft-history-panel {
+        position: static !important;
+        width: 100% !important;
+        flex: 1 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        max-height: 550px !important;
+        height: 550px !important;
+        box-shadow: none !important;
+        border: none !important;
+        animation: none !important;
+        margin-bottom: 0 !important;
+    }
+    .draft-history-panel.hidden {
+        display: none !important;
+    }
+
+    /* Mobile Badge Positioning */
+    .mobile-nav-btn .chat-badge {
+        position: absolute !important;
+        top: 2px !important;
+        right: 15px !important;
+        font-size: 0.6rem !important;
+        width: 14px !important;
+        height: 14px !important;
     }
 }

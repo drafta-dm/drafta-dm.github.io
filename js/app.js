@@ -78,23 +78,36 @@ document.addEventListener('DOMContentLoaded', () => {
             const target = btn.dataset.target;
             const leftPanel = document.querySelector('.draft-left-panel');
             const rightPanel = document.querySelector('.draft-right-panel');
+            const chatPanel = document.getElementById('chat-panel');
+            const historyPanel = document.getElementById('draft-history-panel');
+            const teamsMatrix = document.getElementById('teams-matrix');
 
             if (target === 'players') {
                 if (leftPanel) leftPanel.style.display = '';
                 if (rightPanel) rightPanel.style.display = 'none';
-                document.getElementById('chat-panel')?.classList.add('hidden');
-                document.getElementById('draft-history-panel')?.classList.add('hidden');
+                if (chatPanel) chatPanel.classList.add('hidden');
+                if (historyPanel) historyPanel.classList.add('hidden');
             } else if (target === 'teams') {
                 if (leftPanel) leftPanel.style.display = 'none';
-                if (rightPanel) rightPanel.style.display = '';
-                document.getElementById('chat-panel')?.classList.add('hidden');
-                document.getElementById('draft-history-panel')?.classList.add('hidden');
+                if (rightPanel) {
+                    rightPanel.style.display = '';
+                    if (teamsMatrix) teamsMatrix.style.display = '';
+                }
+                if (chatPanel) chatPanel.classList.add('hidden');
+                if (historyPanel) historyPanel.classList.add('hidden');
             } else if (target === 'chat') {
-                document.getElementById('chat-panel')?.classList.remove('hidden');
-                document.getElementById('draft-history-panel')?.classList.add('hidden');
+                if (leftPanel) leftPanel.style.display = 'none';
+                if (rightPanel) rightPanel.style.display = 'none';
+                if (chatPanel) chatPanel.classList.remove('hidden');
+                if (historyPanel) historyPanel.classList.add('hidden');
             } else if (target === 'history') {
-                document.getElementById('draft-history-panel')?.classList.remove('hidden');
-                document.getElementById('chat-panel')?.classList.add('hidden');
+                if (leftPanel) leftPanel.style.display = 'none';
+                if (rightPanel) {
+                    rightPanel.style.display = '';
+                    if (teamsMatrix) teamsMatrix.style.display = 'none'; // Nasconde la matrice per visualizzare solo il log
+                }
+                if (historyPanel) historyPanel.classList.remove('hidden');
+                if (chatPanel) chatPanel.classList.add('hidden');
             }
         });
     });
