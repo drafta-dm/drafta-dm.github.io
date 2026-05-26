@@ -53,7 +53,11 @@ export function initChat(roomId) {
 
         // Se chat chiusa, incrementa badge
         if (!chatOpen && snapshot.docChanges().length > 0) {
-            const newMessages = snapshot.docChanges().filter(c => c.type === 'added');
+            const newMessages = snapshot.docChanges().filter(c => {
+                if (c.type !== 'added') return false;
+                const msg = c.doc.data();
+                return msg.uid !== state.user?.uid;
+            });
             if (newMessages.length > 0 && list.childNodes.length > 0) {
                 unreadCount += newMessages.length;
                 updateBadge();
@@ -132,6 +136,28 @@ export function toggleChatPanel() {
         const list = document.getElementById('chat-messages');
         if (list) list.scrollTop = list.scrollHeight;
     }
+}
+
+/**
+ * Segna la chat come letta (aperta) e azzera il contatore
+ */
+export function markChatAsRead() {
+    chatOpen = true;
+    unreadCount = 0;
+    updateBadge();
+    const panel = document.getElementById('chat-panel');
+    if (panel) panel.classList.remove('hidden');
+    const input = document.getElementById('chat-input');
+    if (input) input.focus();
+    const list = document.getElementById('chat-messages');
+    if (list) list.scrollTop = list.scrollHeight;
+}
+
+/**
+ * Segna la chat come chiusa
+ */
+export function markChatAsClosed() {
+    chatOpen = false;
 }
 
 /**

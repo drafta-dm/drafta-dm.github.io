@@ -86,7 +86,7 @@ export function updateDraftUI(data) {
     // ── 2. CARD GIOCATORE SELEZIONATO ───────────────────────────────────
     if (data.currentPick) {
         // Trova giocatore dall'ID in currentPick
-        const player = state.players.find(p => p.id === data.currentPick.playerId);
+        const player = state.players.find(p => String(p.id) === String(data.currentPick.playerId));
         updateStage(player);
     } else {
         // Nessun giocatore selezionato: reset card

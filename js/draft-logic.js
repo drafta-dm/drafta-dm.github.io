@@ -136,8 +136,11 @@ export function selectPlayerForAuction(playerId) {
 
     // ── Aggiorna currentPick su Firebase ────────────────────────────────
     const roomRef = doc(db, 'rooms', state.currentRoomId);
+    const numId = Number(playerId);
+    const finalId = isNaN(numId) ? playerId : numId;
+
     updateDoc(roomRef, {
-        currentPick: { playerId: playerId }
+        currentPick: { playerId: finalId }
     });
 }
 
@@ -236,10 +239,18 @@ export async function confirmPick() {
     // ── Logica Blocco Portieri Automatico ───────────────────────────────
     const useBlockGK = state.roomData.settings?.blockGK;
     if (targetRole === 'P' && useBlockGK && roles.P === 0) {
-        // Se è il primo portiere, cerca gli altri 2 della stessa squadra ed assegnali
+        // Raccogli ID presi da tutte le squadre
+        const takenIds = new Set();
+        room.teams.forEach(t => {
+            if (t.roster) {
+                t.roster.forEach(r => takenIds.add(String(r.playerId)));
+            }
+        });
+
+        // Se è il primo portiere, cerca gli altri della stessa squadra non presi ed assegnali (max 2 compagni)
         const teamMates = state.players.filter(p =>
-            p.team === player.team && p.role === 'P' && p.id !== player.id
-        );
+            p.team === player.team && p.role === 'P' && p.id !== player.id && !takenIds.has(String(p.id))
+        ).slice(0, 2);
         teamMates.forEach(m => pickedItems.push({ playerId: m.id, cost: m.cost }));
         showToast(`Blocco portieri ${player.team} assegnato!`);
     }
@@ -747,10 +758,10 @@ export async function autoPickForTimeout() {
     const pickedItems = [{ playerId: player.id, cost: player.cost }];
     const useBlockGK = room.settings?.blockGK;
     if (targetRole === 'P' && useBlockGK && roles.P === 0) {
-        // Cerca gli altri portieri della stessa squadra ed assegnali
+        // Cerca gli altri portieri della stessa squadra non presi ed assegnali (max 2 compagni)
         const teamMates = state.players.filter(p =>
-            p.team === player.team && p.role === 'P' && p.id !== player.id
-        );
+            p.team === player.team && p.role === 'P' && p.id !== player.id && !takenIds.has(String(p.id))
+        ).slice(0, 2);
         teamMates.forEach(m => pickedItems.push({ playerId: m.id, cost: m.cost }));
     }
 

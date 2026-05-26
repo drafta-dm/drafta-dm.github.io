@@ -32,7 +32,7 @@ import { setupDraftListeners } from './draft-logic.js';
 import { setupCSVListeners } from './csv-handler.js';
 import { initTeamsMatrixDragScroll } from './drag-scroll.js';
 import { setupHistoryListeners } from './draft-history.js';
-import { setupChatListeners } from './chat.js';
+import { setupChatListeners, markChatAsRead, markChatAsClosed } from './chat.js';
 import { setupSoundListeners } from './sounds.js';
 
 /**
@@ -87,6 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (rightPanel) rightPanel.style.display = 'none';
                 if (chatPanel) chatPanel.classList.add('hidden');
                 if (historyPanel) historyPanel.classList.add('hidden');
+                markChatAsClosed();
             } else if (target === 'teams') {
                 if (leftPanel) leftPanel.style.display = 'none';
                 if (rightPanel) {
@@ -95,11 +96,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 if (chatPanel) chatPanel.classList.add('hidden');
                 if (historyPanel) historyPanel.classList.add('hidden');
+                markChatAsClosed();
             } else if (target === 'chat') {
                 if (leftPanel) leftPanel.style.display = 'none';
                 if (rightPanel) rightPanel.style.display = 'none';
                 if (chatPanel) chatPanel.classList.remove('hidden');
                 if (historyPanel) historyPanel.classList.add('hidden');
+                markChatAsRead();
             } else if (target === 'history') {
                 if (leftPanel) leftPanel.style.display = 'none';
                 if (rightPanel) {
@@ -108,6 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 if (historyPanel) historyPanel.classList.remove('hidden');
                 if (chatPanel) chatPanel.classList.add('hidden');
+                markChatAsClosed();
             }
         });
     });

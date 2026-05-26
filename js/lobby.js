@@ -48,6 +48,27 @@ export function renderLobbyOrDraft(data) {
         if (views.draft.classList.contains('hidden')) {
             switchView('draft');
             renderPlayerList(); // Rendering iniziale lista giocatori
+
+            // Gestione Mobile: default visualizzazione tab giocatori all'ingresso nel draft
+            if (window.innerWidth <= 768) {
+                document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
+                    if (btn.dataset.target === 'players') {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+
+                const leftPanel = document.querySelector('.draft-left-panel');
+                const rightPanel = document.querySelector('.draft-right-panel');
+                const chatPanel = document.getElementById('chat-panel');
+                const historyPanel = document.getElementById('draft-history-panel');
+
+                if (leftPanel) leftPanel.style.display = '';
+                if (rightPanel) rightPanel.style.display = 'none';
+                if (chatPanel) chatPanel.classList.add('hidden');
+                if (historyPanel) historyPanel.classList.add('hidden');
+            }
         }
         updateDraftUI(data);
 

@@ -388,7 +388,8 @@
         box-shadow: none !important;
         border: none !important;
         animation: none !important;
-        height: 550px !important;
+        height: calc(100vh - 120px) !important;
+        max-height: calc(100vh - 120px) !important;
     }
     .chat-panel.hidden {
         display: none !important;
@@ -400,8 +401,8 @@
         flex: 1 !important;
         display: flex !important;
         flex-direction: column !important;
-        max-height: 550px !important;
-        height: 550px !important;
+        max-height: calc(100vh - 120px) !important;
+        height: calc(100vh - 120px) !important;
         box-shadow: none !important;
         border: none !important;
         animation: none !important;
