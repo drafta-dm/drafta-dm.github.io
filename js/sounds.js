@@ -111,7 +111,7 @@ export function toggleMute() {
 function updateMuteUI() {
     const btn = document.getElementById('btn-toggle-sound');
     if (btn) {
-        btn.textContent = isMuted ? '🔇' : '🔊';
+        btn.innerHTML = isMuted ? '🔇 Suoni Disattivati' : '🔊 Suoni Attivi';
         btn.title = isMuted ? 'Riattiva suoni' : 'Disattiva suoni';
     }
 }

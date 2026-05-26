@@ -169,6 +169,18 @@ export function setupAuthListeners() {
         document.getElementById('profile-modal-avatar').src = state.user.photoURL || '';
         document.getElementById('profile-modal-name').textContent = state.user.displayName || 'Utente';
         document.getElementById('profile-modal-email').textContent = state.user.email || '';
+
+        // Gestisci visibilità credenziali e azioni asta nel profilo
+        const roomActions = document.getElementById('profile-room-actions');
+        const roomCredentials = document.getElementById('profile-room-credentials');
+        if (state.currentRoomId) {
+            if (roomActions) roomActions.style.display = 'flex';
+            if (roomCredentials) roomCredentials.style.display = 'flex';
+        } else {
+            if (roomActions) roomActions.style.display = 'none';
+            if (roomCredentials) roomCredentials.style.display = 'none';
+        }
+
         document.getElementById('modal-profile').classList.remove('hidden');
     };
 

@@ -58,13 +58,28 @@ export async function startDraft() {
         initialTurnIndex++;
     }
 
+    // Trova il portiere più costoso disponibile per pre-selezionarlo ed avviare l'asta in modo pulito
+    const takenIds = new Set();
+    state.roomData.teams.forEach(t => {
+        if (t.roster) {
+            t.roster.forEach(r => takenIds.add(String(r.playerId)));
+        }
+    });
+    const goalkeepers = state.players.filter(p => p.role === 'P' && !takenIds.has(String(p.id)));
+    let initialPick = null;
+    if (goalkeepers.length > 0) {
+        goalkeepers.sort((a, b) => b.cost - a.cost);
+        initialPick = { playerId: goalkeepers[0].id };
+    }
+
     await updateDoc(doc(db, "rooms", state.currentRoomId), {
         status: "started",
         draftOrder: teamIds,
         currentTurnIndex: initialTurnIndex,
         roundNumber: 1,
         turnStartedAt: Date.now(),
-        draftHistory: []
+        draftHistory: [],
+        currentPick: initialPick
     });
 }
 
@@ -544,12 +559,27 @@ export async function applyDraftOrder(type) {
         initialTurnIndex++;
     }
 
+    // Trova il portiere più costoso disponibile per pre-selezionarlo ed avviare l'asta in modo pulito
+    const takenIds = new Set();
+    state.roomData.teams.forEach(t => {
+        if (t.roster) {
+            t.roster.forEach(r => takenIds.add(String(r.playerId)));
+        }
+    });
+    const goalkeepers = state.players.filter(p => p.role === 'P' && !takenIds.has(String(p.id)));
+    let initialPick = null;
+    if (goalkeepers.length > 0) {
+        goalkeepers.sort((a, b) => b.cost - a.cost);
+        initialPick = { playerId: goalkeepers[0].id };
+    }
+
     // Salva su Firebase
     const roomRef = doc(db, 'rooms', state.currentRoomId);
     await updateDoc(roomRef, {
         draftOrder: newOrder,
         currentTurnIndex: initialTurnIndex,
         orderSettingsApplied: true,
+        currentPick: initialPick,
         "settings.sortMode": type  // Salva modalità per applicarla ad ogni turno
     });
 

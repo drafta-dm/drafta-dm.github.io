@@ -756,6 +756,24 @@ export function setupRoomListeners() {
             prompt('Copia questo link:', link);
         });
     });
+
+    // ── Profilo Utente: Copia Link Invito (con ID/PSW) ───────────────────
+    const btnProfileCopyLink = document.getElementById('btn-profile-copy-link');
+    if (btnProfileCopyLink) {
+        btnProfileCopyLink.addEventListener('click', () => {
+            if (!state.currentRoomId || !state.roomData) return;
+            const roomId = state.currentRoomId;
+            const password = state.roomData.password || '';
+            const baseUrl = window.location.origin + window.location.pathname;
+            const link = `${baseUrl}?room=${roomId}&pass=${password}`;
+
+            navigator.clipboard.writeText(link).then(() => {
+                showToast('📋 Link asta copiato negli appunti!');
+            }).catch(() => {
+                prompt('Copia questo link:', link);
+            });
+        });
+    }
 }
 
 /**

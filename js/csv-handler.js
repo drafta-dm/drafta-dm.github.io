@@ -221,6 +221,20 @@ export async function createRoomFromCSV(csvText) {
         initialTurnIndex++;
     }
 
+    // Trova il portiere più costoso disponibile per pre-selezionarlo ed avviare l'asta in modo pulito
+    const takenIds = new Set();
+    teams.forEach(t => {
+        if (t.roster) {
+            t.roster.forEach(r => takenIds.add(String(r.playerId)));
+        }
+    });
+    const goalkeepers = state.players.filter(p => p.role === 'P' && !takenIds.has(String(p.id)));
+    let initialPick = null;
+    if (goalkeepers.length > 0) {
+        goalkeepers.sort((a, b) => b.cost - a.cost);
+        initialPick = { playerId: goalkeepers[0].id };
+    }
+
     const roomData = {
         hostId: state.user.uid,
         password: password,
@@ -234,7 +248,7 @@ export async function createRoomFromCSV(csvText) {
         currentTurnIndex: initialTurnIndex,
         roundNumber: 1,
         draftOrder: draftOrder, // Ordine turni iniziale = ordine squadre
-        currentPick: null,
+        currentPick: initialPick,
         settings: {
             blockGK: false,               // Blocco portieri disabilitato
             strictRoles: true             // Ordine ruoli P->D->C->A obbligatorio

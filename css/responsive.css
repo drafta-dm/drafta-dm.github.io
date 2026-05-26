@@ -41,11 +41,13 @@
 
     /* Draft View - Header spacing */
     .draft-header {
-        flex-direction: column !important;
-        height: auto !important;
-        padding: 8px 12px !important;
-        gap: 8px !important;
-        align-items: stretch !important;
+        height: 60px !important;
+        padding: 0 10px !important;
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 5px !important;
     }
 
     /* Nascondi il logo su smartphone piccoli per salvare spazio */
@@ -55,10 +57,9 @@
 
     .header-left {
         display: flex !important;
-        width: 100% !important;
-        justify-content: space-between !important;
+        width: auto !important;
         align-items: center !important;
-        gap: 10px !important;
+        gap: 8px !important;
     }
 
     /* Rimuovi i bordi di separazione desktop */
@@ -70,14 +71,18 @@
 
     /* Rendi il box del turno più pulito e compatto */
     #txt-current-turn-team {
-        font-size: 1.1rem !important;
+        font-size: 0.95rem !important;
         font-weight: bold !important;
-        padding: 4px 10px !important;
+        padding: 4px 8px !important;
         margin: 0 !important;
         background: var(--bg-surface) !important;
         border-radius: 6px !important;
         display: inline-block !important;
         text-align: left !important;
+        max-width: 120px !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
     }
 
     /* Timer compatto */
@@ -86,7 +91,7 @@
         padding-left: 0 !important;
         margin-left: 0 !important;
         background: var(--bg-surface) !important;
-        padding: 4px 8px !important;
+        padding: 4px 6px !important;
         border-radius: 20px !important;
         gap: 4px !important;
     }
@@ -96,35 +101,31 @@
     }
 
     .timer-text {
-        font-size: 0.95rem !important;
+        font-size: 0.85rem !important;
     }
 
     .btn-timer-control {
-        font-size: 0.75rem !important;
-        padding: 1px 4px !important;
+        font-size: 0.7rem !important;
+        padding: 1px 2px !important;
     }
 
-    /* Riga inferiore dell'header */
+    /* Riga dell'header destra */
     .header-right {
         display: flex !important;
-        width: 100% !important;
-        justify-content: space-between !important;
+        width: auto !important;
+        justify-content: flex-end !important;
         align-items: center !important;
         margin: 0 !important;
-        gap: 10px !important;
-        border-top: 1px solid var(--bg-surface) !important;
-        padding-top: 8px !important;
+        gap: 8px !important;
+        border-top: none !important;
+        padding-top: 0 !important;
     }
 
     /* Raggruppa ID stanza e Round a sinistra */
     .header-info-group {
         display: flex !important;
-        gap: 10px !important;
+        gap: 5px !important;
         align-items: center !important;
-    }
-
-    .room-credentials {
-        text-align: left !important;
     }
 
     .round-display {
@@ -144,7 +145,7 @@
     .header-actions-group {
         display: flex !important;
         align-items: center !important;
-        gap: 8px !important;
+        gap: 5px !important;
     }
 
     .btn-header-action {
