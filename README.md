@@ -234,6 +234,14 @@ python scripts/update_players.py
 
 ## 📝 Changelog
 
+### v6.8.8 (2026-05-26) - **Fix Google Login Popup & Mobile Scroll Layout** 🔑📱
+- ✅ **Google Login con Popup su Mobile**: Utilizzato `signInWithPopup` per tutte le piattaforme. Il redirect (`signInWithRedirect`) fallisce sui browser mobili a causa del blocco dei cookie di terze parti (cross-origin storage block) quando il sito è ospitato su domini esterni (come GitHub Pages).
+- ✅ **Ripristino Scroll Verticale da Mobile**: Impostata la posizione delle viste (`.view`) a `position: relative !important` e altezza automatica per `#app` e `.view` su dispositivi mobili. Questo inserisce la vista attiva nel normale flusso di layout (mentre quelle inattive sono `display: none`), ripristinando il corretto scorrimento nativo delle pagine di login, dashboard e lobby da mobile.
+
+### v6.8.7 (2026-05-26) - **Fix Google Login on Mobile & Restored View Scroll** 🔑📱
+- ✅ **Google Login con Redirect su Mobile**: Sostituito `signInWithPopup` con `signInWithRedirect` su browser mobile per prevenire il blocco delle finestre popup nativo del browser. Aggiunta la gestione ed il recupero del risultato dell'accesso (`getRedirectResult`) all'inizializzazione dell'applicazione.
+- ✅ **Ripristino dello Scroll per le Viste Standard**: Rimossa la limitazione di altezza e scroll dal body e dalle viste generiche (login, dashboard, lobby), ripristinando il normale scorrimento verticale. Il blocco del viewport a `100vh` con altezza fissa viene ora applicato esclusivamente alla vista di draft (`#view-draft` con `position: fixed; inset: 0; overflow: hidden;`), permettendo di utilizzare i tab di navigazione fissi a fondo schermo senza bloccare lo scorrimento naturale delle altre pagine.
+
 ### v6.8.6 (2026-05-26) - **Fix Mobile Viewport & Pre-selection Logs** 📱🪵
 - ✅ **Fix Layout a Schermo Intero su Mobile**: Forzato il body e le views a `height: 100vh; overflow: hidden; position: fixed;` su mobile, eliminando lo scrolling del body. Le aree interne dell'applicazione (lista giocatori, squadre, chat, history) scorrono autonomamente. Questo garantisce che la bottom navigation rimanga fissa a fondo schermo e non possa mai scivolare fuori dal viewport o essere coperta.
 - ✅ **Console Logs per Asta / Pre-selezione**: Aggiunti messaggi di log diagnostici dettagliati nel modulo `getInitialPickForTeam` e `getTeamTargetRole` per monitorare in console la scelta automatica dei giocatori all'inizio e al re-ordinamento.

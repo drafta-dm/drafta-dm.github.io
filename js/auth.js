@@ -9,7 +9,7 @@
 // ============================================================================
 
 // Import SDK Firebase per autenticazione
-import { auth, googleProvider, signInWithPopup, onAuthStateChanged, signOut } from './firebase-modules.js';
+import { auth, googleProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut } from './firebase-modules.js';
 
 // Import moduli interni dell'applicazione
 import { state } from './state.js';                                              // Stato globale
@@ -38,6 +38,12 @@ import { loadRecentRooms, leaveRoom, joinRoom } from './room-manager.js';       
  * initAuth();
  */
 export function initAuth() {
+    // Gestione degli errori del re-indirizzamento Google (es. se fallisce su mobile)
+    getRedirectResult(auth).catch((error) => {
+        console.error("Redirect sign-in error:", error);
+        showToast("Errore di accesso: " + error.message);
+    });
+
     // Registra un observer che viene chiamato ogni volta che lo stato di autenticazione cambia
     onAuthStateChanged(auth, (user) => {
         if (user) {
@@ -143,10 +149,10 @@ export function setupAuthListeners() {
     // ── Pulsante Login con Google ───────────────────────────────────────
     document.getElementById('btn-login-google').addEventListener('click', async () => {
         try {
-            // Apre il popup di autenticazione Google OAuth 2.0
-            // Se il login ha successo, onAuthStateChanged verrà attivato automaticamente
+            // Usa il popup standard sia su desktop che su mobile.
+            // Il redirect su mobile fallisce a causa del blocco dei cookie di terze parti
+            // (cross-origin storage block) quando l'app è ospitata su GitHub Pages.
             await signInWithPopup(auth, googleProvider);
-
         } catch (error) {
             // Gestione errori (popup chiuso, permessi negati, rete offline, ecc.)
             console.error(error);
