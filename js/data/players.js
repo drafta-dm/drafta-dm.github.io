@@ -1,4 +1,4 @@
-export const playersLastUpdated = "2026-11-18T16:16:25Z";
+export const playersLastUpdated = "2026-11-19T16:25:02Z";
 
 export const playersDB = [
     {
