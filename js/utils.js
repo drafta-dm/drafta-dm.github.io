@@ -1,274 +1,76 @@
-// ============================================================================
-// MODULO: Funzioni di Utilità
-// ============================================================================
-// Collezione di helper functions riutilizzabili in tutta l'applicazione.
-// 
-// Categorie:
-// - Navigazione: cambio view, redirect
-// - Notifiche: toast, modal di errore
-// - Generazione: ID stanze, colori
-// - UI: utility varie per interfaccia
-// ============================================================================
+// Small helpers shared by every module: views, dialogs, toasts, escaping, icons.
 
 import { views, state } from './state.js';
+import { playSound } from './sounds.js';
 
-/**
- * Cambia la view attiva dell'applicazione con transizione CSS
- * 
- * Gestisce il sistema di navigazione single-page dell'app.
- * Nasconde tutte le view e mostra solo quella richiesta.
- * 
- * Flusso:
- * 1. Rimuove classe 'active' da tutte le view
- * 2. Aggiunge classe 'hidden' a tutte le view
- * 3. Rimuove 'hidden' dalla view target
- * 4. Forza reflow per attivare transizioni CSS
- * 5. Aggiunge 'active' alla view target (trigger transizioni)
- * 
- * View disponibili:
- * - 'login': Schermata login con Google
- * - 'dashboard': Dashboard con crea/join stanza
- * - 'lobby': Lobby pre-draft
- * - 'draft': Vista draft principale
- * 
- * @function switchView
- * @param {string} viewName - Nome della view da mostrare ('login' | 'dashboard' | 'lobby' | 'draft')
- * @returns {void}
- * 
- * @example
- * switchView('dashboard');  // Mostra dashboard
- * switchView('lobby');      // Mostra lobby
- */
 export function switchView(viewName) {
-    // Nascondi tutte le view
-    Object.values(views).forEach(el => {
-        el.classList.remove('active');
-        el.classList.add('hidden');
-    });
-
-    // Mostra view target
-    const target = views[viewName];
-    target.classList.remove('hidden');
-
-    // Forza reflow per attivare transizioni CSS
-    void target.offsetWidth;
-
-    // Attiva transizioni di entrata
-    target.classList.add('active');
+    Object.values(views).forEach((el) => { el.classList.remove('active'); el.classList.add('hidden'); });
+    views[viewName].classList.remove('hidden');
+    views[viewName].classList.add('active');
+    window.scrollTo(0, 0);
 }
 
-/**
- * Mostra un messaggio toast temporaneo in basso a destra
- * 
- * I toast sono notifiche non-invasive che scompaiono automaticamente.
- * Vengono usati per feedback utente (successo operazioni, errori lievi).
- * 
- * Caratteristiche:
- * - Durata fissa: 3 secondi
- * - Posizione: bottom-right (gestito da CSS)
- * - Multiple toast possono essere mostrati contemporaneamente (stack verticale)
- * - Auto-remove dopo timeout
- * 
- * @function showToast
- * @param {string} msg - Messaggio da mostrare nel toast
- * @returns {void}
- * 
- * @example
- * showToast("Stanza creata con successo!");
- * showToast("⚠️ Password errata");
- * showToast("✅ Giocatore assegnato");
- */
-export function showToast(msg) {
-    const container = document.getElementById('toast-container');
+export const showDashboard = () => switchView('dashboard');
 
-    // Crea elemento toast
+// Everything that comes from Firestore (team names, Google display names, chat) goes through here before innerHTML.
+const ESC = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+export const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ESC[c]);
+
+export const icon = (name, cls = '') => `<svg class="i ${cls}" aria-hidden="true"><use href="#i-${name}"/></svg>`;
+
+export function openModal(id) {
+    const d = document.getElementById(id);
+    if (d && !d.open) d.showModal();
+}
+export const closeModal = (id) => document.getElementById(id)?.close();
+
+export function showToast(msg) {
+    const box = document.getElementById('toast-container');
+    // re-show the popover so it lands on top of any dialog opened since
+    if (box.showPopover) { if (box.matches(':popover-open')) box.hidePopover(); box.showPopover(); }
     const toast = document.createElement('div');
     toast.className = 'toast';
     toast.textContent = msg;
-
-    // Aggiungi al container
-    container.appendChild(toast);
-
-    // Auto-remove dopo 3 secondi
+    box.appendChild(toast);
     setTimeout(() => {
         toast.remove();
-    }, 3000);
+        if (!box.children.length && box.hidePopover && box.matches(':popover-open')) box.hidePopover();
+    }, 3500);
 }
 
-/**
- * Genera un ID univoco casuale per una nuova stanza
- * 
- * Algoritmo:
- * 1. Genera numero random
- * 2. Converte in base-36 (0-9, a-z)
- * 3. Prende 6 caratteri dalla posizione 2 (salta "0.")
- * 4. Converte in maiuscolo
- * 
- * Risultato: ID di 6 caratteri alfanumerici maiuscoli (es: "AB12XY", "K3M9P2")
- * 
- * Probabilità collisione:
- * - 36^6 = 2,176,782,336 combinazioni possibili
- * - Con poche migliaia di stanze contemporanee, probabilità collisione ~0%
- * 
- * @function generateRoomId
- * @returns {string} ID stanza univoco di 6 caratteri maiuscoli
- * 
- * @example
- * const roomId = generateRoomId();  // "AB12XY"
- * console.log(roomId.length);       // 6
- */
-export function generateRoomId() {
-    return Math.random().toString(36).substring(2, 8).toUpperCase();
+export function showBigError(msg) {
+    document.getElementById('modal-error-text').textContent = msg;
+    openModal('modal-error-big');
+    playSound('error');
 }
 
-/**
- * Ottiene un colore CSS per la visualizzazione della squadra
- * 
- * Attualmente ritorna un colore neutro per tutte le squadre.
- * Può essere esteso in futuro per assegnare colori diversi basati sull'ID.
- * 
- * Possibile implementazione futura:
- * - Hash dell'ID per selezionare da palette predefinita
- * - Assegnazione sequenziale da array di colori
- * - Colori personalizzabili dall'utente
- * 
- * @function getTeamColor
- * @param {string} id - ID della squadra (es: "team-1", "team-2")
- * @returns {string} Colore CSS (variabile CSS o hex/rgb)
- * 
- * @example
- * const color = getTeamColor('team-1');  // "var(--bg-surface)"
- */
-// Palette di 20 colori distinti e vivaci per le squadre
+export async function copyText(text, okMsg) {
+    try {
+        await navigator.clipboard.writeText(text);
+        showToast(okMsg);
+    } catch {
+        prompt('Copia il testo:', text);
+    }
+}
+
+export const inviteLink = (roomId, password) => `${location.origin}${location.pathname}?room=${roomId}&pass=${encodeURIComponent(password || '')}`;
+
+// 6 characters from crypto, without the ones people misread (0/O, 1/I/L).
+export function generateRoomId(len = 6) {
+    const abc = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+    return Array.from(crypto.getRandomValues(new Uint8Array(len)), (b) => abc[b % abc.length]).join('');
+}
+
 export const TEAM_PALETTE = [
-    '#00ffc2', // Teal (primary)
-    '#7c3aed', // Viola
-    '#ff6b35', // Arancione
-    '#3b82f6', // Blu
-    '#ef4444', // Rosso
-    '#22c55e', // Verde
-    '#f59e0b', // Ambra
-    '#ec4899', // Rosa
-    '#06b6d4', // Cyan
-    '#a855f7', // Viola chiaro
-    '#f97316', // Arancione scuro
-    '#14b8a6', // Teal chiaro
-    '#e11d48', // Rosso rosa
-    '#8b5cf6', // Indaco
-    '#84cc16', // Lime
-    '#0ea5e9', // Azzurro
-    '#d946ef', // Magenta
-    '#facc15', // Giallo
-    '#64748b', // Grigio ardesia
-    '#fb923c', // Pesca
+    '#2fe37f', '#7c3aed', '#ff6b35', '#3b82f6', '#ef4444', '#c6f36b', '#f59e0b', '#ec4899', '#06b6d4', '#a855f7',
+    '#f97316', '#14b8a6', '#e11d48', '#8b5cf6', '#84cc16', '#0ea5e9', '#d946ef', '#facc15', '#64748b', '#fb923c',
 ];
 
-export function getTeamColor(id, roomData = null) {
-    let customColor = null;
-    if (roomData && roomData.teams) {
-        const team = roomData.teams.find(t => t.id === id);
-        if (team && team.color) customColor = team.color;
-    } else if (state && state.roomData && state.roomData.teams) {
-        const team = state.roomData.teams.find(t => t.id === id);
-        if (team && team.color) customColor = team.color;
-    }
-
-    if (customColor) return customColor;
-
-    // Estrai indice dal team ID (es: "team-0" → 0, "team-15" → 15)
-    const match = id?.match?.(/(\d+)/);
-    const index = match ? parseInt(match[1]) : 0;
-
-    return TEAM_PALETTE[index % TEAM_PALETTE.length];
+export function getTeamColor(id, roomData = state.roomData) {
+    const team = roomData?.teams?.find((t) => t.id === id);
+    if (team?.color) return team.color;
+    const n = parseInt(String(id).match(/\d+/)?.[0] || '0', 10);
+    return TEAM_PALETTE[n % TEAM_PALETTE.length];
 }
 
-/**
- * Mostra una modal di errore grande e vistosa con effetto sonoro
- * 
- * Utilizzata per errori critici durante il draft che richiedono
- * attenzione immediata dell'utente (es: ordine ruoli non rispettato,
- * slot pieni, crediti insufficienti).
- * 
- * Caratteristiche:
- * - Fullscreen overlay con sfondo scuro
- * - Icona grande 🚫
- * - Bordo rosso e ombra colorata
- * - Suono di errore (best-effort, può fallire se permessi bloccati)
- * - Pulsante OK per chiudere
- * - Creazione lazy: modal viene creata solo al primo utilizzo
- * 
- * Differenza con toast:
- * - Toast: errori lievi, auto-dismissal, non bloccante
- * - Big Error: errori critici, richiede azione utente, bloccante
- * 
- * @function showBigError
- * @param {string} msg - Messaggio di errore da mostrare
- * @returns {void}
- * 
- * @example
- * showBigError("Devi completare i portieri prima!");
- * showBigError("Slot Difensori completi!");
- * showBigError("Crediti insufficienti!");
- */
-export function showBigError(msg) {
-    // ── Creazione lazy della modal ─────────────────────────────────────
-    let modal = document.getElementById('modal-error-big');
-
-    if (!modal) {
-        // Crea modal al primo utilizzo
-        modal = document.createElement('div');
-        modal.id = 'modal-error-big';
-
-        // Stile inline per garantire massima visibilità
-        modal.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); display:flex; align-items:center; justify-content:center; z-index:9999;';
-
-        modal.innerHTML = `
-            <div style="background:#1a1a1a; padding:2rem; border-radius:1rem; border:2px solid #ff4444; max-width:400px; text-align:center; box-shadow:0 20px 60px rgba(255,68,68,0.5);">
-                <div style="font-size:4rem; margin-bottom:1rem;">🚫</div>
-                <h3 style="color:#ff4444; font-size:1.5rem; margin-bottom:1rem; font-weight:bold;">ATTENZIONE</h3>
-                <p id="modal-error-text" style="color:white; font-size:1.1rem; margin-bottom:2rem; font-weight:500;"></p>
-                <button onclick="document.getElementById('modal-error-big').style.display='none'" 
-                        style="background:#ff4444; color:white; border:none; padding:0.75rem 2rem; border-radius:0.5rem; font-size:1rem; font-weight:bold; cursor:pointer; width:100%;">OK</button>
-            </div>
-        `;
-
-        document.body.appendChild(modal);
-    }
-
-    // ── Aggiorna contenuto e mostra ────────────────────────────────────
-    document.getElementById('modal-error-text').textContent = msg;
-    modal.style.display = 'flex';
-
-    // ── Effetto sonoro di errore ────────────────────────────────────────
-    // Best-effort: potrebbe fallire se autoplay bloccato o connessione assente
-    const audio = new Audio('https://actions.google.com/sounds/v1/alarms/error_buzzer.ogg');
-    audio.volume = 0.5;
-    audio.play().catch(e => {
-        // Fallimento silenzioso: suono è opzionale
-    });
-}
-
-/**
- * Reindirizza l'utente alla dashboard
- * 
- * Semplicemente un wrapper per switchView('dashboard').
- * Utilizzata principalmente in room-manager quando una stanza
- * viene eliminata o non esiste più.
- * 
- * Fornire una funzione dedicata migliora la leggibilità del codice
- * e permette di aggiungere logica aggiuntiva in futuro se necessario
- * (es: cleanup stato, reset variabili).
- * 
- * @function showDashboard
- * @returns {void}
- * 
- * @example
- * // In room-manager quando stanza non esiste
- * if (!docSnap.exists()) {
- *   showToast("La stanza non esiste più.");
- *   showDashboard();  // Torna alla dashboard
- * }
- */
-export function showDashboard() {
-    switchView('dashboard');
-}
+export const ROLE_NAMES = { P: 'Portiere', D: 'Difensore', C: 'Centrocampista', A: 'Attaccante' };

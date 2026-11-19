@@ -1,45 +1,56 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function isMember(roomId) {
+      return signedIn() && request.auth.uid in get(/databases/$(database)/documents/rooms/$(roomId)).data.participantIds;
+    }
+    function unchanged(keys) { return !request.resource.data.diff(resource.data).affectedKeys().hasAny(keys); }
+
+    // FCM tokens: each user only their own
     match /users/{userId}/fcmTokens/{tokenId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read, write: if signedIn() && request.auth.uid == userId;
     }
 
     match /rooms/{roomId} {
-      allow read: if request.auth != null;
-      allow create: if request.auth != null;
-      allow update: if request.auth != null && (
-        // L'host ha permessi di scrittura completi
-        resource.data.hostId == request.auth.uid || 
-        // I partecipanti possono solo aggiornare lo stato senza modificare i metadati critici della stanza
-        (
-          request.resource.data.get('hostId', null) == resource.data.get('hostId', null) &&
-          request.resource.data.get('password', null) == resource.data.get('password', null) &&
-          request.resource.data.get('settings', null) == resource.data.get('settings', null) &&
-          (
-            // Se sono già partecipanti
-            request.auth.uid in resource.data.participantIds ||
-            // Oppure si stanno unendo alla stanza aggiungendo unicamente il proprio UID
-            (
-              request.resource.data.participantIds.hasAll(resource.data.participantIds) &&
-              request.resource.data.participantIds.size() == resource.data.participantIds.size() + 1 &&
-              request.auth.uid in request.resource.data.participantIds
-            )
-          )
-        )
-      );
-      allow delete: if request.auth != null && resource.data.hostId == request.auth.uid;
+      // Only who is in the room reads it: the "my rooms" list filters on participantIds,
+      // a get by code works only after joining. Nobody can list other people's rooms.
+      allow read: if signedIn() && request.auth.uid in resource.data.participantIds;
 
-      // Sub-collezione messaggi chat
+      allow create: if signedIn()
+        && request.resource.data.hostId == request.auth.uid
+        && request.resource.data.participantIds == [request.auth.uid];
+
+      allow update: if signedIn() && (
+        // the host can do anything
+        resource.data.hostId == request.auth.uid
+        // members play the draft, but don't touch host, password, rules or who is in
+        || (request.auth.uid in resource.data.participantIds
+            && unchanged(['hostId', 'password', 'settings', 'participantIds', 'joins']))
+        // joining: only yourself, with the room's password in joins.<uid>
+        || (!(request.auth.uid in resource.data.participantIds)
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['participantIds', 'participantNames', 'joins'])
+            && request.resource.data.participantIds.hasAll(resource.data.participantIds)
+            && request.resource.data.participantIds.size() == resource.data.participantIds.size() + 1
+            && request.auth.uid in request.resource.data.participantIds
+            && request.resource.data.joins[request.auth.uid] == resource.data.password
+            && request.resource.data.participantNames.diff(resource.data.get('participantNames', {})).affectedKeys().hasOnly([request.auth.uid]))
+      );
+
+      allow delete: if signedIn() && resource.data.hostId == request.auth.uid;
+
       match /messages/{messageId} {
-        allow read: if request.auth != null;
-        allow create: if request.auth != null;
+        allow read: if isMember(roomId);
+        allow create: if isMember(roomId)
+          && request.resource.data.uid == request.auth.uid
+          && request.resource.data.text is string
+          && request.resource.data.text.size() <= 500;
       }
 
-      // Sub-collezione snapshot draft
-      match /snapshots/{snapshotId} {
-        allow read: if request.auth != null;
-        allow create: if request.auth != null;
+      // presence/{uid}: a timestamp while Drafta is on screen
+      match /presence/{uid} {
+        allow read: if isMember(roomId);
+        allow write: if isMember(roomId) && request.auth.uid == uid;
       }
     }
   }

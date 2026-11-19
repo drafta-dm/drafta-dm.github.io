@@ -1,85 +1,58 @@
-import openpyxl
+"""
+Turns scripts/quotazioni.xlsx into js/data/players.js (id, name, team, role, FVM as cost).
+Refuses to write a list that looks broken, so a bad download never empties the app.
+
+Usage: python scripts/convert_excel_to_js.py
+"""
+
 import json
-import io
 import os
+import sys
+from datetime import datetime, timezone
+
+import openpyxl
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+TARGET = os.path.join(os.path.dirname(HERE), "js", "data", "players.js")
+COLUMNS = {"id": "Id", "role": "R", "name": "Nome", "team": "Squadra", "cost": "FVM"}
+
 
 def convert():
+    rows = list(openpyxl.load_workbook(os.path.join(HERE, "quotazioni.xlsx"), data_only=True).active.iter_rows(values_only=True))
+    # row 1 is a title, row 2 the headers: find columns by name, not by position
+    headers = [str(h).strip() if h is not None else "" for h in rows[1]]
     try:
-        # Calcolo dei percorsi in modo dinamico
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-        project_root = os.path.dirname(script_dir)
-        target_path = os.path.join(project_root, 'js', 'data', 'players.js')
+        idx = {key: headers.index(name) for key, name in COLUMNS.items()}
+    except ValueError as e:
+        sys.exit(f"[ERRORE] colonna mancante nel listone: {e}. Intestazioni: {headers}")
 
-        excel_name = 'Quotazioni_Fantacalcio_Stagione_2025_26.xlsx'
-        excel_path = os.path.join(project_root, excel_name)
-        if not os.path.exists(excel_path):
-            excel_path = os.path.join(script_dir, excel_name)
+    players = []
+    for row in rows[2:]:
+        if not row[idx["name"]] or row[idx["role"]] not in ("P", "D", "C", "A"):
+            continue
+        cost = row[idx["cost"]]
+        players.append({
+            "id": str(row[idx["id"]]),
+            "name": row[idx["name"]],
+            "team": row[idx["team"]],
+            "role": row[idx["role"]],
+            "cost": int(cost) if cost is not None else 1,
+        })
 
-        wb = openpyxl.load_workbook(excel_path, data_only=True)
-        sheet = wb.active
-        
-        players = []
-        
-        # We start from row 3 (index 2 in 0-based, or just skip 2 rows)
-        # Row 1 is title, Row 2 is headers.
-        
-        # Headers are at row 2 (1-based in openpyxl)
-        # Data starts row 3
-        
-        rows = list(sheet.iter_rows(values_only=True))
-        
-        # Verify headers at row index 1
-        headers = rows[1]
-        # Expected: Id, R, RM, Nome, Squadra, Qt.A
-        
-        # Indices
-        idx_id = 0
-        idx_role = 1
-        idx_name = 3
-        idx_team = 4
-        idx_cost = 11 # FVM (was 5 for Qt.A)
-        
-        for row in rows[2:]:
-            if not row[idx_name]: continue # Skip empty
-            
-            p_id = str(row[idx_id])
-            role = row[idx_role] # P, D, C, A typically
-            name = row[idx_name]
-            team = row[idx_team]
-            # Handle empty FVM if necessary
-            raw_cost = row[idx_cost]
-            cost = int(raw_cost) if raw_cost is not None else 1
-            
-            # Map roles if needed. Usually they are P, D, C, A in Classic.
-            # R column seems to satisfy this.
-            
-            players.append({
-                "id": p_id,
-                "name": name,
-                "team": team,
-                "role": role,
-                "cost": cost
-            })
-            
-        # Output JS file content con timestamp di aggiornamento
-        from datetime import datetime, timezone
-        now_iso = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
-        js_content = (
-            f"export const playersLastUpdated = \"{now_iso}\";\n\n"
-            f"export const playersDB = {json.dumps(players, indent=4)};"
-        )
-        
-        # Assicura che la directory di destinazione esista
-        os.makedirs(os.path.dirname(target_path), exist_ok=True)
+    roles = {r: sum(p["role"] == r for p in players) for r in "PDCA"}
+    if len(players) < 300 or min(roles.values()) < 20:
+        sys.exit(f"[ERRORE] listone sospetto: {len(players)} giocatori {roles}, players.js non toccato")
 
-        # Scrittura del file direttamente nel percorso di destinazione corretto
-        with open(target_path, 'w', encoding='utf-8') as f:
-            f.write(js_content)
-            
-        print(f"Successfully converted and saved {len(players)} players to: {target_path}")
-        
-    except Exception as e:
-        print(f"Error: {e}")
+    season_file = os.path.join(HERE, "season.txt")
+    season = int(open(season_file).read()) if os.path.exists(season_file) else None
+    now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    with open(TARGET, "w", encoding="utf-8") as f:
+        f.write(f'export const playersLastUpdated = "{now}";\n\n')
+        if season:
+            f.write(f"export const playersSeason = {season};\n\n")
+        f.write(f"export const playersDB = {json.dumps(players, indent=4, ensure_ascii=False)};\n")
+    print(f"[OK] {len(players)} giocatori {roles} -> js/data/players.js")
+
 
 if __name__ == "__main__":
     convert()

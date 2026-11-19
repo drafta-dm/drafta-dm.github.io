@@ -1,504 +1,137 @@
-# 🏆 Drafta
+<p align="center">
+  <img src="icons/icon-512x512.png" width="112" alt="Drafta icon">
+</p>
 
-**Live Serie A Fantasy Draft Platform** - Real-time multiplayer draft system for FantaCalcio with advanced push notifications and professional architecture.
+<h1 align="center">Drafta</h1>
 
-[![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=flat&logo=firebase&logoColor=black)](https://firebase.google.com/)
-[![PWA](https://img.shields.io/badge/PWA-5A0FC8?style=flat&logo=pwa&logoColor=white)](https://web.dev/progressive-web-apps/)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+<p align="center">
+  Your fantasy football draft, live and in turns: you open a room, your friends join, everyone picks when it's their turn.<br>
+  <a href="#english">English</a> · <a href="#italiano">Italiano</a> · <a href="https://davide-mariotti.github.io/apps/drafta">Website</a> · <a href="https://drafta-dm.github.io">Open the app</a>
+</p>
 
-## ✨ Features
+<p align="center">
+  <a href="https://ko-fi.com/Z0X32ATNHL"><img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Buy me a coffee on Ko-fi"></a>
+</p>
 
-### 🔔 Push Notifications
-- **Background notifications** via Firebase Cloud Messaging
-- Automatic turn notifications with browser closed
-- Nudge system for offline users
-- Service Worker for background delivery
-- Multi-device support
-
-### 🎮 Draft Management
-- Real-time multi-user draft
-- Dynamic turn order (role-based, count-based, value-based)
-- Snake draft support
-- Live team matrix visualization with desktop mouse drag-to-scroll support
-- Improved roster needs counters (current/max format with green/red status color-coding)
-- CSV import/export
-
-### 👥 User Management
-- Google Firebase Authentication
-- Multi-team support
-- Online/offline presence tracking
-- Heartbeat-based presence system
-
-### 📊 Player Database
-- Complete Serie A player database
-- Role-based filters (P, D, C, A)
-- Player search
-- Dynamic roster management (25 fixed slots)
-
-### 🏗️ Professional Architecture
-- **16 modular JavaScript files** in `js/`
-- **10 modular CSS files** in `css/`
-- Clean separation of concerns
-- Comprehensive Italian documentation
-- Scalable and maintainable codebase
+<p align="center">
+  <img src="docs/screenshots/draft.webp" width="760" alt="Drafta during a draft: the player on stage, the free players of the needed role, the eight rosters with the team on turn first">
+</p>
+<p align="center">
+  <img src="docs/screenshots/lobby.webp" width="375" alt="The lobby: participants on one side, team slots on the other"> <img src="docs/screenshots/summary.webp" width="375" alt="The end of the draft: most expensive pick, best bargain and a card per team">
+</p>
 
 ---
 
-## 🚀 Quick Start
+## English
 
-### Prerequisites
+### What it does
 
-- **Node.js 20+**
-- **Firebase CLI**: `npm install -g firebase-tools`
-- **Firebase Project** with Blaze plan (free up to 2M invocations/month)
+- Runs a Serie A fantasy football (Fantacalcio) draft for 4 to 20 teams, in the browser, live: every pick shows up on everyone's screen at once.
+- The host creates the room and shares a code and a password, or one link that does both. Then assigns each participant to a team, and picks the colours.
+- Turns go in order. In the first round the host shuffles; from the second on, whoever spent less picks first.
+- Optional rules: the role order (3 goalkeepers, then 8 defenders, 8 midfielders, 6 forwards) and the goalkeeper block (take one keeper, the others of the same club come along).
+- A timer per pick, from one minute to four hours. When it runs out, Drafta picks the most expensive free player in the role the team needs. The host can pause it and undo the last pick.
+- Notifications when it's your turn, even with Drafta closed, and a nudge for whoever is asleep on it. A chat, the history of every pick, and at the end a summary to copy or send by email.
+- Players and prices (FVM) come from Fantacalcio.it and are updated every day. Rosters can be exported to CSV in the Fantacalcio.it league format, and imported to run a repair draft.
 
-### Installation
+### What it doesn't do
 
-```bash
-# Clone repository
-git clone https://github.com/drafta-dm/drafta-dm.github.io.git
-cd drafta-dm.github.io
+- It isn't an auction: nobody bids. Each player costs his FVM, and the order of the turns does the balancing.
+- It doesn't run your league: no line-ups, no match days, no scores. It ends when the rosters are full.
+- It doesn't speak English: the app is in Italian, like the game it's for.
+- It doesn't work offline, and it needs a Google account to sign in.
+- It doesn't keep your data for itself: rooms, names, chat and push tokens live in Firebase (Google) and nowhere else. No ads, no analytics.
+- On iPhone, notifications only arrive with Drafta added to the Home screen (iOS 16.4 or newer). That's Apple's rule, not mine.
 
-# Install Cloud Functions dependencies
-cd functions
-npm install
-cd ..
+### How to use it
 
-# Login to Firebase
-firebase login
+1. Open [drafta-dm.github.io](https://drafta-dm.github.io) and sign in with Google. On a phone, add it to the Home screen: the login page explains how.
+2. **Create a draft**: number of teams, time per pick, the two rules. You get a code and a password to send around, or copy the invite link.
+3. **Lobby**: tap a participant, then the slot of their team. The pencil changes name, colour and coach. Then **Start the draft**.
+4. **Draft**: whoever is on turn taps a name in the list and confirms. The list only shows who can still be picked. The host can pick for anyone, and finds undo, sound and CSV export in the profile menu.
+5. **Repair draft**: on the home page, **Import rosters from CSV** creates a room from the rosters you already have, and asks how to decide the turns (missing roles, fewest players, lowest value).
 
-# Deploy Cloud Functions
-firebase deploy --only functions
+### How it works
 
-# Deploy Firestore rules
-firebase deploy --only firestore:rules
+1. A static page on GitHub Pages: plain HTML, CSS and JavaScript modules, no build step. Google sign-in through Firebase Authentication.
+2. Each room is one Firestore document (teams, rosters, order, turn, history). Every client listens to it, so everyone sees the same thing. Chat and presence (who has Drafta open) live in subcollections, so they don't make everyone download the room again.
+3. `firestore.rules` decides who can do what: only the people in a room can read it, joining needs the right password, members can't touch password, host or rules. The draft rules themselves are in `js/draft-rules.js`.
+4. A Cloud Function (`functions/index.js`) sends the push when the turn changes or someone nudges you.
+5. A GitHub Action downloads the Fantacalcio.it price list every morning (`scripts/`), turns it into `js/data/players.js` and commits it only if something changed.
+
+### Build from source
+
+Serve the folder as it is, for example `npx serve .`, and open http://localhost:3000 (localhost is allowed by Firebase Authentication).
+
+```sh
+node test/draft-rules.test.mjs            # turns, picks, goalkeeper block, auto pick
+cd test && npm install && npm test        # the same, plus firestore.rules on the Firestore emulator (needs Java 11+)
+firebase deploy --only firestore:rules,functions
+FANTACALCIO_USERNAME=... FANTACALCIO_PASSWORD=... python scripts/update_players.py
 ```
 
-### Configuration
+### Support
 
-1. **Firebase Setup:**
-   - Create project on [Firebase Console](https://console.firebase.google.com)
-   - Enable Authentication (Google provider)
-   - Enable Firestore Database
-   - Enable Cloud Messaging
-   - Get VAPID key from Project Settings → Cloud Messaging
+If Drafta saved your draft night from a spreadsheet, you can [buy me a coffee on Ko-fi](https://ko-fi.com/Z0X32ATNHL). That's how the next app gets written.
 
-2. **Update `js/firebase-modules.js`** with your Firebase config
+### License
 
-3. **Update `firebase-messaging-sw.js`** with same config
-
-4. **Update VAPID key** in `js/notifications.js`
+[MIT](LICENSE). Players, prices and player cards come from Fantacalcio.it and are theirs. Firebase JavaScript SDK (Apache-2.0), Lucide icons (ISC), Geist, Geist Mono and Instrument Serif fonts (SIL Open Font License).
 
 ---
 
-## 📁 Project Structure
+## Italiano
 
-```
-drafta-dm.github.io/
-├── index.html                      # Main entry point
-├── manifest.json                   # PWA manifest
-├── firebase-messaging-sw.js        # Service Worker
-├── favicon.ico                     # Favicon
-├── version.json                    # App version
-├── firebase.json, .firebaserc      # Firebase config
-├── firestore.rules                 # Security rules
-│
-├── js/                             # JavaScript Modules (16 files)
-│   ├── app.js                      # Application entry point
-│   ├── firebase-modules.js         # Firebase SDK initialization
-│   ├── player-service.js           # Player data service
-│   ├── state.js                    # Global state management
-│   ├── utils.js                    # Utility functions
-│   ├── auth.js                     # Authentication
-│   ├── notifications.js            # FCM notifications
-│   ├── room-manager.js             # Room lifecycle
-│   ├── lobby.js                    # Lobby interface
-│   ├── draft-logic.js              # Draft game logic
-│   ├── ui-renderer.js              # UI rendering
-│   ├── player-filters.js           # Player filtering
-│   ├── version-check.js            # Version checking
-│   ├── csv-handler.js              # CSV operations
-│   ├── drag-scroll.js              # Mouse drag-to-scroll for teams matrix
-│   └── data/
-│       └── players.js              # Serie A player data
-│
-├── css/                            # CSS Modules (10 files)
-│   ├── style.css                   # Main CSS orchestrator
-│   ├── variables.css               # CSS custom properties
-│   ├── reset.css                   # Reset & base styles
-│   ├── typography.css              # Typography
-│   ├── buttons.css                 # Button styles
-│   ├── forms.css                   # Form elements
-│   ├── components.css              # Reusable components
-│   ├── views.css                   # View-specific styles
-│   ├── draft.css                   # Draft view styles
-│   └── responsive.css              # Responsive design
-│
-├── scripts/                        # Development & automation scripts
-│   ├── download_excel.py           # Download automatico Excel da fantacalcio.it
-│   ├── convert_excel_to_js.py      # Convertitore Excel → players.js
-│   ├── update_players.py           # Script combinato (download + conversione)
-│   └── inspect_excel.py            # Excel inspector (debug)
-│
-├── .github/workflows/
-│   └── update-players.yml          # GitHub Action: aggiornamento giornaliero DB
-├── examples/                       # Example files
-├── icons/                          # PWA icons
-└── functions/                      # Firebase Cloud Functions
-    ├── index.js                    # Turn & nudge notifications
-    └── package.json                # Dependencies
-```
+### Cosa fa
 
----
+- Fa il draft del fantacalcio, da 4 a 20 squadre, nel browser e in diretta: ogni scelta compare subito sullo schermo di tutti.
+- L'host crea la stanza e manda codice e password, oppure un link che fa tutto. Poi assegna ogni partecipante a una squadra e sceglie i colori.
+- I turni vanno in ordine. Al primo giro l'host mescola; dal secondo sceglie prima chi ha speso meno.
+- Regole a scelta: l'ordine dei ruoli (3 portieri, poi 8 difensori, 8 centrocampisti, 6 attaccanti) e il blocco portieri (prendi un portiere, arrivano anche gli altri della stessa squadra).
+- Un timer per ogni scelta, da un minuto a quattro ore. Allo scadere Drafta assegna il giocatore libero più caro nel ruolo che serve. L'host può metterlo in pausa e annullare l'ultima scelta.
+- Una notifica quando tocca a te, anche con Drafta chiusa, e un sollecito per chi si è addormentato. La chat, la cronologia di tutte le scelte, e alla fine un riepilogo da copiare o mandare per email.
+- Giocatori e quotazioni (FVM) arrivano da Fantacalcio.it e si aggiornano ogni giorno. Le rose si esportano in CSV nel formato delle leghe di Fantacalcio.it, e si importano per fare l'asta di riparazione.
 
-## 🔄 Aggiornamento automatico del Database Giocatori
+### Cosa non fa
 
-Il database dei giocatori (`js/data/players.js`) viene aggiornato automaticamente ogni giorno tramite **GitHub Actions**.
+- Non è un'asta a rilanci: nessuno offre. Ogni giocatore costa la sua FVM, e a bilanciare ci pensa l'ordine dei turni.
+- Non gestisce la lega: niente formazioni, giornate, punteggi. Finisce quando le rose sono piene.
+- Non parla inglese: l'app è in italiano, come il gioco per cui è fatta.
+- Non funziona offline, e per entrare serve un account Google.
+- Non si tiene i tuoi dati: stanze, nomi, chat e token delle notifiche stanno su Firebase (Google) e da nessun'altra parte. Niente pubblicità, niente statistiche.
+- Su iPhone le notifiche arrivano solo con Drafta aggiunta alla schermata Home (iOS 16.4 o successivo). La regola è di Apple, non mia.
+
+### Come si usa
+
+1. Apri [drafta-dm.github.io](https://drafta-dm.github.io) e accedi con Google. Sul telefono aggiungila alla Home: la pagina d'accesso spiega come.
+2. **Crea un'asta**: numero di squadre, tempo per ogni scelta, le due regole. Ottieni codice e password da girare, o copi il link d'invito.
+3. **Sala d'attesa**: tocca un partecipante, poi lo slot della sua squadra. La matita cambia nome, colore e allenatore. Poi **Avvia l'asta**.
+4. **Draft**: chi è di turno tocca un nome nella lista e conferma. La lista mostra solo chi si può ancora prendere. L'host può scegliere al posto di chiunque, e nel menu del profilo trova annulla, suoni ed esportazione CSV.
+5. **Asta di riparazione**: dalla home, **Importa rose da CSV** crea una stanza con le rose che hai già, e chiede come decidere i turni (ruolo mancante, meno giocatori, valore più basso).
 
 ### Come funziona
 
-1. Il workflow `.github/workflows/update-players.yml` si avvia ogni giorno alle **09:00 ora italiana** (07:00 UTC).
-2. Lo script `scripts/download_excel.py` si autentica su **fantacalcio.it** con Playwright (browser headless) e scarica il file Excel ufficiale delle quotazioni.
-3. Lo script `scripts/convert_excel_to_js.py` converte il file in `js/data/players.js`.
-4. Il file aggiornato viene committato automaticamente nel repository.
+1. Una pagina statica su GitHub Pages: HTML, CSS e moduli JavaScript, niente build. L'accesso con Google passa da Firebase Authentication.
+2. Ogni stanza è un documento Firestore (squadre, rose, ordine, turno, cronologia). Tutti i client lo ascoltano, così tutti vedono la stessa cosa. Chat e presenza (chi ha Drafta aperta) stanno in sottocollezioni, così non costringono tutti a riscaricare la stanza.
+3. `firestore.rules` decide chi può fare cosa: la stanza la legge solo chi ci è dentro, per entrare serve la password giusta, i partecipanti non toccano password, host e regole. Le regole del draft sono in `js/draft-rules.js`.
+4. Una Cloud Function (`functions/index.js`) manda la notifica quando cambia il turno o quando qualcuno ti sollecita.
+5. Una GitHub Action ogni mattina scarica il listone di Fantacalcio.it (`scripts/`), lo trasforma in `js/data/players.js` e fa il commit solo se è cambiato qualcosa.
 
-### Setup dei GitHub Secrets
+### Compilarlo
 
-Per far funzionare l'automazione devi configurare **due Secrets** nel tuo repository GitHub:
+Basta servire la cartella così com'è, per esempio con `npx serve .`, e aprire http://localhost:3000 (localhost è già autorizzato in Firebase Authentication).
 
-1. Vai su **GitHub → Repository → Settings → Secrets and variables → Actions**
-2. Clicca **"New repository secret"** e aggiungi:
-
-| Secret | Valore |
-|--------|--------|
-| `FANTACALCIO_USERNAME` | Il tuo username di Fantacalcio.it |
-| `FANTACALCIO_PASSWORD` | La tua password di Fantacalcio.it |
-
-### Esecuzione manuale
-
-Puoi anche eseguire il workflow manualmente da **GitHub → Actions → Update Players Database → Run workflow**.
-
-Oppure in locale:
-```bash
-# Solo download Excel
-python scripts/download_excel.py
-
-# Solo conversione (se hai già l'Excel)
-python scripts/convert_excel_to_js.py
-
-# Download + conversione in un comando
-python scripts/update_players.py
+```sh
+node test/draft-rules.test.mjs            # turni, scelte, blocco portieri, scelta d'ufficio
+cd test && npm install && npm test        # lo stesso, più firestore.rules sull'emulatore Firestore (serve Java 11+)
+firebase deploy --only firestore:rules,functions
+FANTACALCIO_USERNAME=... FANTACALCIO_PASSWORD=... python scripts/update_players.py
 ```
 
----
+### Supporto
 
-## 🔔 Notification System
+Se Drafta ha salvato la serata dell'asta da un foglio Excel, puoi [offrirmi un caffè su Ko-fi](https://ko-fi.com/Z0X32ATNHL). È così che nasce la prossima app.
 
-### Architecture
+### Licenza
 
-1. **User Login** → Request notification permissions → Register FCM token
-2. **Token saved** in Firestore: `users/{uid}/fcmTokens/{token}`
-3. **Turn change** → Cloud Function `onTurnChange` → Send notification
-4. **Nudge** → Cloud Function `onNudge` → Send targeted notification
-
-### Cloud Functions
-
-#### `onTurnChange`
-- **Trigger**: `onDocumentWritten("rooms/{roomId}")`
-- Detects `currentTurnIndex` change
-- Finds owner of new turn
-- Retrieves FCM tokens
-- Sends push notification
-
-#### `onNudge`
-- **Trigger**: `onDocumentWritten("rooms/{roomId}")`
-- Detects `notification` field modified
-- Finds target user
-- Sends nudge via push notification
-
----
-
-## 🛠️ Technology Stack
-
-| Layer | Technology |
-|-------|-----------|
-| **Frontend** | Vanilla JavaScript (ES6 modules) |
-| **Backend** | Firebase Cloud Functions (Node.js 20) |
-| **Database** | Firebase Firestore |
-| **Authentication** | Firebase Authentication (Google) |
-| **Notifications** | Firebase Cloud Messaging + Service Worker |
-| **Hosting** | GitHub Pages |
-| **PWA** | Manifest + Service Worker |
-
----
-
-## 📝 Changelog
-
-### v6.9.5 (2026-05-26) - **Add PWA Installation & Push Notification Guide on Login Screen** 📲🔔
-- ✅ **Guida all'installazione dell'App**: Aggiunto un widget collassabile interattivo direttamente sotto il pulsante di login con Google. Spiega dettagliatamente come aggiungere l'applicazione alla schermata Home (installazione PWA) sia su dispositivi iOS (Safari) che Android (Chrome o Samsung Internet). L'installazione è un pre-requisito essenziale per abilitare la ricezione delle notifiche push in tempo reale su dispositivi iOS.
-
-### v6.9.4 (2026-05-26) - **Prevent iOS Google Auth "Cannot Open Page" Crash** 🔑📱
-- ✅ **Pre-intercettazione Browser iOS non-Safari**: Aggiunto un controllo preventivo all'avvio del login Google su dispositivi iOS. Se l'utente si trova in un browser diverso da Safari (es. Chrome per iOS, Firefox o WebView in-app di WhatsApp/Telegram), l'app mostra immediatamente la modal con le istruzioni chiare su come copiare il link e aprirlo in Safari, senza lanciare il metodo `signInWithPopup` di Firebase. Questo previene il crash nativo di WebKit che genera l'errore bloccante "Impossibile aprire questa pagina".
-
-### v6.9.3 (2026-05-26) - **Fix Mobile User Profile Modal Stack & Height Adjustments** 👤📱
-- ✅ **Z-Index Modali Assoluto a 999999**: Impostato `z-index: 999999 !important` per `.modal-overlay` su mobile, con `#toast-container` elevato a `1000000 !important`. Questo assicura che il profilo utente e le altre modali si trovino sempre sopra qualsiasi elemento del layout (compresi i tab di navigazione inferiore).
-- ✅ **Ridotta Altezza Massima a 75dvh**: Ridotto il limite massimo di altezza delle modali a `75dvh !important` su schermi mobili. Insieme a `height: 100dvh` sull'overlay, questo previene che i pulsanti inferiori della modali (es. "Chiudi" e "Disconnetti") vengano spinti fuori dallo schermo o coperti dalle barre degli strumenti del browser/safe area.
-
-### v6.9.2 (2026-05-26) - **Fix Mobile User Profile Modal: Maximum Stacking & Scrollable Height** 👤📱
-- ✅ **Z-Index Modali Massimo su Mobile**: Impostato `z-index: 20000 !important` per `.modal-overlay` e `z-index: 20001 !important` per `#toast-container` su mobile. Questo forza le modal (incluso il Profilo Utente) ad essere visualizzate sempre sopra qualsiasi altro elemento (inclusa la barra dei tab inferiori mobile-bottom-nav che aveva z-index 9999).
-- ✅ **Corretto Cut-off del Profilo Utente**: Impostata l'altezza massima per `.modal-card` a `85dvh` su mobile, accoppiata a un layout flex e `overflow-y: auto !important` sul corpo `.modal-body`. Ora, in caso di schermi piccoli, il corpo della modal (avatar, credenziali, impostazioni audio, CSV ed undo) scorre internamente in modo fluido, lasciando i pulsanti di chiusura e disconnessione in fondo fissi e sempre cliccabili.
-
-### v6.9.1 (2026-05-26) - **Fix Mobile Tab Alternation & Clean Full-Screen Tabs** 📱🧹
-- ✅ **Risolto Alternarsi dei Tab Mobile**: Rimosso l'override `!important` dal CSS sulla proprietà `display` per `.draft-left-panel`, `.draft-right-panel` e `#teams-matrix`. In questo modo, le istruzioni JavaScript che modificano inline il `display` (nascondendo o mostrando i pannelli) funzionano correttamente e l'alternarsi tra la scheda Giocatori e la scheda Squadre (o il Log storico) è ripristinato.
-- ✅ **Eliminati Bottoni Chiudi su Mobile**: Nascosto il pulsante di chiusura "✕" (`.btn-close-panel`) per le schede Chat e Log storico solo quando visualizzate da mobile. Ora questi pannelli si comportano come pulite schede a schermo intero integrate nel flusso dei tab inferiori, rendendo l'esperienza utente molto più coerente.
-
-### v6.9 (2026-05-26) - **Fix iOS Draft View Rendering & Mobile Scroll Layout** 📱🛠️
-- ✅ **Risoluzione Sovrapposizione e Trasparenza su iOS**: Impostato `z-index: 100 !important` e un background solido (`background: var(--bg-dark) !important`) per la vista attiva del draft (`#view-draft`) su mobile. Questo previene che altre viste in background si sovrappongano o che la schermata dell'asta appaia trasparente o invisibile.
-- ✅ **Correzione Altezza Viewport e Scroll dei Tab**: Vincolata l'altezza del contenitore del draft su mobile (`.draft-view-container`) all'area utile effettiva tra header e bottom nav (`calc(100dvh - 120px - safe-area)`). Questo permette ai singoli pannelli di sinistra e destra di scorrere verticalmente in modo indipendente e fluido, senza più bloccarsi.
-- ✅ **Rimozione Scorrimenti Annidati (Giocatori)**: Disattivato lo scroll interno e l'altezza massima limitata del database giocatori (`.player-database`) e della lista dei giocatori (`.player-list-container`) su mobile. La lista ora si espande interamente all'interno del pannello sinistro, consentendo uno scorrimento nativo unico e fluido.
-
-### v6.8.11 (2026-05-26) - **Prevent iOS Chrome Google Login Crash & Instructions Modal** 📱⚠️
-- ✅ **Prevenzione Crash Redirect su iOS Chrome**: Disattivato completamente il redirect automatico `signInWithRedirect` per i dispositivi iOS. Su iOS, i browser basati su WebKit che non sono Safari (es. Chrome per iOS) bloccano la redirezione ed i cookie cross-origin, provocando la schermata di errore di sistema *"Impossibile aprire questa pagina"*.
-- ✅ **Modal di Istruzioni per Accesso Bloccato**: Introdotta la modal informativa `#modal-auth-instructions` su iOS. Se la finestra popup viene bloccata o l'ambiente non la supporta (come nelle webview in-app), viene mostrato un pannello che spiega all'utente come procedere (es. cliccare su "Consenti sempre" in basso o copiare l'indirizzo per aprirlo manualmente in **Safari**, dove il login è supportato nativamente).
-
-### v6.8.10 (2026-05-26) - **Robust Hybrid Google Login for Mobile** 🔑📱
-- ✅ **Gestione Ibrida Login con Fallback**: Modificato il gestore di login con Google in [auth.js] per avviare `signInWithPopup` in modo strettamente sincrono all'evento `click`. Se il browser mobile blocca il popup o l'ambiente non lo supporta (es. in-app webviews di WhatsApp, Telegram o Instagram), il sistema intercetta l'errore ed esegue immediatamente un fallback automatico su `signInWithRedirect`. Questo garantisce la massima compatibilità su tutte le piattaforme e browser mobili.
-
-### v6.8.9 (2026-05-26) - **Fix iOS Safe Area & Bottom Nav Visibility** 📱🛠️
-- ✅ **Supporto iOS Safe Area / Home Indicator**: Aggiunta la proprietà `viewport-fit=cover` al tag viewport in `index.html` per forzare l'app a utilizzare l'intera area dello schermo.
-- ✅ **Fix Taglio Bottom Nav su iOS**: Modificato il posizionamento in [responsive.css] calcolando l'altezza del menu inferiore come `calc(60px + env(safe-area-inset-bottom, 0px))`. In questo modo, su dispositivi iOS con notch e home indicator, l'altezza della barra di navigazione cresce proporzionalmente per fare spazio ai bottoni, evitando che vengano compressi e resi invisibili.
-- ✅ **Dynamic Heights e Padding**: Utilizzata l'unità `dvh` (Dynamic Viewport Height) per tutti i calcoli di altezza mobili (come chat, history e stage del draft) e aggiornati i padding di compensazione inferiori.
-
-### v6.8.8 (2026-05-26) - **Fix Google Login Popup & Mobile Scroll Layout** 🔑📱
-- ✅ **Google Login con Popup su Mobile**: Utilizzato `signInWithPopup` per tutte le piattaforme. Il redirect (`signInWithRedirect`) fallisce sui browser mobili a causa del blocco dei cookie di terze parti (cross-origin storage block) quando il sito è ospitato su domini esterni (come GitHub Pages).
-- ✅ **Ripristino Scroll Verticale da Mobile**: Impostata la posizione delle viste (`.view`) a `position: relative !important` e altezza automatica per `#app` e `.view` su dispositivi mobili. Questo inserisce la vista attiva nel normale flusso di layout (mentre quelle inattive sono `display: none`), ripristinando il corretto scorrimento nativo delle pagine di login, dashboard e lobby da mobile.
-
-### v6.8.7 (2026-05-26) - **Fix Google Login on Mobile & Restored View Scroll** 🔑📱
-- ✅ **Google Login con Redirect su Mobile**: Sostituito `signInWithPopup` con `signInWithRedirect` su browser mobile per prevenire il blocco delle finestre popup nativo del browser. Aggiunta la gestione ed il recupero del risultato dell'accesso (`getRedirectResult`) all'inizializzazione dell'applicazione.
-- ✅ **Ripristino dello Scroll per le Viste Standard**: Rimossa la limitazione di altezza e scroll dal body e dalle viste generiche (login, dashboard, lobby), ripristinando il normale scorrimento verticale. Il blocco del viewport a `100vh` con altezza fissa viene ora applicato esclusivamente alla vista di draft (`#view-draft` con `position: fixed; inset: 0; overflow: hidden;`), permettendo di utilizzare i tab di navigazione fissi a fondo schermo senza bloccare lo scorrimento naturale delle altre pagine.
-
-### v6.8.6 (2026-05-26) - **Fix Mobile Viewport & Pre-selection Logs** 📱🪵
-- ✅ **Fix Layout a Schermo Intero su Mobile**: Forzato il body e le views a `height: 100vh; overflow: hidden; position: fixed;` su mobile, eliminando lo scrolling del body. Le aree interne dell'applicazione (lista giocatori, squadre, chat, history) scorrono autonomamente. Questo garantisce che la bottom navigation rimanga fissa a fondo schermo e non possa mai scivolare fuori dal viewport o essere coperta.
-- ✅ **Console Logs per Asta / Pre-selezione**: Aggiunti messaggi di log diagnostici dettagliati nel modulo `getInitialPickForTeam` e `getTeamTargetRole` per monitorare in console la scelta automatica dei giocatori all'inizio e al re-ordinamento.
-
-### v6.8.5 (2026-05-26) - **Fix Mobile Bottom Nav, Logo, Turno & Smart Pre-selection** 📱🧤
-- ✅ **Risoluzione Visibilità Bottom Nav Mobile**: Alzato il `z-index` a `9999`, impostata altezza fissa a `60px`, background solido, ombra e supporto per le safe-area (iPhone/Android con notch/home indicators) per garantire che i tab in basso non siano mai coperti o nascosti.
-- ✅ **Ripristino Logo Drafta su Mobile**: Il logo Drafta è ora sempre visibile su mobile in modo compatto (nascondendo la versione).
-- ✅ **Fix Testo Turno Tagliato**: Rimossa la label duplicata `"Turno:"` su mobile per risparmiare spazio e aumentata la larghezza massima del box del turno a `160px`, assicurando che la dicitura `"Tocca a TE! 🫵"` e i nomi delle squadre siano interamente visibili.
-- ✅ **Pre-selezione Intelligente del Pick**: Corretto l'avvio e re-ordinamento dell'asta. Invece di selezionare ciecamente un portiere, il sistema pre-seleziona dinamicamente il giocatore libero più costoso corrispondente all'esatto ruolo attualmente richiesto per la squadra di turno (es. se la squadra ha già i portieri completi e ha i difensori come ruolo attivo, viene pre-selezionato il difensore più costoso).
-- ✅ **Fix Mismatch ID Giocatore**: Risolti i type mismatch degli ID giocatore in `draft-logic.js`, `ui-renderer.js` e `draft-summary.js` convertendo sempre gli ID in stringhe durante la ricerca per evitare malfunzionamenti o card vuote durante il primo pick.
-
-### v6.8.4 (2026-05-26) - **Semplificazione Header & Integrazione Profilo** 🚪Header
-- ✅ **Header Mobile a Riga Singola**: Riorganizzato l'header mobile su un'unica riga orizzontale di 60px contenente solo il Turno, il Timer capsula, il Round e l'avatar del profilo.
-- ✅ **Integrazione Profilo Utente**: Rimossi i pulsanti Annulla Pick, Suoni, Esporta CSV e le credenziali dall'header e spostati tutti all'interno della modal del Profilo (accessibile cliccando sull'avatar).
-- ✅ **Copia Link Asta**: Aggiunto un pulsante all'interno della modal del profilo per copiare rapidamente il link d'invito pre-compilato con ID e password per auto-join.
-- ✅ **Dynamic Sound Label**: Il pulsante dei suoni nel profilo mostra ora etichette dinamiche in base allo stato (`Suoni Attivi` / `Suoni Disattivati`).
-- ✅ **Fix Definitivo Primo Pick**: Pre-selezionato automaticamente il portiere disponibile più costoso all'avvio o re-ordinamento dell'asta, in modo che la card sia subito popolata al primo turno.
-
-### v6.8.3 (2026-05-26) - **Bugfix Mobile UX & Auto-Pick Portieri** 💬🧤
-- ✅ **Notifiche Filtrate Chat**: Il badge delle notifiche non conta più i messaggi inviati dall'utente corrente e si azzera alla lettura.
-- ✅ **Altezza Chat & History Mobile**: Ridotta l'altezza dei pannelli a `calc(100vh - 120px)` per prevenire overflow e mantenere l'input di testo a portata di mano.
-- ✅ **Fix Primo Pick Type Mismatch**: Corretto il type mismatch degli ID giocatore (string vs number) forzando la conversione in stringa durante il rendering.
-- ✅ **Tab Predefinita Mobile**: Mostrata solo la lista giocatori all'ingresso nel draft su schermi mobili.
-- ✅ **Limite Portieri Auto-Pick**: Limitata la scelta automatica a massimo 3 portieri totali (esclusi quelli già presi).
-
-### v6.8.2 (2026-05-26) - **Allineamento Layout Mobile & UX Polish** 📱✨
-- ✅ **Header Mobile Riordinato**: Riorganizzato l'header su mobile in due righe ordinate: la prima dedicata alle credenziali stanza ed azioni rapide, la seconda interamente a turno e timer (compresso in formato capsula senza barra di progresso).
-- ✅ **Pulizia Elementi Duplicati**: Rimossi i pulsanti chat e cronologia dall'header su mobile, lasciandoli accessibili esclusivamente dal bottom nav mobile per evitare disallineamenti.
-- ✅ **Pannelli Chat & Log Migliorati**: Chat e Cronologia si integrano fluidamente come pannelli centrali a altezza piena su mobile senza coprire l'header e il navigatore.
-- ✅ **Sincronizzazione Badge Chat**: Aggiunto il supporto e la sincronizzazione del badge di notifica messaggi non letti sul bottom nav mobile.
-- ✅ **Fix Cache-Busting**: Aggiornata la query string delle risorse principali in `index.html` alla versione `v6.8.2`.
-- ✅ **Version Bump**: Aggiornato `version.json` a `6.8.2`.
-
-### v6.8.1 (2026-05-25) - **Fix Modal Impostazioni Ordine su Re-Import** 🛠️📋
-- ✅ **Fix Modal Ordine Turni**: Risolto il bug per cui la modal di scelta dell'ordine dei turni non appariva re-importando un CSV o rientrando in stanze differenti nella stessa sessione di navigazione (ora il flag di stato `state.hasShownOrderModal` viene correttamente resettato a `false` ad ogni ingresso stanza).
-- ✅ **Version Bump**: Aggiornato `version.json` a `6.8.1`.
-
-### v6.8.0 (2026-05-25) - **Priorità Ruoli in Asta & Salto Squadre Complete** 📋🔄
-- ✅ **Priorità Ruoli su Costo**: Quando la regola `strictRoles` è attiva, l'ordinamento dinamico delle chiamate (`compareTeamsSmart`) dà priorità assoluta alla copertura dei ruoli in ordine P -> D -> C -> A. Chi deve completare un reparto precedente sceglie sempre prima di chi si trova a un reparto successivo, a prescindere dal costo totale della rosa.
-- ✅ **Salto Automatico Squadre Complete**: Le squadre con rose completate (25/25 giocatori) vengono automaticamente saltate durante il draft, prevenendo blocchi o attese del timer inutili.
-- ✅ **Version Bump**: Aggiornato `version.json` a `6.8.0`.
-
-### v6.7.8 (2026-05-25) - **Tooltip Crea Stanza Aggiornati** 💬ℹ️
-- ✅ **Tooltip Numero Squadre**: Aggiunto un tooltip esplicativo per specificare lo scopo del selettore del numero di partecipanti.
-- ✅ **Tooltip Timer Turno**: Aggiunto un tooltip esplicativo dettagliato che descrive il funzionamento del timer e l'assegnazione automatica d'ufficio alla scadenza del tempo.
-- ✅ **Tooltip Esistenti Aggiornati**: Riformulati i tooltip di *Blocco Portieri* e *Ordine Ruoli* per riflettere le regole in modo più chiaro e corretto.
-- ✅ **Version Bump**: Aggiornato `version.json` a `6.7.8`.
-
-### v6.7.7 (2026-05-25) - **Top 2 per Ruolo & Condivisione Email/Clipboard** 🏆✉️📋
-- ✅ **Top 2 per Ruolo**: Ciascuna card squadra nel riepilogo ora mostra i 2 migliori acquisti per ciascun ruolo (D, C, A) invece che un unico best pick.
-- ✅ **Invia per Email**: Aggiunto un pulsante che genera automaticamente un'email pre-compilata (tramite link `mailto`) con l'intero report testuale ordinato dell'asta per tutti i partecipanti.
-- ✅ **Copia Report Testo**: Aggiunto un pulsante per copiare negli appunti il report strutturato in formato testo pulito (ideale da incollare su WhatsApp, Telegram o fogli di calcolo).
-- ✅ **Version Bump**: Aggiornato `version.json` a `6.7.7`.
-
-### v6.7.6 (2026-05-25) - **Riepilogo Fine Draft Potenziato & Fix N/A** 🏆📊
-- ✅ **Fix Best Pick N/A**: Corretto il bug per cui il miglior acquisto (best pick) mostrava "N/A" invece del nome del giocatore (ora viene risolto correttamente tramite lookup dello stato giocatori globale).
-- ✅ **Bypass Crediti Rimasti**: Rimosso il dato sui crediti rimasti dal riepilogo (non significativo in modalità draft).
-- ✅ **Ripartizione Spesa per Ruolo**: Aggiunto sotto ogni squadra un grafico/dettaglio compatto con la spesa effettuata per ruolo (P, D, C, A) colorata a tema.
-- ✅ **Statistiche Globali del Draft**: Inserito un pannello di Highlights a inizio riepilogo che mostra il record dell'asta (Top Pick assoluto con relativa squadra), il giocatore più economico acquistato (Affare) e la spesa complessiva di tutta la lega con costo medio a giocatore.
-- ✅ **Version Bump**: Aggiornato `version.json` a `6.7.6`.
-
-### v6.7.5 (2026-05-25) - **Selezione Colori Squadra & Player Info Popup** 🎨ℹ️
-- ✅ **Selezione Colori Squadra**: L'host può ora scegliere manualmente il colore di ogni squadra tramite una griglia di color bubble interattive presente nella modal di gestione squadra.
-- ✅ **Player Info Popup**: I link alle schede fantacalcio.it dei giocatori si aprono ora in un popup dedicato (`window.open` con dimensioni controllate) mantenendo l'utente all'interno della stessa finestra principale senza aprire nuove tab intere.
-- ✅ **Version Bump**: Aggiornato `version.json` a `6.7.5`.
-
-### v6.7.4 (2026-05-25) - **Bypass Limiti Budget nel Draft** 💸
-- ✅ **Bypass Limite Crediti**: Rimosso il blocco dei crediti/budget residui sia nei pick manuali che nell'assegnazione automatica (timeout) e blocco portieri, poiché nel draft puro non c'è un tetto massimo di budget all'acquisto dei giocatori (il costo influenza solo il valore rosa finale e l'ordine dei turni successivi).
-- ✅ **Version Bump**: Aggiornato `version.json` a `6.7.4`.
-
-### v6.7.3 (2026-05-25) - **Auto-Pick d'Ufficio per Timeout & Nuovi Timer** ⏱️🤖
-- ✅ **Auto-Pick di Ufficio**: Quando scade il timer del turno, non si salta più il turno. Viene invece assegnato automaticamente il giocatore disponibile più caro per il ruolo corrente della squadra, penalizzandone i crediti per i turni successivi.
-- ✅ **Nuove Selezioni Timer**: Opzioni di scelta del timer aggiornate a: 1m, 5m, 10m, 20m, 30m, 1h, 2h, 4h.
-- ✅ **Format Countdown**: I timer lunghi sono formattati elegantemente in formato `MM:SS` o `H:MM:SS`.
-- ✅ **Version Bump**: Aggiornato `version.json` a `6.7.3`.
-
-### v6.7.2 (2026-05-25) - **Supporto Link in Dashboard** ☕
-- ✅ **Support Button in Dashboard**: Aggiunto il pulsante "Buy me a beer! 🍺" anche nella schermata di dashboard (selezione stanza) oltre che alla login.
-- ✅ **Version Bump**: Aggiornato `version.json` a `6.7.2`.
-
-### v6.7 (2026-05-25) - **Riepilogo, Mobile Nav & Final Polish** 🏆📱
-- ✅ **Riepilogo Fine Draft**: Overlay automatico a fine asta con ranking squadre, crediti spesi/rimasti, media costo, best pick per squadra.
-- ✅ **Mobile Bottom Nav**: Barra di navigazione fissa in basso su mobile con tabs rapide per Giocatori, Squadre, Chat e Log.
-- ✅ **Spectator-ready**: Le regole Firestore permettono la lettura a qualsiasi utente autenticato (base per future modalità spettatore).
-
-### v6.6 (2026-05-25) - **Colori, Info Link & Condivisione** 🎨ℹ️🔗
-- ✅ **Colori Squadra**: Palette di 20 colori vivaci assegnati automaticamente ad ogni squadra. Bordo colorato sulle colonne della matrice.
-- ✅ **Player Info Link**: Icona ℹ️ accanto ad ogni giocatore nella lista, link diretto alla pagina fantacalcio.it del giocatore.
-- ✅ **Share via Link**: Pulsante "📋 Copia Link Invito" nella modal di creazione stanza. Link con auto-join (parametri URL room + pass).
-- ✅ **Deep Link Auto-Join**: Gli ospiti che aprono il link vengono automaticamente uniti alla stanza dopo il login.
-
-### v6.5.2 (2026-05-25) - **Chat & Effetti Sonori** 💬🔊
-- ✅ **Chat in Stanza**: Messaggi real-time via Firestore sub-collection. Emoji rapide, badge unread, XSS sanitization.
-- ✅ **Effetti Sonori**: Feedback audio via Web Audio API (turn chime, pick success, nudge, timer tick, chat pop). Toggle mute persistente in localStorage.
-
-### v6.5 (2026-05-25) - **Timer, Undo & Draft History** ⏱️↩️📜
-- ✅ **Timer Turno**: Countdown configurabile per ogni turno (30s, 60s, 90s, 120s, illimitato). Barra animata con transizione colore verde→giallo→rosso. Auto-skip se scaduto. Host può mettere in pausa/riprendere.
-- ✅ **Undo Pick (solo host)**: Pulsante ↩️ per annullare l'ultimo pick. Ripristina completamente roster, crediti, turno e round. Disponibile solo dopo il primo pick.
-- ✅ **Draft History Log**: Cronologia in tempo reale di tutti i pick effettuati. Feed scrollabile con round, ruolo, giocatore e costo. Toggle dal pulsante 📜 nell'header.
-- ✅ **Timer nella creazione stanza**: Nuovo selettore "Timer Turno" nella configurazione stanza (default: Illimitato).
-
-### v6.4.2 (2026-05-25) - **Pick confirmation logic** ⚙️
-- ✅ **Richiesta conferma pick per host**: Aggiunta una finestra di conferma quando l'host forza un pick per conto di un'altra squadra (evitando selezioni accidentali).
-
-### v6.4.1 (2026-05-25) - **Firestore Rules Patch** 🔒
-- ✅ **Risolto bug di join ospiti**: Sostituita la logica di comparazione dei set nelle regole di sicurezza di Firestore con controlli nativi su liste (basati su `hasAll`, `size` e operatore `in`), eliminando il problema di permessi (`Missing or insufficient permissions`) che bloccava il primo accesso dei partecipanti non-host.
-
-### v6.4 (2026-05-25) - **Supporto per Asta a 4 Squadre** 👥
-- ✅ **Aggiunto supporto a 4 squadre**: Permesso agli host di scegliere un minimo di 4 squadre quando creano una stanza (mantenendo solo il conteggio delle squadre pari: 4, 6, 8, ecc.).
-
-### v6.3 (2026-05-20) - **Draft Navigation, Profile Menu & Excel Automation** 🚀
-- ✅ **Draft Navigation**: Added a `← Home` exit button inside the draft header to allow leaving the draft and returning to the dashboard cleanly (with a confirmation prompt to prevent accidental exits).
-- ✅ **Unified User Profile Modal**: Introduced a modal displaying Google account information (Name, Email, Avatar) and a "Logout" action, accessible by clicking the user avatar from both the dashboard and draft header.
-- ✅ **Excel Conversion Automation**: Updated `convert_excel_to_js.py` to automatically output the converted `players.js` file directly inside the `js/data/` folder, removing the manual file-move requirement.
-
-### v6.2 (2026-05-20) - **Security & Stability Release** 🚀
-- ✅ **Fixed presence bug**: `connectedUsers` now strictly stores UID strings instead of object literals, resolving the bug where disconnected users remained online forever.
-- ✅ **Fixed memory/timer leaks**: Heartbeat and window event listeners are now fully cleaned up when leaving a room or logging out.
-- ✅ **Enhanced security rules**: Restructured Firestore rules to protect critical room settings/passwords from manipulation by non-host participants.
-- ✅ **Valid HTML**: Relocated modals from `<head>` to `<body>`.
-- ✅ **Lobby improvements**: Allowed hosts to unassign/reset a team owner.
-- ✅ **Drag scroll enhancement**: Captured and stopped click propagation during drag scroll to prevent opening modals accidentally.
-
-### v6.1 (2026-02-09) - **UX Improvements & Database Release** 🚀
-- ✅ **Added Serie A Players Database**: `players.js` with 761 players.
-- ✅ **Desktop Drag-to-Scroll**: Integrated new `drag-scroll.js` module to enable click-and-drag horizontal scrolling on the teams matrix.
-- ✅ **Improved Roster Counters**: Need counters updated to show current/max format (e.g., `2/8` instead of `6`) with red/green status color-coding.
-- ✅ **CSS Variables Optimization**: Consolidated spacing and colors into `variables.css` across all 10 CSS modules, achieving zero hardcoded hex/rgba values.
-- ✅ **UI/UX Refinements**: Updated role colors (DEF: green, MID: blue), changed active tab/value color to `--text`, and added spacing to player lists.
-- ✅ **Code Cleanup**: Removed obsolete `old-style.css`.
-
-### v6.0 (2026-02-09) - **Complete Architecture Refactor** 🏗️
-- ✅ **Complete project reorganization** with modular architecture
-- ✅ **15 JavaScript modules** organized in `js/` directory
-- ✅ **10 CSS modules** organized in `css/` directory
-- ✅ Split 1974-line `app.js` into focused modules
-- ✅ Split 1749-line `style.css` into thematic modules
-- ✅ Professional directory structure
-- ✅ Comprehensive Italian documentation on all modules
-- ✅ Clean root directory (only 11 essential files)
-- ✅ Improved maintainability and scalability
-
-### v5.0 (2026-02-07) - **Domain Migration & Fixes** 🚀
-- Improved notification system (works with app closed)
-- Migration to root domain `drafta-dm.github.io`
-- PWA icon and manifest fixes
-
-### v4.0 (2026-02-05) - **FCM Notification System** 🔔
-- Implemented Firebase Cloud Messaging
-- Push notifications with browser closed
-- Service Worker for background notifications
-- Cloud Functions for turn & nudge notifications
-- Token management in Firestore
-- Multi-device support
-
-### v3.x and earlier
-- Core draft functionality
-- Bug fixes and improvements
-
----
-
-## 🧪 Testing
-
-### Manual Testing Checklist
-
-- [ ] **Authentication** - Google login/logout
-- [ ] **Room Management** - Create, join, delete rooms
-- [ ] **Lobby** - User assignment, team editing
-- [ ] **Draft** - Player selection, turn rotation, filters
-- [ ] **Notifications** - Turn alerts, nudges (browser open & closed)
-- [ ] **CSV** - Import/export functionality
-- [ ] **Real-time Sync** - Multi-user synchronization
-- [ ] **Presence** - Online/offline tracking
-- [ ] **Responsive** - Mobile, tablet, desktop
-
-### Browser Compatibility
-
-- ✅ Chrome/Edge (Chromium)
-- ✅ Firefox
-- ✅ Safari (iOS/macOS)
-
----
-
-## 💰 Costs
-
-| Service | Free Tier | Status |
-|---------|-----------|--------|
-| **FCM** | Unlimited | **€0** ✅ |
-| **Cloud Functions** | 2M invocations/month | **€0** ✅ |
-| **Firestore** | 1GB storage + 50K reads/day | **€0** ✅ |
-| **Authentication** | Unlimited | **€0** ✅ |
-
-**Total:** Completely free for normal usage! 🎉
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Please open an issue before making major changes.
-
----
-
-## 📄 License
-
-MIT License - see [LICENSE](LICENSE) for details
-
----
-
-## 👨‍💻 Author
-
-**Davide Mariotti**
-- GitHub: [@davide-mariotti](https://github.com/davide-mariotti)
-- Email: d.mariotti1991@gmail.com
-
----
-
-## 🙏 Acknowledgments
-
-- Firebase Team for excellent APIs
-- Serie A for player data
-- Italian FantaCalcio community
-
----
-
-**Made with ❤️ for FantaCalcio lovers**
+[MIT](LICENSE). Giocatori, quotazioni e figurine arrivano da Fantacalcio.it e sono loro. Firebase JavaScript SDK (Apache-2.0), icone Lucide (ISC), font Geist, Geist Mono e Instrument Serif (SIL Open Font License).

@@ -1,224 +1,84 @@
-// ============================================================================
-// MODULO: Filtri e Ricerca Giocatori
-// ============================================================================
-// Gestisce il sistema di filtri e ricerca per la lista giocatori disponibili.
-// Permette di:
-// - Filtrare giocatori per ruolo (P, D, C, A)
-// - Cercare giocatori per nome
-// - Nascondere giocatori già assegnati o con ruoli completi
-// - Visualizzare messaggi di stato (lista vuota, draft completato)
-// ============================================================================
+// Free players list: role tabs, search, hiding who is taken or whose role is full.
 
-// Import moduli interni
 import { state } from './state.js';
-import { getPlayerUrl } from './player-utils.js';                          // Stato globale (players, roomData)
-import { selectPlayerForAuction } from './draft-logic.js';   // Funzione per selezionare giocatore
-import { playerService } from './player-service.js';         // Servizio giocatori (timestamp DB)
+import { esc, icon, ROLE_NAMES } from './utils.js';
+import { selectPlayerForAuction } from './draft-logic.js';
+import * as data from './data/players.js';
 
-/**
- * Renderizza la lista dei giocatori disponibili applicando filtri e ricerca
- * 
- * Logica di funzionamento:
- * 1. Filtra i giocatori escludendo quelli già assegnati a squadre
- * 2. Applica filtro per ruolo se specificato (P/D/C/A)
- * 3. Applica ricerca testuale sul nome del giocatore
- * 4. Ordina per costo decrescente (giocatori più costosi in cima)
- * 5. Crea gli elementi HTML <li> con badge ruolo, nome, squadra e valore
- * 6. Aggiunge event listener per selezione al click
- * 
- * @function renderPlayerList
- * @param {string} [filterRole='all'] - Ruolo da filtrare: 'all', 'P', 'D', 'C', 'A'
- * @param {string} [searchTerm=''] - Termine di ricerca per il nome (case-insensitive)
- * @returns {void}
- * 
- * @example
- * renderPlayerList('D', 'ronaldo'); // Mostra solo difensori con "ronaldo" nel nome
- * renderPlayerList();               // Mostra tutti i giocatori disponibili
- */
-export function renderPlayerList(filterRole = 'all', searchTerm = '') {
-    const list = document.getElementById('player-list');
-    list.innerHTML = '';
+const SEASON = data.playersSeason || 21;   // fantacalcio.it season id: 21 = 2026/27
+let filter = { role: 'all', text: '' };
+let hiddenNow = [];   // roles the team on turn has already filled
 
-    // ── Applicazione filtri ─────────────────────────────────────────────
-    let players = state.players.filter(p => {
-        // Esclude giocatori già assegnati a qualsiasi squadra
-        const isAssigned = state.roomData.teams.some(t => t.roster && t.roster.some(r => String(r.playerId) === String(p.id)));
-        if (isAssigned) return false;
+const fold = (s) => String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+const slug = (s) => fold(s).replace(/[.'’,]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').replace(/-$/, '');
 
-        // Filtro per ruolo
-        if (filterRole !== 'all' && p.role !== filterRole) return false;
+export const cardUrl = (p) => `https://content.fantacalcio.it/web/campioncini/${SEASON}/card/${p.id}.png`;
+const infoUrl = (p) => `https://www.fantacalcio.it/serie-a/squadre/${slug(p.team)}/${slug(p.name)}/${p.id}`;
 
-        // Filtro per nome (ricerca case-insensitive)
-        if (searchTerm && !p.name.toLowerCase().includes(searchTerm.toLowerCase())) return false;
+export function renderPlayerList() {
+    const taken = new Set(state.roomData.teams.flatMap((t) => (t.roster || []).map((r) => String(r.playerId))));
+    const q = fold(filter.text.trim());
+    const rows = state.players
+        .filter((p) => !taken.has(String(p.id)) && (filter.role === 'all' || p.role === filter.role) && (!q || fold(`${p.name} ${p.team}`).includes(q)))
+        .sort((a, b) => b.cost - a.cost);
 
-        return true;
-    });
-
-    // Ordina per valore decrescente (più costosi in cima)
-    players.sort((a, b) => b.cost - a.cost);
-
-    // ── Creazione elementi lista ────────────────────────────────────────
-    players.forEach(p => {
-        const li = document.createElement('li');
-        li.className = 'player-item';
-        li.dataset.id = p.id;
-        li.dataset.role = p.role; // Attributo data per filtering dinamico
-
-        // Determina il colore CSS del badge ruolo
-        const roleColorClass = p.role === 'P' ? 'gk' : p.role === 'D' ? 'def' : p.role === 'C' ? 'mid' : 'att';
-
-        // Genera URL fantacalcio.it
-        const playerUrl = getPlayerUrl(p);
-        const infoHtml = playerUrl
-            ? `<a href="${playerUrl}" class="p-info-link" title="Info su fantacalcio.it" onclick="event.stopPropagation(); window.open(this.href, 'fc_player_info', 'width=1000,height=800,scrollbars=yes,resizable=yes'); return false;">ℹ️</a>`
-            : '';
-
-        li.innerHTML = `
-            <span class="p-role-badge role-${p.role}" style="background:var(--role-${roleColorClass})">${p.role}</span>
-            <div class="p-info">
-                <span class="p-name">${p.name}</span>
-                <span class="p-team">${p.team}</span>
-            </div>
-            <span class="p-value">${p.cost}</span>
-            ${infoHtml}
-        `;
-
-        // Event listener per selezione giocatore
-        li.addEventListener('click', () => {
-            selectPlayerForAuction(p.id);
-        });
-
-        list.appendChild(li);
-    });
+    document.getElementById('player-list').innerHTML = rows.map((p) => `<li data-id="${esc(p.id)}" data-role="${p.role}">
+        <button class="player-pick" data-pick="${esc(p.id)}" aria-label="${esc(p.name)}, ${esc(p.team)}, ${ROLE_NAMES[p.role]}, quotazione ${p.cost}">
+            <span class="role-badge role-${p.role}" aria-hidden="true">${p.role}</span>
+            <span class="p-info" aria-hidden="true"><span class="p-name">${esc(p.name)}</span><span class="p-team">${esc(p.team)}</span></span>
+            <span class="p-value" aria-hidden="true">${p.cost}</span>
+        </button>
+        <a class="p-info-link" href="${esc(infoUrl(p))}" target="_blank" rel="noopener" aria-label="Scheda di ${esc(p.name)} su Fantacalcio.it">${icon('external-link')}</a>
+    </li>`).join('');
+    updatePlayerListVisuals(taken, hiddenNow, state.roomData.currentPick?.playerId);
 }
 
-/**
- * Aggiorna la visibilità degli elementi giocatore già presenti nel DOM
- * 
- * Utilizzato per nascondere/mostrare giocatori senza rifare il rendering completo.
- * Applica le classi CSS 'hidden' in base a:
- * - Giocatori già presi da squadre
- * - Ruoli che devono essere nascosti (es. squadra ha completato tutti i portieri)
- * 
- * Se tutti i giocatori sono nascosti, mostra un messaggio di stato appropriato.
- * 
- * @function updatePlayerListVisuals
- * @param {Set<string>} takenIds - Set di ID giocatori già assegnati
- * @param {Array<string>} [hiddenRoles=[]] - Array di ruoli da nascondere ('P', 'D', 'C', 'A')
- * @returns {void}
- * 
- * @example
- * const taken = new Set(['101', '102', '103']);
- * const hidden = ['P', 'D']; // Nascondi portieri e difensori
- * updatePlayerListVisuals(taken, hidden);
- */
-export function updatePlayerListVisuals(takenIds, hiddenRoles = []) {
-    const items = document.querySelectorAll('.player-item');
-
-    // ── Nascondi giocatori presi o con ruolo nascosto ───────────────────
-    items.forEach(item => {
-        const isTaken = takenIds.has(item.dataset.id);
-        const isHiddenRole = hiddenRoles.includes(item.dataset.role);
-
-        if (isTaken || isHiddenRole) {
-            item.classList.add('hidden');
-        } else {
-            item.classList.remove('hidden');
-        }
+export function updatePlayerListVisuals(takenIds, hiddenRoles = [], currentId = null) {
+    hiddenNow = hiddenRoles;
+    let visible = 0;
+    document.querySelectorAll('#player-list > li').forEach((li) => {
+        const hide = takenIds.has(li.dataset.id) || hiddenRoles.includes(li.dataset.role);
+        li.classList.toggle('hidden', hide);
+        if (!hide) visible++;
+        li.firstElementChild.classList.toggle('is-current', li.dataset.id === String(currentId));
     });
 
-    // ── Gestione messaggio lista vuota ──────────────────────────────────
-    const visible = document.querySelectorAll('.player-item:not(.hidden)');
-    const msgEl = document.getElementById('list-status-msg');
-
-    if (visible.length === 0) {
-        // Determina il messaggio appropriato
-        const isDraftComplete = hiddenRoles.length >= 4;
-        const message = isDraftComplete
-            ? "Draft Completato! 🎉"                              // Tutti ruoli completi
-            : "Nessun giocatore disponibile per i ruoli richiesti."; // Solo alcuni ruoli esauriti
-
-        if (!msgEl) {
-            // Crea il messaggio se non esiste
-            const msg = document.createElement('div');
+    const done = hiddenRoles.length >= 4;
+    let msg = document.getElementById('list-status-msg');
+    if (!visible) {
+        if (!msg) {
+            msg = document.createElement('p');
             msg.id = 'list-status-msg';
-            msg.style.padding = '20px';
-            msg.style.textAlign = 'center';
-            msg.style.color = '#888';
-            msg.textContent = message;
-
-            const container = document.querySelector('.player-list-container');
-            if (container) {
-                container.appendChild(msg);
-            }
-        } else {
-            // Aggiorna il messaggio esistente
-            msgEl.textContent = message;
-            msgEl.style.display = 'block';
+            msg.className = 'list-status';
+            document.querySelector('.player-list-container').appendChild(msg);
         }
-
-        // Quando il draft è completato → evidenzia il bottone Export CSV
-        const btnCsv = document.getElementById('btn-export-csv');
-        if (btnCsv) {
-            if (isDraftComplete) {
-                btnCsv.classList.add('csv-ready');
-            } else {
-                btnCsv.classList.remove('csv-ready');
-            }
-        }
-    } else {
-        // Nascondi il messaggio se ci sono giocatori visibili
-        if (msgEl) msgEl.style.display = 'none';
-
-        // Draft in corso → rimuovi eventuale stato csv-ready
-        const btnCsv = document.getElementById('btn-export-csv');
-        if (btnCsv) btnCsv.classList.remove('csv-ready');
+        msg.textContent = done ? 'Rose complete: asta finita.' : filter.text ? 'Nessun giocatore libero con questo nome.' : 'Nessun giocatore libero nei ruoli che servono.';
     }
+    msg?.classList.toggle('hidden', !!visible);
 }
 
-/**
- * Configura gli event listener per i controlli di filtro e ricerca
- * 
- * Collega:
- * - Clic sui tab ruolo (P, D, C, A, Tutti) -> filtra la lista
- * - Input nella barra di ricerca -> filtra per nome in tempo reale
- * 
- * Questa funzione deve essere chiamata una sola volta durante l'inizializzazione.
- * 
- * @function setupFilters
- * @returns {void}
- * 
- * @example
- * // In app.js durante DOMContentLoaded
- * setupFilters();
- */
 export function setupFilters() {
-    // ── Mostra data ultimo aggiornamento DB ─────────────────────────────
-    const lastUpdatedEl = document.getElementById('players-last-updated');
-    if (lastUpdatedEl) {
-        lastUpdatedEl.textContent = playerService.getLastUpdatedLabel();
-    }
+    const date = data.playersLastUpdated ? new Date(data.playersLastUpdated) : null;
+    document.getElementById('players-last-updated').textContent = date
+        ? date.toLocaleString('it-IT', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Rome' })
+        : 'n.d.';
 
-    // ── Tab filtro ruoli ────────────────────────────────────────────────
-    document.querySelectorAll('.role-tab').forEach(tab => {
-        tab.addEventListener('click', (e) => {
-            // Rimuove classe active da tutti i tab
-            document.querySelectorAll('.role-tab').forEach(t => t.classList.remove('active'));
-
-            // Aggiunge active al tab cliccato
-            e.target.classList.add('active');
-
-            // Applica filtro ruolo + eventuali filtri di ricerca
-            const role = e.target.dataset.role;
-            const search = document.getElementById('search-player').value;
-            renderPlayerList(role, search);
+    document.getElementById('role-filters').addEventListener('click', (e) => {
+        const tab = e.target.closest('.role-tab');
+        if (!tab) return;
+        document.querySelectorAll('.role-tab').forEach((t) => {
+            t.classList.toggle('active', t === tab);
+            t.setAttribute('aria-pressed', String(t === tab));
         });
+        filter.role = tab.dataset.role;
+        renderPlayerList();
     });
-
-    // ── Input ricerca ───────────────────────────────────────────────────
     document.getElementById('search-player').addEventListener('input', (e) => {
-        // Mantiene il filtro ruolo attivo mentre si digita
-        const activeTab = document.querySelector('.role-tab.active');
-        renderPlayerList(activeTab.dataset.role, e.target.value);
+        filter.text = e.target.value;
+        renderPlayerList();
+    });
+    document.getElementById('player-list').addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-pick]');
+        if (btn) selectPlayerForAuction(btn.dataset.pick);
     });
 }

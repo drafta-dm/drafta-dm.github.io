@@ -1,1024 +1,208 @@
-// ============================================================================
-// MODULO: Logica del Draft
-// ============================================================================
-// Gestisce l'intera logica del fantasy draft inclusi turni, selezioni e validazioni.
-// Funzionalità principali:
-// - Avvio draft e creazione ordine turni iniziale
-// - Selezione giocatori (con permessi host/owner turno)
-// - Conferma pick con validazioni multiple (crediti, slot, ordine ruoli)
-// - Calcolo ordine turni dinamico (strict, count, value)
-// - Confronto intelligente squadre per ordinamento
-// - Logica automatica blocco portieri
-// - Salvataggio stato su Firebase con aggiornamento real-time
-// ============================================================================
+// Draft actions: start, select, confirm, undo, timer, auto pick. The rules themselves are in draft-rules.js.
 
-// Import Firebase per aggiornamenti stanza
 import { db, doc, updateDoc } from './firebase-modules.js';
+import { state } from './state.js';
+import { showToast, showBigError, closeModal, esc } from './utils.js';
+import { playSound } from './sounds.js';
+import { nextTurn, pickError, applyPick, bestAvailable, dynamicOrder, firstOpenIndex } from './draft-rules.js';
 
-// Import moduli interni
-import { state } from './state.js';                    // Stato globale
-import { showToast, showBigError } from './utils.js';  // Notifiche UI
-import { playSound } from './sounds.js';               // Effetti sonori
+const roomRef = () => doc(db, 'rooms', state.currentRoomId);
+const currentTeam = (room = state.roomData) => room?.teams.find((t) => t.id === room.draftOrder?.[room.currentTurnIndex]);
+const canAct = (team) => state.isHost || (team && team.ownerUid === state.user.uid);
 
-/**
- * Determina il ruolo target richiesto per una squadra
- * Rispettando l'ordine P -> D -> C -> A
- * @param {Object} team - La squadra di cui verificare il roster
- * @param {boolean} strictRoles - Se true applica il vincolo rigido
- * @returns {string|null} Il ruolo target ('P', 'D', 'C', 'A') o null se completa
- */
-export function getTeamTargetRole(team, strictRoles) {
-    console.log("[Drafta Debug] getTeamTargetRole for team:", team ? team.name : 'null', "strict:", strictRoles);
-    const roles = { P: 0, D: 0, C: 0, A: 0 };
-    if (team && team.roster) {
-        team.roster.forEach(r => {
-            const p = state.players.find(pl => String(pl.id) === String(r.playerId));
-            if (p) roles[p.role]++;
-        });
-    }
-    console.log("[Drafta Debug] Current team roster counts:", JSON.stringify(roles));
-    
-    // Se strictRoles è attivo, dobbiamo rispettare rigorosamente l'ordine P -> D -> C -> A
-    if (strictRoles) {
-        if (roles.P < 3) return 'P';
-        if (roles.D < 8) return 'D';
-        if (roles.C < 8) return 'C';
-        if (roles.A < 6) return 'A';
-        return null;
-    }
-    
-    // Se non è strict, restituiamo il primo ruolo incompleto partendo da P -> D -> C -> A come fallback intelligente
-    if (roles.P < 3) return 'P';
-    if (roles.D < 8) return 'D';
-    if (roles.C < 8) return 'C';
-    if (roles.A < 6) return 'A';
-    return null;
-}
+// Pre-selects the obvious pick for whoever starts, so the first screen isn't empty.
+const suggestion = (teams, team) => {
+    const p = team && bestAvailable(teams, team, state.players, state.byId);
+    return p ? { playerId: String(p.id) } : null;
+};
 
-/**
- * Ottiene il pick iniziale per una squadra selezionando il giocatore disponibile più costoso
- * per il ruolo target richiesto
- * @param {Array} teams - Elenco di tutte le squadre per verificare i giocatori già presi
- * @param {Object} team - La squadra per cui calcolare il pick iniziale
- * @param {boolean} strictRoles - Se true applica la logica rigida dei ruoli
- * @returns {Object|null} Oggetto { playerId } o null
- */
-export function getInitialPickForTeam(teams, team, strictRoles) {
-    console.log("[Drafta Debug] getInitialPickForTeam called. players count:", state.players ? state.players.length : 0);
-    const takenIds = new Set();
-    teams.forEach(t => {
-        if (t.roster) {
-            t.roster.forEach(r => takenIds.add(String(r.playerId)));
-        }
-    });
-
-    const targetRole = getTeamTargetRole(team, strictRoles);
-    console.log("[Drafta Debug] getInitialPickForTeam: targetRole is", targetRole);
-    if (!targetRole) return null;
-
-    const availableCandidates = state.players.filter(p => p.role === targetRole && !takenIds.has(String(p.id)));
-    console.log(`[Drafta Debug] getInitialPickForTeam: found ${availableCandidates.length} available candidates for role ${targetRole}`);
-    if (availableCandidates.length > 0) {
-        availableCandidates.sort((a, b) => b.cost - a.cost);
-        const selected = availableCandidates[0];
-        console.log("[Drafta Debug] getInitialPickForTeam: selected player:", selected.name, "ID:", selected.id, "cost:", selected.cost);
-        return { playerId: String(selected.id) };
-    }
-    
-    // Fallback: se per quel ruolo non ci sono giocatori disponibili (es. finiti!), prendiamo il primo disponibile in assoluto più caro
-    const anyAvailable = state.players.filter(p => !takenIds.has(String(p.id)));
-    console.log(`[Drafta Debug] getInitialPickForTeam fallback: found ${anyAvailable.length} players overall`);
-    if (anyAvailable.length > 0) {
-        anyAvailable.sort((a, b) => b.cost - a.cost);
-        const selected = anyAvailable[0];
-        console.log("[Drafta Debug] getInitialPickForTeam fallback selected player:", selected.name, "ID:", selected.id, "cost:", selected.cost);
-        return { playerId: String(selected.id) };
-    }
-    console.warn("[Drafta Debug] getInitialPickForTeam: no players available at all!");
-    return null;
-}
-
-/**
- * Avvia il draft cambiando lo stato della stanza da 'lobby' a 'started'
- * 
- * Operazioni eseguite:
- * - Crea ordine turni iniziale basato sull'ordine delle squadre
- * - Imposta currentTurnIndex a 0 (prima squadra)
- * - Imposta roundNumber a 1 (primo turno)
- * - Resetta flag modal ordine turni
- * - Cambia status stanza a 'started'
- * 
- * Solo l'host può avviare il draft.
- * 
- * @function startDraft
- * @returns {Promise<void>}
- * 
- * @example
- * // Collegato al pulsante "Avvia Draft" in lobby
- * await startDraft();
- */
 export async function startDraft() {
     if (!state.isHost) return;
-
-    // Reset flag modal ordine turni (per mostrarla di nuovo se necessario)
+    const room = state.roomData;
+    if (!room.teams.some((t) => t.ownerUid) && !confirm('Nessuna squadra ha un allenatore: le scelte le farai tutte tu. Parto lo stesso?')) return;
     state.hasShownOrderModal = false;
-
-    // Crea ordine turni iniziale = ordine squadre
-    const teamIds = state.roomData.teams.map(t => t.id);
-
-    // Trova il primo indice di squadra incompleta
-    let initialTurnIndex = 0;
-    while (initialTurnIndex < teamIds.length) {
-        const team = state.roomData.teams.find(t => t.id === teamIds[initialTurnIndex]);
-        if (team && team.roster && team.roster.length < 25) {
-            break;
-        }
-        initialTurnIndex++;
-    }
-
-    // Trova il giocatore intelligente per pre-selezionarlo ed avviare l'asta in modo pulito
-    const activeTeamId = teamIds[initialTurnIndex];
-    const activeTeam = state.roomData.teams.find(t => t.id === activeTeamId);
-    const strictRoles = !!state.roomData.settings?.strictRoles;
-    const initialPick = getInitialPickForTeam(state.roomData.teams, activeTeam, strictRoles);
-
-    await updateDoc(doc(db, "rooms", state.currentRoomId), {
-        status: "started",
-        draftOrder: teamIds,
-        currentTurnIndex: initialTurnIndex,
+    const order = room.teams.map((t) => t.id);
+    const index = firstOpenIndex(order, room.teams);
+    await updateDoc(roomRef(), {
+        status: 'started',
+        draftOrder: order,
+        currentTurnIndex: index,
         roundNumber: 1,
         turnStartedAt: Date.now(),
+        timerPaused: false,
+        pausedElapsed: 0,
         draftHistory: [],
-        currentPick: initialPick
+        currentPick: suggestion(room.teams, room.teams.find((t) => t.id === order[index])),
     });
 }
 
-/**
- * Renderizza l'anteprima dell'ordine dei turni nella modal
- * 
- * Mostra una lista numerata con i nomi delle squadre nell'ordine
- * in cui giocheranno durante il round corrente.
- * 
- * @function renderOrderPreview
- * @param {Array<string>} order - Array di team IDs nell'ordine desiderato
- * @returns {void}
- * 
- * @example
- * renderOrderPreview(['team-1', 'team-3', 'team-2']);
- * // Mostra: 1. Nome Team 1
- * //         2. Nome Team 3
- * //         3. Nome Team 2
- */
 export function renderOrderPreview(order) {
-    const list = document.getElementById('order-preview-list');
-    list.innerHTML = '';
-
-    order.forEach((tid, i) => {
-        const team = state.roomData.teams.find(t => t.id === tid);
-        const div = document.createElement('div');
-        div.textContent = `${i + 1}. ${team ? team.name : tid}`;
-        div.style.padding = "4px";
-        div.style.borderBottom = "1px solid #333";
-        list.appendChild(div);
-    });
+    document.getElementById('order-preview-list').innerHTML = order.map((id, i) => {
+        const team = state.roomData.teams.find((t) => t.id === id);
+        return `<li style="--n:${i}">${esc(team ? team.name : id)}</li>`;
+    }).join('');
 }
 
-/**
- * Seleziona un giocatore per metterlo in asta (mostra card preview)
- * 
- * Controllo permessi:
- * - Host può sempre selezionare
- * - Owner della squadra di turno può selezionare
- * - Altri utenti non possono (viene mostrato toast di errore)
- * 
- * Non assegna direttamente il giocatore, ma lo mette in stato "currentPick"
- * visibile a tutti. L'assegnazione definitiva avviene con confirmPick().
- * 
- * @function selectPlayerForAuction
- * @param {string|number} playerId - ID del giocatore da selezionare
- * @returns {void}
- * 
- * @example
- * selectPlayerForAuction(1234); // Mostra card giocatore ID 1234
- */
-export function selectPlayerForAuction(playerId) {
-    // ── Controllo permessi ──────────────────────────────────────────────
-    let canSelect = state.isHost;
-
-    if (!canSelect && state.roomData && state.roomData.draftOrder) {
-        // Verifica se è il proprietario della squadra di turno
-        const currentTeamId = state.roomData.draftOrder[state.roomData.currentTurnIndex];
-        const currentTeam = state.roomData.teams.find(t => t.id === currentTeamId);
-
-        if (currentTeam && currentTeam.ownerUid === state.user.uid) {
-            canSelect = true;
-        }
-    }
-
-    if (!canSelect) {
-        return showToast("Non è il tuo turno per selezionare!");
-    }
-
-    // ── Aggiorna currentPick su Firebase ────────────────────────────────
-    const roomRef = doc(db, 'rooms', state.currentRoomId);
-    const numId = Number(playerId);
-    const finalId = isNaN(numId) ? playerId : numId;
-
-    updateDoc(roomRef, {
-        currentPick: { playerId: finalId }
-    });
-}
-
-/**
- * Conferma l'assegnazione del giocatore selezionato alla squadra di turno
- * 
- * Validazioni effettuate:
- * 1. Verifica che ci sia un giocatore selezionato (currentPick)
- * 2. Verifica permessi (host o owner squadra di turno)
- * 3. Verifica crediti sufficienti
- * 4. Se strictRoles attivo: verifica ordine ruoli P->D->C->A
- * 5. Verifica slot ruolo non pieni (max: P=3, D=8, C=8, A=6)
- * 
- * Logiche speciali:
- * - Blocco portieri automatico: se blockGK attivo e primo portiere, aggiunge automaticamente gli altri 2 della stessa squadra
- * 
- * Dopo la conferma:
- * - Aggiorna roster squadra
- * - Sottrae crediti
- * - Calcola turno successivo (snake o dynamic order modes)
- * - Salva tutto su Firebase
- * 
- * @function confirmPick
- * @returns {Promise<void>}
- * 
- * @example
- * // Dopo selectPlayerForAuction(), l'utente clicca "Conferma"
- * await confirmPick();
- */
-export async function confirmPick() {
+// Fisher-Yates on the first-round order (host, before the first pick).
+export async function shuffleOrder() {
     const room = state.roomData;
-
-    // ── Validazione 1: Giocatore selezionato ────────────────────────────
-    if (!room.currentPick) return showToast("Nessun giocatore selezionato");
-
-    const currentTeamId = state.roomData.draftOrder[state.roomData.currentTurnIndex];
-    if (!currentTeamId) return showToast("Draft terminato");
-
-    const currentTeam = state.roomData.teams.find(t => t.id === currentTeamId);
-
-    // ── Validazione 2: Permessi ─────────────────────────────────────────
-    if (!state.isHost && state.user.uid !== currentTeam.ownerUid) {
-        return showToast(`Non è il tuo turno! Tocca a: ${currentTeam ? currentTeam.name : 'Altra Squadra'}`);
+    if (!state.isHost || !room?.draftOrder) return;
+    const order = [...room.draftOrder];
+    for (let i = order.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [order[i], order[j]] = [order[j], order[i]];
     }
+    const index = firstOpenIndex(order, room.teams);
+    await updateDoc(roomRef(), {
+        draftOrder: order,
+        currentTurnIndex: index,
+        turnStartedAt: Date.now(),
+        currentPick: suggestion(room.teams, room.teams.find((t) => t.id === order[index])),
+    }).catch((e) => console.error('shuffle', e));
+}
 
-    // Se l'host forza il pick per un'altra squadra, chiedi conferma
-    if (state.isHost && state.user.uid !== currentTeam.ownerUid) {
-        const confirmMsg = `Confermi di fare il pick per la squadra "${currentTeam ? currentTeam.name : 'Altra Squadra'}"?`;
-        if (!confirm(confirmMsg)) {
-            return;
-        }
-    }
+export function selectPlayerForAuction(playerId) {
+    if (!canAct(currentTeam())) return showToast('Non è il tuo turno: guarda pure, scegli quando tocca a te.');
+    updateDoc(roomRef(), { currentPick: { playerId: String(playerId) } }).catch((e) => showToast('Selezione non salvata: ' + e.message));
+}
 
-    const teamIndex = state.roomData.teams.findIndex(t => t.id === currentTeamId);
-    const team = state.roomData.teams[teamIndex];
-
-    const playerId = room.currentPick.playerId;
-    const player = state.players.find(p => String(p.id) === String(playerId));
-    const cost = player.cost;
-
-    // (Nessuna limitazione budget/crediti per pick manuale in modalità draft)
-
-    // ── Calcolo ruoli attuali squadra ───────────────────────────────────
-    const roles = { P: 0, D: 0, C: 0, A: 0 };
-    team.roster.forEach(r => {
-        const pState = state.players.find(pl => String(pl.id) === String(r.playerId));
-        if (pState) roles[pState.role]++;
-    });
-
-    const targetRole = player.role;
-
-    // ── Validazione 4: Ordine Ruoli Strict (P->D->C->A) ─────────────────
-    if (state.roomData.settings?.strictRoles) {
-        if (targetRole === 'D' && roles.P < 3) {
-            return showBigError("Devi completare i portieri prima!");
-        }
-        if (targetRole === 'C' && (roles.P < 3 || roles.D < 8)) {
-            return showBigError("Devi completare P e D prima!");
-        }
-        if (targetRole === 'A' && (roles.P < 3 || roles.D < 8 || roles.C < 8)) {
-            return showBigError("Devi completare P, D e C prima!");
-        }
-    }
-
-    // ── Validazione 5: Slot Massimi ─────────────────────────────────────
-    const maxRoles = { P: 3, D: 8, C: 8, A: 6 };
-    if (roles[targetRole] >= maxRoles[targetRole]) {
-        return showBigError(`Slot ${targetRole} completi!`);
-    }
-
-    // ── Preparazione assegnazione ───────────────────────────────────────
-    const roomRef = doc(db, 'rooms', state.currentRoomId);
-    const newTeams = JSON.parse(JSON.stringify(room.teams));
-    const pickedItems = [{ playerId, cost }];
-
-    // ── Logica Blocco Portieri Automatico ───────────────────────────────
-    const useBlockGK = state.roomData.settings?.blockGK;
-    if (targetRole === 'P' && useBlockGK && roles.P === 0) {
-        // Raccogli ID presi da tutte le squadre
-        const takenIds = new Set();
-        room.teams.forEach(t => {
-            if (t.roster) {
-                t.roster.forEach(r => takenIds.add(String(r.playerId)));
-            }
-        });
-
-        // Se è il primo portiere, cerca gli altri della stessa squadra non presi ed assegnali (max 2 compagni)
-        const teamMates = state.players.filter(p =>
-            p.team === player.team && p.role === 'P' && p.id !== player.id && !takenIds.has(String(p.id))
-        ).slice(0, 2);
-        teamMates.forEach(m => pickedItems.push({ playerId: m.id, cost: m.cost }));
-        showToast(`Blocco portieri ${player.team} assegnato!`);
-    }
-
-    // ── Applicazione Pick ───────────────────────────────────────────────
-    let totalCost = 0;
-    pickedItems.forEach(item => {
-        newTeams[teamIndex].roster.push(item);
-        totalCost += item.cost;
-    });
-    newTeams[teamIndex].credits -= totalCost;
-    newTeams[teamIndex].totalValue = (newTeams[teamIndex].totalValue || 0) + totalCost;
-
-    // ── Calcolo Turno Successivo ────────────────────────────────────────
-    let nextTurnIndex = room.currentTurnIndex + 1;
-    let nextDraftOrder = [...room.draftOrder];
-    let nextRound = room.roundNumber;
-
-    const sortMode = state.roomData.settings?.sortMode;
-
-    if (sortMode) {
-        // ── Modalità Ordinamento Dinamico ──────────────────────────────
-        // Riordina le squadre ad ogni turno in base al criterio scelto
-        nextDraftOrder = calculateDynamicOrder(newTeams, sortMode);
-        nextTurnIndex = 0;
-    } else {
-        // ── Modalità Standard (Snake) ───────────────────────────────────
-        // Quando finisce il giro, passa al round successivo e riordina squadre
-        if (nextTurnIndex >= room.draftOrder.length) {
-            nextRound++;
-            const sortedTeams = [...newTeams].sort(compareTeamsSmart);
-            nextDraftOrder = sortedTeams.map(t => t.id);
-            nextTurnIndex = 0;
-        }
-    }
-
-    // Salta le squadre che hanno completato tutti i 25 slot
-    const anyIncomplete = newTeams.some(t => (t.roster?.length || 0) < 25);
-    if (!anyIncomplete) {
-        nextTurnIndex = nextDraftOrder.length;
-    } else {
-        let attempts = 0;
-        const maxAttempts = nextDraftOrder.length * 2;
-        while (attempts < maxAttempts) {
-            if (nextTurnIndex >= nextDraftOrder.length) {
-                if (sortMode) {
-                    nextTurnIndex = 0;
-                    break;
-                }
-                nextRound++;
-                const sortedTeams = [...newTeams].sort(compareTeamsSmart);
-                nextDraftOrder = sortedTeams.map(t => t.id);
-                nextTurnIndex = 0;
-            }
-
-            const nextTeamId = nextDraftOrder[nextTurnIndex];
-            const nextTeam = newTeams.find(t => t.id === nextTeamId);
-            if (nextTeam && nextTeam.roster && nextTeam.roster.length < 25) {
-                break;
-            }
-            nextTurnIndex++;
-            attempts++;
-        }
-    }
-
-    // ── Preparazione snapshot per Undo ───────────────────────────────
-    const lastPickState = {
-        teams: JSON.parse(JSON.stringify(room.teams)),
-        currentTurnIndex: room.currentTurnIndex,
-        roundNumber: room.roundNumber,
-        draftOrder: [...room.draftOrder],
-        draftHistory: room.draftHistory ? [...room.draftHistory] : []
-    };
-
-    // ── Salvataggio su Firebase ─────────────────────────────────
-    const historyEntry = {
-        teamId: currentTeamId,
-        teamName: team.name,
-        playerId: playerId,
-        playerName: player.name,
-        role: player.role,
-        cost: cost,
-        round: room.roundNumber,
-        timestamp: Date.now()
-    };
-    const newHistory = [...(room.draftHistory || []), historyEntry];
-
-    await updateDoc(roomRef, {
-        teams: newTeams,
-        currentTurnIndex: nextTurnIndex,
-        roundNumber: nextRound,
-        draftOrder: nextDraftOrder,
+// One write for every turn change: teams, next turn, undo snapshot, history.
+async function commitPick(room, team, player, auto = false) {
+    const { teams, items } = applyPick(room, team.id, player, state.players, state.byId);
+    const turn = nextTurn(room, teams, state.byId);
+    await updateDoc(roomRef(), {
+        teams,
+        ...turn,
         currentPick: null,
         turnStartedAt: Date.now(),
-        lastPickState: lastPickState,
-        draftHistory: newHistory
+        pausedElapsed: 0,
+        lastPickState: { teams: room.teams, currentTurnIndex: room.currentTurnIndex, roundNumber: room.roundNumber, draftOrder: room.draftOrder },
+        draftHistory: [...(room.draftHistory || []), ...items.map((p) => ({
+            teamId: team.id, teamName: team.name, playerId: String(p.id), playerName: p.name, role: p.role, cost: p.cost,
+            round: room.roundNumber, timestamp: Date.now(), ...(auto && { isAutoPick: true }),
+        }))],
     });
-
-    showToast(`Assegnato ${player.name} (+${pickedItems.length - 1}) a ${team.name}`);
+    const extra = items.length > 1 ? ` e ${items.length - 1} portier${items.length > 2 ? 'i' : 'e'} della stessa squadra` : '';
+    showToast(`${auto ? 'Tempo scaduto: d\'ufficio ' : ''}${player.name}${extra} a ${team.name}.`);
     playSound('pick');
 }
 
-/**
- * Calcola l'ordine dinamico dei turni basato su un criterio specifico
- * 
- * Modalità disponibili:
- * - 'strict': Ordina per ruoli mancanti (P -> D -> C -> A), chi è più indietro sceglie per primo
- * - 'count': Ordina per numero totale giocatori, chi ha meno sceglie per primo
- * - 'value': Ordina per valore rosa, chi ha speso meno sceglie per primo
- * 
- * In caso di parità su criterio primario, usa compareTeamsSmart come tie-breaker.
- * 
- * @function calculateDynamicOrder
- * @param {Array<Object>} teams - Array di squadre
- * @param {string} type - Tipo di ordinamento ('strict', 'count', 'value')
- * @returns {Array<string>} Array di team IDs ordinati secondo il criterio
- * 
- * @example
- * const order = calculateDynamicOrder(teams, 'strict');
- * // Ritorna: ['team-2', 'team-1', 'team-3'] (team-2 ha meno ruoli completati)
- */
-export function calculateDynamicOrder(teams, type) {
-    const sorted = [...teams];
+export async function confirmPick() {
+    const room = state.roomData;
+    const team = currentTeam(room);
+    if (!team) return showToast("L'asta è finita.");
+    if (!room.currentPick) return showToast('Prima scegli un giocatore dalla lista.');
+    if (!canAct(team)) return showToast(`Non è il tuo turno: tocca a ${team.name}.`);
+    if (state.isHost && team.ownerUid !== state.user.uid && !confirm(`Fai la scelta al posto di "${team.name}"?`)) return;
 
-    // Helper per contare ruoli nella rosa
-    const countRoles = (roster) => {
-        const c = { P: 0, D: 0, C: 0, A: 0, Total: 0 };
-        roster.forEach(r => {
-            const p = state.players.find(pl => String(pl.id) === String(r.playerId));
-            if (p) {
-                c[p.role]++;
-                c.Total++;
-            }
-        });
-        return c;
-    };
+    const player = state.byId.get(String(room.currentPick.playerId));
+    if (!player) return showBigError('Questo giocatore non è più nel listone. Scegline un altro.');
+    const err = pickError(room, team, player, state.byId);
+    if (err) return showBigError(err);
 
-    // ── Ordinamento basato sul tipo ────────────────────────────────────
-    sorted.sort((a, b) => {
-        const rA = countRoles(a.roster);
-        const rB = countRoles(b.roster);
-
-        const valueComparison = compareTeamsSmart(a, b);
-
-        if (type === 'strict') {
-            // Ordine per fase del ruolo corrente da completare: P -> D -> C -> A
-            const getNextRolePriority = (r) => {
-                if (r.P < 3) return 1;
-                if (r.D < 8) return 2;
-                if (r.C < 8) return 3;
-                if (r.A < 6) return 4;
-                return 5;
-            };
-            const prioA = getNextRolePriority(rA);
-            const prioB = getNextRolePriority(rB);
-            if (prioA !== prioB) {
-                return prioA - prioB;
-            }
-            return valueComparison;  // Tie-breaker
-        } else if (type === 'count') {
-            // Ordine per numero totale giocatori
-            if (rA.Total !== rB.Total) return rA.Total - rB.Total;
-            return valueComparison;  // Tie-breaker
-        } else {
-            // Ordine per valore rosa (type === 'value')
-            return valueComparison;
-        }
-    });
-
-    return sorted.map(t => t.id);
-}
-
-/**
- * Confronta due squadre per ordinamento intelligente basato su valore rosa
- * 
- * Algoritmo:
- * 1. Confronto primario: totalValue (chi ha speso meno sceglie prima)
- * 2. Confronto secondario (tie-breaker): "High Card" logic
- *    - Ordina i costi dei giocatori di ogni squadra in ordine decrescente
- *    - Confronta il giocatore più costoso di A vs B
- *    - Se uguale, confronta il secondo più costoso
- *    - E così via finché non trova una differenza
- * 
- * Questo sistema assicura un bilanciamento equo anche quando due squadre
- * hanno lo stesso valore totale ma composizione diversa.
- * 
- * @function compareTeamsSmart
- * @param {Object} a - Prima squadra da confrontare
- * @param {Object} b - Seconda squadra da confrontare
- * @returns {number} -1 se a < b, 0 se a == b, 1 se a > b
- * 
- * @example
- * // Team A: totalValue=100, giocatori=[50, 30, 20]
- * // Team B: totalValue=100, giocatori=[40, 35, 25]
- * compareTeamsSmart(teamA, teamB);
- * // Ritorna: 1 (Team B sceglie prima perché ha il giocatore più costoso più basso)
- */
-export function compareTeamsSmart(a, b) {
-    // Se la regola strictRoles è attiva, la precedenza va ai ruoli mancanti in ordine P -> D -> C -> A
-    if (state.roomData?.settings?.strictRoles) {
-        const getNextRoleNeeded = (team) => {
-            const roles = { P: 0, D: 0, C: 0, A: 0 };
-            if (team.roster) {
-                team.roster.forEach(r => {
-                    const p = state.players.find(pl => String(pl.id) === String(r.playerId));
-                    if (p) roles[p.role]++;
-                });
-            }
-            if (roles.P < 3) return 'P';
-            if (roles.D < 8) return 'D';
-            if (roles.C < 8) return 'C';
-            if (roles.A < 6) return 'A';
-            return 'Done';
-        };
-
-        const rolePriority = { P: 1, D: 2, C: 3, A: 4, Done: 5 };
-        const prioA = rolePriority[getNextRoleNeeded(a)];
-        const prioB = rolePriority[getNextRoleNeeded(b)];
-
-        if (prioA !== prioB) {
-            return prioA - prioB; // Chi ha priorità inferiore (più urgente, es. 'P' < 'D') sceglie prima
-        }
-    }
-
-    const valA = a.totalValue || 0;
-    const valB = b.totalValue || 0;
-
-    // ── Confronto primario: Valore totale ───────────────────────────────
-    if (valA !== valB) return valA - valB;
-
-    // ── Confronto secondario: High Card Logic ───────────────────────────
-    const getCosts = (t) => t.roster.map(r => r.cost || 0).sort((x, y) => y - x);
-
-    const costsA = getCosts(a);
-    const costsB = getCosts(b);
-
-    const len = Math.max(costsA.length, costsB.length);
-
-    // Confronta giocatore per giocatore dal più costoso
-    for (let i = 0; i < len; i++) {
-        const cA = costsA[i] || 0;
-        const cB = costsB[i] || 0;
-
-        if (cA !== cB) {
-            return cA - cB;
-        }
-    }
-
-    return 0;  // Perfettamente uguali
-}
-
-/**
- * Applica un nuovo ordine di draft dinamico e salva le impostazioni
- * 
- * Operazioni:
- * 1. Calcola nuovo ordine basato sul tipo scelto
- * 2. Resetta currentTurnIndex a 0
- * 3. Salva sortMode nelle settings per applicarlo ad ogni turno
- * 4. Chiude modal impostazioni ordine
- * 
- * Solo l'host può modificare l'ordine dei turni.
- * 
- * @function applyDraftOrder
- * @param {string} type - Tipo ordinamento ('strict', 'count', 'value')
- * @returns {Promise<void>}
- * 
- * @example
- * // Utente sceglie "Per Ruolo Mancante" nella modal
- * await applyDraftOrder('strict');
- */
-export async function applyDraftOrder(type) {
-    if (!state.isHost) return;
-    if (!state.roomData) return;
-
-    // Verifica che i giocatori siano caricati
-    if (!state.players || state.players.length === 0) {
-        showToast("Attendi caricamento giocatori...");
-        return;
-    }
-
-    // Calcola nuovo ordine
-    const newOrder = calculateDynamicOrder(state.roomData.teams, type);
-
-    // Trova il primo indice di squadra incompleta nel nuovo ordine
-    let initialTurnIndex = 0;
-    while (initialTurnIndex < newOrder.length) {
-        const team = state.roomData.teams.find(t => t.id === newOrder[initialTurnIndex]);
-        if (team && team.roster && team.roster.length < 25) {
-            break;
-        }
-        initialTurnIndex++;
-    }
-
-    // Trova il giocatore intelligente per pre-selezionarlo ed avviare l'asta in modo pulito
-    const activeTeamId = newOrder[initialTurnIndex];
-    const activeTeam = state.roomData.teams.find(t => t.id === activeTeamId);
-    const strictRoles = !!state.roomData.settings?.strictRoles;
-    const initialPick = getInitialPickForTeam(state.roomData.teams, activeTeam, strictRoles);
-
-    // Salva su Firebase
-    const roomRef = doc(db, 'rooms', state.currentRoomId);
-    await updateDoc(roomRef, {
-        draftOrder: newOrder,
-        currentTurnIndex: initialTurnIndex,
-        orderSettingsApplied: true,
-        currentPick: initialPick,
-        "settings.sortMode": type  // Salva modalità per applicarla ad ogni turno
-    });
-
-    // Chiudi modal e notifica
-    document.getElementById('modal-order-settings').classList.add('hidden');
-    showToast("Ordine dei turni aggiornato!");
-}
-
-/**
- * Configura gli event listener per le funzionalità del draft
- * 
- * Collega:
- * - Pulsante "Avvia Draft" (lobby) -> startDraft()
- * - Pulsante "Conferma" (draft) -> confirmPick()
- * - Pulsante "Annulla" (draft) -> resetta currentPick
- * - Modal ordinamento turni -> pulsanti strict/count/value
- * - Pulsante chiusura modal ordinamento
- * 
- * Da chiamare durante l'inizializzazione dell'app.
- * 
- * @function setupDraftListeners
- * @returns {void}
- * 
- * @example
- * // In app.js durante DOMContentLoaded
- * setupDraftListeners();
- */
-export function setupDraftListeners() {
-    // ── Pulsante Avvia Draft ────────────────────────────────────────────
-    document.getElementById('btn-start-draft').addEventListener('click', startDraft);
-
-    // ── Pulsante Conferma Pick ──────────────────────────────────────────
-    document.getElementById('btn-confirm-pick').addEventListener('click', confirmPick);
-
-    // ── Pulsante Annulla Selezione ──────────────────────────────────────
-    document.getElementById('btn-clear-pick').addEventListener('click', async () => {
-        if (!state.currentRoomId) return;
-        await updateDoc(doc(db, 'rooms', state.currentRoomId), { currentPick: null });
-        showToast("Selezione annullata");
-    });
-
-    // ── Modal Ordinamento Turni ─────────────────────────────────────────
-    const mdOrder = document.getElementById('modal-order-settings');
-    const btnCloseOrder = document.getElementById('btn-close-order-modal');
-
-    if (btnCloseOrder) {
-        btnCloseOrder.addEventListener('click', () => {
-            mdOrder.classList.add('hidden');
-        });
-    }
-
-    // Pulsanti ordinamento (strict, count, value)
-    ['btn-order-strict', 'btn-order-count', 'btn-order-value'].forEach(id => {
-        const btn = document.getElementById(id);
-        if (btn) {
-            btn.addEventListener('click', () => {
-                const type = id.replace('btn-order-', '');  // Estrae 'strict', 'count' o 'value'
-                applyDraftOrder(type);
-            });
-        }
-    });
-
-    // ── Pulsante Undo Pick (solo host) ─────────────────────────────
-    const btnUndo = document.getElementById('btn-undo-pick');
-    if (btnUndo) {
-        btnUndo.addEventListener('click', undoPick);
-    }
-
-    // ── Pulsante Pausa Timer (solo host) ───────────────────────────
-    const btnTimerPause = document.getElementById('btn-timer-pause');
-    if (btnTimerPause) {
-        btnTimerPause.addEventListener('click', toggleTimerPause);
-    }
-}
-
-/**
- * Annulla l'ultimo pick effettuato (solo host)
- * 
- * Ripristina lo stato della stanza al momento precedente l'ultimo pick:
- * - Ripristina teams (roster, crediti, totalValue)
- * - Ripristina turno e round precedenti
- * - Ripristina draftOrder e draftHistory
- * - Rimuove lastPickState per disabilitare ulteriori undo
- * 
- * @function undoPick
- * @returns {Promise<void>}
- */
-export async function undoPick() {
-    if (!state.isHost) return;
-    if (!state.roomData?.lastPickState) {
-        return showToast('Nessun pick da annullare');
-    }
-
-    if (!confirm('Sei sicuro di voler annullare l\'ultimo pick?')) return;
-
-    const snapshot = state.roomData.lastPickState;
-    const roomRef = doc(db, 'rooms', state.currentRoomId);
-
+    const btn = document.getElementById('btn-confirm-pick');
+    btn.disabled = true;
     try {
-        await updateDoc(roomRef, {
-            teams: snapshot.teams,
-            currentTurnIndex: snapshot.currentTurnIndex,
-            roundNumber: snapshot.roundNumber,
-            draftOrder: snapshot.draftOrder,
-            draftHistory: snapshot.draftHistory || [],
+        await commitPick(room, team, player);
+        document.getElementById('active-player-card').classList.remove('flash');
+        void document.getElementById('active-player-card').offsetWidth;
+        document.getElementById('active-player-card').classList.add('flash');
+    } catch (e) {
+        console.error(e);
+        showToast('Scelta non salvata: ' + e.message);
+    } finally {
+        btn.disabled = false;
+    }
+}
+
+let autoPickedTurn = null;
+
+// Timer at zero: the host's browser assigns the most expensive free player in the role the team needs.
+export async function autoPickForTimeout() {
+    const room = state.roomData;
+    const team = currentTeam(room);
+    if (!state.isHost || !team) return;
+    const key = `${room.roundNumber}/${room.currentTurnIndex}/${room.turnStartedAt}`;
+    if (autoPickedTurn === key) return;   // snapshots re-run the timer: one auto pick per turn
+    autoPickedTurn = key;
+
+    const player = bestAvailable(room.teams, team, state.players, state.byId);
+    try {
+        if (player && !pickError({ ...room, settings: { ...room.settings, strictRoles: false } }, team, player, state.byId)) {
+            return await commitPick(room, team, player, true);
+        }
+        await updateDoc(roomRef(), { ...nextTurn(room, room.teams, state.byId), currentPick: null, turnStartedAt: Date.now(), pausedElapsed: 0 });
+        showToast(`Tempo scaduto: ${team.name} salta il turno.`);
+    } catch (e) {
+        console.error('auto pick', e);
+    }
+}
+
+// Imported rosters: the host picks how turns are decided, recomputed after every pick.
+export async function applyDraftOrder(type) {
+    const room = state.roomData;
+    if (!state.isHost || !room) return;
+    const order = dynamicOrder(room.teams, type, state.byId, !!room.settings?.strictRoles);
+    const index = firstOpenIndex(order, room.teams);
+    await updateDoc(roomRef(), {
+        draftOrder: order,
+        currentTurnIndex: index,
+        orderSettingsApplied: true,
+        turnStartedAt: Date.now(),
+        currentPick: suggestion(room.teams, room.teams.find((t) => t.id === order[index])),
+        'settings.sortMode': type,
+    });
+    closeModal('modal-order-settings');
+    showToast('Ordine dei turni aggiornato.');
+}
+
+export async function undoPick() {
+    const room = state.roomData;
+    if (!state.isHost || !room?.lastPickState) return showToast('Non c\'è una scelta da annullare.');
+    if (!confirm("Annulli l'ultima scelta? La squadra torna di turno.")) return;
+    const s = room.lastPickState;
+    // the last pick added one history entry per player (the goalkeeper block adds up to three)
+    const added = s.teams.reduce((n, t) => n - (t.roster?.length || 0), room.teams.reduce((n, t) => n + (t.roster?.length || 0), 0));
+    try {
+        await updateDoc(roomRef(), {
+            teams: s.teams,
+            currentTurnIndex: s.currentTurnIndex,
+            roundNumber: s.roundNumber,
+            draftOrder: s.draftOrder,
+            draftHistory: (room.draftHistory || []).slice(0, -Math.max(1, added)),
             currentPick: null,
             lastPickState: null,
-            turnStartedAt: Date.now()
-        });
-        showToast('↩️ Ultimo pick annullato!');
-    } catch (e) {
-        console.error('Undo error:', e);
-        showToast('Errore durante l\'annullamento');
-    }
-}
-
-/**
- * Toggle pausa/riprendi timer (solo host)
- * 
- * @function toggleTimerPause
- * @returns {Promise<void>}
- */
-export async function toggleTimerPause() {
-    if (!state.isHost) return;
-
-    const roomRef = doc(db, 'rooms', state.currentRoomId);
-    const isPaused = state.roomData?.timerPaused || false;
-
-    try {
-        if (isPaused) {
-            // Riprendi: setta nuovo turnStartedAt con il tempo rimanente
-            await updateDoc(roomRef, {
-                timerPaused: false,
-                turnStartedAt: Date.now()
-            });
-            showToast('▶️ Timer ripreso');
-        } else {
-            // Pausa
-            await updateDoc(roomRef, {
-                timerPaused: true
-            });
-            showToast('⏸️ Timer in pausa');
-        }
-    } catch (e) {
-        console.error('Timer pause error:', e);
-    }
-}
-
-/**
- * Assegna automaticamente di ufficio il giocatore più caro per il ruolo corrente
- * quando il timer del turno scade.
- * 
- * @function autoPickForTimeout
- * @returns {Promise<void>}
- */
-export async function autoPickForTimeout() {
-    if (!state.isHost || !state.roomData) return;
-
-    const room = state.roomData;
-    const currentTeamId = room.draftOrder[room.currentTurnIndex];
-    if (!currentTeamId) return;
-
-    const teamIndex = room.teams.findIndex(t => t.id === currentTeamId);
-    const team = room.teams[teamIndex];
-
-    // 1. Calcola ruoli attuali squadra
-    const roles = { P: 0, D: 0, C: 0, A: 0 };
-    team.roster.forEach(r => {
-        const pState = state.players.find(pl => String(pl.id) === String(r.playerId));
-        if (pState) roles[pState.role]++;
-    });
-
-    // 2. Determina targetRole (il primo ruolo non completo in ordine P->D->C->A)
-    let targetRole = null;
-    if (roles.P < 3) targetRole = 'P';
-    else if (roles.D < 8) targetRole = 'D';
-    else if (roles.C < 8) targetRole = 'C';
-    else if (roles.A < 6) targetRole = 'A';
-
-    if (!targetRole) {
-        // Nessun ruolo mancante (squadra completa), salta il turno
-        return await fallbackSkipTurn(room);
-    }
-
-    // 3. Trova ID dei giocatori già assegnati
-    const takenIds = new Set();
-    room.teams.forEach(t => {
-        if (t.roster) {
-            t.roster.forEach(r => takenIds.add(String(r.playerId)));
-        }
-    });
-
-    // 4. Trova i candidati disponibili per quel ruolo
-    const candidatePlayers = state.players.filter(p => p.role === targetRole && !takenIds.has(String(p.id)));
-    if (candidatePlayers.length === 0) {
-        console.warn(`Nessun giocatore disponibile trovato per il ruolo ${targetRole}`);
-        return await fallbackSkipTurn(room);
-    }
-
-    // 5. Ordina per costo decrescente per trovare il più caro (in caso di parità, ordina per nome per determinismo)
-    const sortedCandidates = [...candidatePlayers].sort((a, b) => b.cost - a.cost || String(a.name).localeCompare(String(b.name)));
-    const player = sortedCandidates[0];
-    const cost = player.cost;
-
-    // 6. Prepara assegnazione (e blocco portieri se applicabile)
-    const pickedItems = [{ playerId: player.id, cost: player.cost }];
-    const useBlockGK = room.settings?.blockGK;
-    if (targetRole === 'P' && useBlockGK && roles.P === 0) {
-        // Cerca gli altri portieri della stessa squadra non presi ed assegnali (max 2 compagni)
-        const teamMates = state.players.filter(p =>
-            p.team === player.team && p.role === 'P' && p.id !== player.id && !takenIds.has(String(p.id))
-        ).slice(0, 2);
-        teamMates.forEach(m => pickedItems.push({ playerId: m.id, cost: m.cost }));
-    }
-
-    // 8. Applica modifiche
-    const newTeams = JSON.parse(JSON.stringify(room.teams));
-    let totalCost = 0;
-    pickedItems.forEach(item => {
-        newTeams[teamIndex].roster.push(item);
-        totalCost += item.cost;
-    });
-    newTeams[teamIndex].credits -= totalCost;
-    newTeams[teamIndex].totalValue = (newTeams[teamIndex].totalValue || 0) + totalCost;
-
-    // 9. Calcola Turno Successivo
-    let nextTurnIndex = room.currentTurnIndex + 1;
-    let nextDraftOrder = [...room.draftOrder];
-    let nextRound = room.roundNumber;
-
-    const sortMode = room.settings?.sortMode;
-
-    if (sortMode) {
-        nextDraftOrder = calculateDynamicOrder(newTeams, sortMode);
-        nextTurnIndex = 0;
-    } else {
-        if (nextTurnIndex >= room.draftOrder.length) {
-            nextRound++;
-            const sortedTeams = [...newTeams].sort(compareTeamsSmart);
-            nextDraftOrder = sortedTeams.map(t => t.id);
-            nextTurnIndex = 0;
-        }
-    }
-
-    // Salta le squadre che hanno completato tutti i 25 slot
-    const anyIncomplete = newTeams.some(t => (t.roster?.length || 0) < 25);
-    if (!anyIncomplete) {
-        nextTurnIndex = nextDraftOrder.length;
-    } else {
-        let attempts = 0;
-        const maxAttempts = nextDraftOrder.length * 2;
-        while (attempts < maxAttempts) {
-            if (nextTurnIndex >= nextDraftOrder.length) {
-                if (sortMode) {
-                    nextTurnIndex = 0;
-                    break;
-                }
-                nextRound++;
-                const sortedTeams = [...newTeams].sort(compareTeamsSmart);
-                nextDraftOrder = sortedTeams.map(t => t.id);
-                nextTurnIndex = 0;
-            }
-
-            const nextTeamId = nextDraftOrder[nextTurnIndex];
-            const nextTeam = newTeams.find(t => t.id === nextTeamId);
-            if (nextTeam && nextTeam.roster && nextTeam.roster.length < 25) {
-                break;
-            }
-            nextTurnIndex++;
-            attempts++;
-        }
-    }
-
-    // 10. Salva stato precedente per Undo
-    const lastPickState = {
-        teams: JSON.parse(JSON.stringify(room.teams)),
-        currentTurnIndex: room.currentTurnIndex,
-        roundNumber: room.roundNumber,
-        draftOrder: [...room.draftOrder],
-        draftHistory: room.draftHistory ? [...room.draftHistory] : []
-    };
-
-    // 11. Scrivi storico
-    const historyEntry = {
-        teamId: currentTeamId,
-        teamName: team.name,
-        playerId: player.id,
-        playerName: player.name,
-        role: player.role,
-        cost: cost,
-        round: room.roundNumber,
-        timestamp: Date.now(),
-        isAutoPick: true
-    };
-    const newHistory = [...(room.draftHistory || []), historyEntry];
-
-    // 12. Update Firebase
-    try {
-        const roomRef = doc(db, 'rooms', state.currentRoomId);
-        await updateDoc(roomRef, {
-            teams: newTeams,
-            currentTurnIndex: nextTurnIndex,
-            roundNumber: nextRound,
-            draftOrder: nextDraftOrder,
-            currentPick: null,
             turnStartedAt: Date.now(),
-            lastPickState: lastPickState,
-            draftHistory: newHistory
+            pausedElapsed: 0,
         });
-
-        showToast(`⏱️ Tempo scaduto! Assegnato di ufficio ${player.name} (+${pickedItems.length - 1}) a ${team.name}`);
-        playSound('pick');
+        closeModal('modal-profile');
+        showToast('Ultima scelta annullata.');
     } catch (e) {
-        console.error('Error in autoPickForTimeout:', e);
-        await fallbackSkipTurn(room);
+        console.error(e);
+        showToast('Annullamento non riuscito.');
     }
 }
 
-async function fallbackSkipTurn(room) {
-    let nextTurnIndex = room.currentTurnIndex + 1;
-    let nextDraftOrder = [...room.draftOrder];
-    let nextRound = room.roundNumber;
+// Pause keeps the time already used, so resuming gives back exactly what was left.
+export async function toggleTimerPause() {
+    const room = state.roomData;
+    if (!state.isHost || !room) return;
+    const update = room.timerPaused
+        ? { timerPaused: false, turnStartedAt: Date.now() - (room.pausedElapsed || 0) }
+        : { timerPaused: true, pausedElapsed: Date.now() - room.turnStartedAt };
+    await updateDoc(roomRef(), update).catch((e) => console.error('pause', e));
+    showToast(room.timerPaused ? 'Timer ripartito.' : 'Timer in pausa.');
+}
 
-    const sortMode = room.settings?.sortMode;
-
-    if (nextTurnIndex >= room.draftOrder.length) {
-        if (sortMode) {
-            nextDraftOrder = calculateDynamicOrder(room.teams, sortMode);
-            nextTurnIndex = 0;
-        } else {
-            nextRound++;
-            const sortedTeams = [...room.teams].sort(compareTeamsSmart);
-            nextDraftOrder = sortedTeams.map(t => t.id);
-            nextTurnIndex = 0;
-        }
+export function setupDraftListeners() {
+    document.getElementById('btn-start-draft').addEventListener('click', startDraft);
+    document.getElementById('btn-confirm-pick').addEventListener('click', confirmPick);
+    document.getElementById('btn-clear-pick').addEventListener('click', () => {
+        if (state.currentRoomId && canAct(currentTeam())) updateDoc(roomRef(), { currentPick: null });
+    });
+    for (const type of ['strict', 'count', 'value']) {
+        document.getElementById(`btn-order-${type}`).addEventListener('click', () => applyDraftOrder(type));
     }
-
-    // Salta le squadre che hanno completato tutti i 25 slot
-    const anyIncomplete = room.teams.some(t => (t.roster?.length || 0) < 25);
-    if (!anyIncomplete) {
-        nextTurnIndex = nextDraftOrder.length;
-    } else {
-        let attempts = 0;
-        const maxAttempts = nextDraftOrder.length * 2;
-        while (attempts < maxAttempts) {
-            if (nextTurnIndex >= nextDraftOrder.length) {
-                if (sortMode) {
-                    nextTurnIndex = 0;
-                    break;
-                }
-                nextRound++;
-                const sortedTeams = [...room.teams].sort(compareTeamsSmart);
-                nextDraftOrder = sortedTeams.map(t => t.id);
-                nextTurnIndex = 0;
-            }
-
-            const nextTeamId = nextDraftOrder[nextTurnIndex];
-            const nextTeam = room.teams.find(t => t.id === nextTeamId);
-            if (nextTeam && nextTeam.roster && nextTeam.roster.length < 25) {
-                break;
-            }
-            nextTurnIndex++;
-            attempts++;
-        }
-    }
-
-    try {
-        const roomRef = doc(db, 'rooms', state.currentRoomId);
-        await updateDoc(roomRef, {
-            currentTurnIndex: nextTurnIndex,
-            roundNumber: nextRound,
-            draftOrder: nextDraftOrder,
-            currentPick: null,
-            turnStartedAt: Date.now()
-        });
-        showToast('⏱️ Tempo scaduto! Turno saltato.');
-    } catch (e) {
-        console.error('Fallback skip error:', e);
-    }
+    document.getElementById('btn-undo-pick').addEventListener('click', undoPick);
+    document.getElementById('btn-timer-pause').addEventListener('click', toggleTimerPause);
 }

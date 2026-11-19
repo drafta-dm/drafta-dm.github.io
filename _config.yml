@@ -1,7 +1,6 @@
 exclude:
-  - functions/node_modules
   - functions
+  - test
+  - scripts
   - node_modules
   - .firebase
-  - package.json
-  - package-lock.json

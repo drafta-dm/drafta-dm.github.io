@@ -1,291 +1,88 @@
-// ============================================================================
-// MODULO: Autenticazione Utente
-// ============================================================================
-// Gestisce l'intero ciclo di vita dell'autenticazione dell'applicazione:
-// - Login tramite Google OAuth 2.0
-// - Monitoraggio dello stato di autenticazione in tempo reale
-// - Logout e pulizia sessione
-// - Aggiornamento UI con dati utente
-// ============================================================================
+// Google sign-in, sign-out, and what happens when the user changes.
 
-// Import SDK Firebase per autenticazione
 import { auth, googleProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut } from './firebase-modules.js';
+import { state } from './state.js';
+import { showToast, switchView, openModal, closeModal, copyText } from './utils.js';
+import { verifyAppVersion } from './version-check.js';
+import { initializeFCM, checkAndShowNotificationModal } from './notifications.js';
+import { loadRecentRooms, stopRecentRooms, leaveRoom, joinRoom } from './room-manager.js';
 
-// Import moduli interni dell'applicazione
-import { state } from './state.js';                                              // Stato globale
-import { showToast, switchView } from './utils.js';                              // Utilità UI
-import { verifyAppVersion } from './version-check.js';                           // Controllo versione
-import { initializeFCM, checkAndShowNotificationModal } from './notifications.js'; // Sistema notifiche
-import { loadRecentRooms, leaveRoom, joinRoom } from './room-manager.js';                             // Gestione stanze
+const AVATAR = 'icons/avatar.svg';
+const BLOCKED = ['auth/popup-blocked', 'auth/operation-not-supported-in-this-environment', 'auth/cancelled-popup-request'];
 
-/**
- * Inizializza il sistema di autenticazione Firebase
- * 
- * Configura un observer sul cambiamento dello stato di autenticazione Firebase.
- * Quando l'utente effettua login/logout, questa funzione gestisce automaticamente:
- * - La transizione tra le schermate login/dashboard
- * - Il caricamento delle stanze recenti dell'utente
- * - L'inizializzazione del sistema di notifiche push (FCM)
- * - Il controllo della versione dell'applicazione
- * 
- * @function initAuth
- * @returns {void}
- * 
- * @fires onAuthStateChanged - Attiva il callback ogni volta che lo stato auth cambia
- * 
- * @example
- * // Chiamata tipica all'avvio dell'app
- * initAuth();
- */
 export function initAuth() {
-    // Gestione degli errori del re-indirizzamento Google (es. se fallisce su mobile)
-    getRedirectResult(auth).catch((error) => {
-        console.error("Redirect sign-in error:", error);
-        showToast("Errore di accesso: " + error.message);
-    });
+    getRedirectResult(auth).catch((error) => showToast('Accesso non riuscito: ' + error.message));
 
-    // Registra un observer che viene chiamato ogni volta che lo stato di autenticazione cambia
     onAuthStateChanged(auth, (user) => {
-        if (user) {
-            // ── Utente autenticato ──────────────────────────────────────────
-
-            // Verifica se è disponibile una nuova versione dell'app
-            verifyAppVersion();
-
-            // Salva l'utente nello stato globale dell'applicazione
-            state.user = user;
-
-            // Aggiorna nome e avatar nella UI
-            updateUserInfo(user);
-
-            // Passa alla vista dashboard (schermata principale)
-            switchView('dashboard');
-
-            // Carica le stanze recenti a cui l'utente ha partecipato
-            loadRecentRooms(user.uid);
-
-            // Mostra un messaggio di benvenuto
-            showToast(`Benvenuto, ${user.displayName}!`);
-
-            // Inizializza Firebase Cloud Messaging per le notifiche push
-            // Registra il service worker e richiede il token FCM
-            initializeFCM();
-
-            // Mostra la modal per richiedere i permessi di notifica (solo al primo accesso)
-            checkAndShowNotificationModal();
-
-            // ── Auto-join da URL deep link ──────────────────────────────────
-            const urlParams = new URLSearchParams(window.location.search);
-            const roomParam = urlParams.get('room');
-            const passParam = urlParams.get('pass');
-            if (roomParam) {
-                // Pre-compila e auto-join
-                const roomInput = document.getElementById('input-room-id');
-                const passInput = document.getElementById('input-room-pass');
-                if (roomInput) roomInput.value = roomParam.toUpperCase();
-                if (passInput && passParam) passInput.value = passParam;
-                // Pulisci URL per evitare re-join al refresh
-                window.history.replaceState({}, document.title, window.location.pathname);
-                // Auto-join dopo breve delay per permettere rendering dashboard
-                setTimeout(() => joinRoom(), 500);
-            }
-
-        } else {
-            // ── Utente non autenticato ──────────────────────────────────────
-
-            // Esegue cleanup stanza se attiva
+        if (!user) {
             leaveRoom();
-
-            // Rimuove l'utente dallo stato globale
+            stopRecentRooms();
             state.user = null;
-
-            // Torna alla schermata di login
             switchView('login');
-        }
-    });
-}
-
-/**
- * Aggiorna gli elementi della UI con le informazioni dell'utente autenticato
- * 
- * Popola i campi nome e avatar presenti nell'header dell'applicazione
- * con i dati provenienti dal profilo Google dell'utente.
- * 
- * @function updateUserInfo
- * @param {firebase.User} user - Oggetto utente Firebase contenente displayName e photoURL
- * @returns {void}
- * 
- * @example
- * updateUserInfo(firebaseUser);
- * // Aggiorna #user-name => "Mario Rossi"
- * // Aggiorna #user-avatar => "https://lh3.googleusercontent.com/..."
- */
-export function updateUserInfo(user) {
-    // Aggiorna il nome visualizzato nell'header
-    document.getElementById('user-name').textContent = user.displayName;
-
-    // Aggiorna l'immagine del profilo nell'header
-    document.getElementById('user-avatar').src = user.photoURL;
-}
-
-/**
- * Mostra la modal con le istruzioni di accesso per iOS / Mobile
- * quando il popup o il re-indirizzamento viene bloccato dal browser.
- * 
- * @function showAuthInstructionModal
- * @returns {void}
- */
-export function showAuthInstructionModal() {
-    const modalAuth = document.getElementById('modal-auth-instructions');
-    if (modalAuth) {
-        modalAuth.classList.remove('hidden');
-    }
-}
-
-/**
- * Configura gli event listener per i pulsanti di autenticazione
- * 
- * Collega i gestori di eventi ai pulsanti HTML per:
- * - Login: apre popup OAuth di Google e gestisce il flusso di autenticazione
- * - Logout: termina la sessione Firebase e riporta l'utente alla schermata login
- * 
- * Questa funzione deve essere chiamata una sola volta durante l'inizializzazione
- * dell'applicazione (tipicamente in app.js al DOMContentLoaded).
- * 
- * @function setupAuthListeners
- * @returns {void}
- * 
- * @example
- * // In app.js
- * setupAuthListeners();
- */
-export function setupAuthListeners() {
-    // ── Pulsante Login con Google ───────────────────────────────────────
-    document.getElementById('btn-login-google').addEventListener('click', () => {
-        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
-                      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) ||
-                      /iPhone|iPad|iPod/i.test(navigator.platform);
-                      
-        const isSafari = isIOS && 
-                         /Apple/.test(navigator.vendor) && 
-                         !/CriOS/i.test(navigator.userAgent) && 
-                         !/FxiOS/i.test(navigator.userAgent) &&
-                         !/EdgiOS/i.test(navigator.userAgent) &&
-                         !/OPiOS/i.test(navigator.userAgent) &&
-                         !/FBAN/i.test(navigator.userAgent) &&
-                         !/FBAV/i.test(navigator.userAgent) &&
-                         !/Instagram/i.test(navigator.userAgent);
-
-        if (isIOS && !isSafari) {
-            // Su iOS non-Safari (Chrome, Firefox, WebView in-app), il login Firebase fallirà
-            // mostrando "Impossibile aprire questa pagina" o bloccandosi. Mostriamo subito le istruzioni.
-            showAuthInstructionModal();
             return;
         }
+        verifyAppVersion();
+        state.user = user;
+        updateUserInfo(user);
+        switchView('dashboard');
+        loadRecentRooms(user.uid);
+        initializeFCM();
+        checkAndShowNotificationModal();
 
-        // Altrimenti (iOS Safari, Android o Desktop), proviamo signInWithPopup
-        signInWithPopup(auth, googleProvider)
-            .catch((error) => {
-                console.warn("Popup login blocked or failed. Checking fallback...", error);
-                
-                // Se siamo su iOS Safari e il popup è stato bloccato
-                if (isIOS) {
-                    if (error.code === 'auth/popup-blocked' || 
-                        error.code === 'auth/operation-not-supported-in-this-environment' ||
-                        error.code === 'auth/cancelled-popup-request') {
-                        
-                        showAuthInstructionModal();
-                    } else {
-                        console.error("Google Login popup error (iOS):", error);
-                        showToast('Errore Login: ' + error.message);
-                    }
-                } else {
-                    // Su Android / Desktop, proviamo il redirect come fallback di emergenza.
-                    if (error.code === 'auth/popup-blocked' || 
-                        error.code === 'auth/operation-not-supported-in-this-environment' ||
-                        error.code === 'auth/cancelled-popup-request') {
-                        
-                        signInWithRedirect(auth, googleProvider).catch((redirectError) => {
-                            console.error("Redirect fallback error:", redirectError);
-                            showToast('Errore Login: ' + redirectError.message);
-                        });
-                    } else {
-                        console.error("Google Login popup error:", error);
-                        showToast('Errore Login: ' + error.message);
-                    }
-                }
-            });
+        // invite link: ?room=ABC123&pass=XY34 joins straight away
+        const params = new URLSearchParams(location.search);
+        if (params.get('room')) {
+            document.getElementById('input-room-id').value = params.get('room').toUpperCase();
+            document.getElementById('input-room-pass').value = params.get('pass') || '';
+            history.replaceState({}, document.title, location.pathname);
+            joinRoom();
+        }
+    });
+}
+
+export function updateUserInfo(user) {
+    document.getElementById('user-name').textContent = user.displayName || user.email;
+    for (const id of ['user-avatar', 'header-user-avatar']) {
+        const img = document.getElementById(id);
+        img.src = user.photoURL || AVATAR;
+        img.onerror = () => { img.onerror = null; img.src = AVATAR; };
+    }
+}
+
+export function setupAuthListeners() {
+    document.getElementById('btn-login-google').addEventListener('click', () => {
+        const ua = navigator.userAgent;
+        const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        const isSafari = /Apple/.test(navigator.vendor) && !/CriOS|FxiOS|EdgiOS|OPiOS|FBAN|FBAV|Instagram/i.test(ua);
+        // Google sign-in fails inside iOS browsers that are not Safari: explain instead of failing.
+        if (isIOS && !isSafari) return openModal('modal-auth-instructions');
+
+        signInWithPopup(auth, googleProvider).catch((error) => {
+            if (!BLOCKED.includes(error.code)) return showToast('Accesso non riuscito: ' + error.message);
+            if (isIOS) return openModal('modal-auth-instructions');
+            signInWithRedirect(auth, googleProvider).catch((e) => showToast('Accesso non riuscito: ' + e.message));
+        });
     });
 
-    // ── Dialog Istruzioni Auth (iOS/Mobile Popup Blocks) ────────────────
-    const modalAuth = document.getElementById('modal-auth-instructions');
-    const btnCloseAuth = document.getElementById('btn-close-auth-instructions');
-    const btnCopyAppLink = document.getElementById('btn-copy-app-link');
+    document.getElementById('btn-copy-app-link').addEventListener('click', () => copyText(location.href, 'Link copiato: incollalo in Safari.'));
 
-    if (btnCloseAuth && modalAuth) {
-        btnCloseAuth.addEventListener('click', () => {
-            modalAuth.classList.add('hidden');
-        });
-    }
+    const logout = () => { closeModal('modal-profile'); signOut(auth); };
+    document.getElementById('btn-logout').addEventListener('click', logout);
+    document.getElementById('btn-profile-logout').addEventListener('click', logout);
 
-    if (btnCopyAppLink) {
-        btnCopyAppLink.addEventListener('click', () => {
-            navigator.clipboard.writeText(window.location.href)
-                .then(() => {
-                    showToast("Link copiato! Incollalo su Safari per accedere.");
-                })
-                .catch((err) => {
-                    console.error("Copy link failed:", err);
-                    showToast("Impossibile copiare. Copia l'URL manualmente.");
-                });
-        });
-    }
-
-    // ── Pulsante Logout ─────────────────────────────────────────────────
-    const handleLogout = () => {
-        // Termina la sessione Firebase
-        // onAuthStateChanged verrà chiamato con user = null
-        signOut(auth);
-    };
-
-    document.getElementById('btn-logout').addEventListener('click', handleLogout);
-
-    // ── Profilo Utente ──────────────────────────────────────────────────
-    const openProfileModal = () => {
+    const openProfile = () => {
         if (!state.user) return;
-        document.getElementById('profile-modal-avatar').src = state.user.photoURL || '';
-        document.getElementById('profile-modal-name').textContent = state.user.displayName || 'Utente';
-        document.getElementById('profile-modal-email').textContent = state.user.email || '';
-
-        // Gestisci visibilità credenziali e azioni asta nel profilo
-        const roomActions = document.getElementById('profile-room-actions');
-        const roomCredentials = document.getElementById('profile-room-credentials');
-        if (state.currentRoomId) {
-            if (roomActions) roomActions.style.display = 'flex';
-            if (roomCredentials) roomCredentials.style.display = 'flex';
-        } else {
-            if (roomActions) roomActions.style.display = 'none';
-            if (roomCredentials) roomCredentials.style.display = 'none';
-        }
-
-        document.getElementById('modal-profile').classList.remove('hidden');
+        const u = state.user;
+        const img = document.getElementById('profile-modal-avatar');
+        img.src = u.photoURL || AVATAR;
+        img.onerror = () => { img.onerror = null; img.src = AVATAR; };
+        document.getElementById('profile-modal-name').textContent = u.displayName || 'Utente';
+        document.getElementById('profile-modal-email').textContent = u.email || '';
+        const inRoom = !!state.currentRoomId;
+        document.getElementById('profile-room-actions').classList.toggle('hidden', !inRoom);
+        document.getElementById('profile-room-credentials').classList.toggle('hidden', !inRoom);
+        openModal('modal-profile');
     };
-
-    const userAvatar = document.getElementById('user-avatar');
-    if (userAvatar) {
-        userAvatar.addEventListener('click', openProfileModal);
-    }
-
-    const headerUserAvatar = document.getElementById('header-user-avatar');
-    if (headerUserAvatar) {
-        headerUserAvatar.addEventListener('click', openProfileModal);
-    }
-
-    const btnProfileLogout = document.getElementById('btn-profile-logout');
-    if (btnProfileLogout) {
-        btnProfileLogout.addEventListener('click', () => {
-            document.getElementById('modal-profile').classList.add('hidden');
-            handleLogout();
-        });
-    }
+    document.getElementById('user-chip').addEventListener('click', openProfile);
+    document.getElementById('header-user-btn').addEventListener('click', openProfile);
 }

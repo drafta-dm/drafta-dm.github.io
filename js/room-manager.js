@@ -1,900 +1,317 @@
-// ============================================================================
-// MODULO: Gestione Completa Stanze
-// ============================================================================
-// Modulo centrale per la gestione del ciclo di vita completo delle stanze draft.
-// Funzionalità principali:
-// - Creazione nuove stanze con configurazione personalizzata
-// - Join stanze esistenti con validazione password
-// - Uscita da stanze e cleanup risorse
-// - Eliminazione stanze (solo host)
-// - Sistema real-time con listener Firebase
-// - Sistema di presenza basato su heartbeat (5s)
-// - Gestione stanze recenti con auto-join
-// - Sistema nudge per sollecitare utenti offline
-// - Sincronizzazione liste giocatori personalizzate
-// - Modal ordine turni (randomizer e impostazioni)
-// ============================================================================
+// Rooms: create, join, leave, delete, the live listener on rooms/{roomId}, presence and the turn timer.
 
-// Import Firebase per gestione stanze
-import { db, doc, setDoc, getDoc, updateDoc, deleteDoc, arrayUnion, arrayRemove, serverTimestamp, onSnapshot, collection, query, where } from './firebase-modules.js';
+import { db, doc, setDoc, getDoc, updateDoc, deleteDoc, arrayUnion, serverTimestamp, onSnapshot, collection, query, where } from './firebase-modules.js';
+import { state } from './state.js';
+import { showToast, switchView, generateRoomId, openModal, closeModal, copyText, inviteLink, esc, icon } from './utils.js';
+import { renderLobbyOrDraft, renderPresence } from './lobby.js';
+import { renderOrderPreview, autoPickForTimeout, shuffleOrder } from './draft-logic.js';
+import { renderDraftHistory } from './draft-history.js';
+import { playSound } from './sounds.js';
+import { initChat, cleanupChat } from './chat.js';
+import { checkAndShowDraftSummary } from './draft-summary.js';
 
-// Import moduli interni
-import { state } from './state.js';                              // Stato globale
-import { showToast, switchView, generateRoomId, showDashboard } from './utils.js';  // Utility UI
-import { playerService } from './player-service.js';            // Servizio caricamento giocatori
-import { renderLobbyOrDraft } from './lobby.js';                 // Routing lobby/draft
-import { renderPlayerList } from './player-filters.js';          // Rendering lista giocatori
-import { renderOrderPreview, autoPickForTimeout } from './draft-logic.js';           // Preview ordine turni e auto-pick
-import { renderDraftHistory } from './draft-history.js';         // Cronologia pick
-import { playSound } from './sounds.js';                        // Effetti sonori
-import { initChat, cleanupChat } from './chat.js';              // Chat
-import { checkAndShowDraftSummary } from './draft-summary.js';  // Riepilogo fine draft
+// Presence lives in rooms/{id}/presence/{uid}, not in the room: a heartbeat on the room
+// made every client download the whole room again every few seconds.
+const HEARTBEAT = 60_000;
 
-// ── Variabili modulo ────────────────────────────────────────────────────
-// Unsubscribe function per il listener real-time della stanza corrente
 let roomUnsubscribe = null;
+let presenceUnsubscribe = null;
+let presenceCleanup = null;
+let recentUnsubscribe = null;
+let timerInterval = null;
 
-/**
- * Crea una nuova stanza draft con le impostazioni configurate dall'utente
- * 
- * Flusso:
- * 1. Genera ID stanza univoco (4 caratteri alfanumerici)
- * 2. Genera password casuale (4 caratteri maiuscoli)
- * 3. Legge impostazioni dal form (numero squadre, blocco GK, ordine ruoli)
- * 4. Crea struttura squadre vuote con 500 crediti ciascuna
- * 5. Crea documento Firebase con stato iniziale 'lobby'
- * 6. Mostra modal con ID e password per condivisione
- * 
- * Struttura stanza:
- * - teams: array di squadre (id, nome, owner, crediti=500, roster=[])
- * - status: 'lobby' | 'started' | 'drafting'
- * - connectedUsers: array di UID utenti online (sistema heartbeat)
- * - participantIds: array di tutti gli UID che sono stati nella stanza
- * - participantNames: mappa {uid: displayName} per lookup nomi
- * - settings: {blockGK, strictRoles, sortMode}
- * 
- * @function createRoom
- * @returns {Promise<void>}
- * 
- * @example
- * // Utente compila form e clicca "Crea Stanza"
- * await createRoom();
- * // Mostra modal con: ID=AB12, Password=XY34
- */
+const myName = () => state.user.displayName || state.user.email?.split('@')[0] || 'Giocatore';
+
 export async function createRoom() {
-    // ── Generazione credenziali stanza ─────────────────────────────────
-    const roomId = generateRoomId();                                    // Es: "AB12"
-    const password = Math.random().toString(36).slice(-4).toUpperCase(); // Es: "XY34"
-
-    // ── Lettura configurazione dall'UI ──────────────────────────────────
-    const teamCount = parseInt(document.getElementById('input-team-count').value);
-    const blockGK = document.getElementById('input-block-gk').checked;
-    const strictRoles = document.getElementById('input-strict-roles').checked;
-    const timerDuration = parseInt(document.getElementById('input-timer-duration').value) || 0;
-
-    // ── Creazione struttura squadre vuote ───────────────────────────────
-    const teams = [];
-    for (let i = 0; i < teamCount; i++) {
-        teams.push({
-            id: `team-${i + 1}`,
-            name: `Team ${i + 1}`,           // Nome default, modificabile in lobby
-            ownerUid: null,                  // Assegnato in lobby
-            ownerName: null,
-            credits: 500,                     // Budget iniziale
-            roster: [],                       // Lista giocatori (vuota all'inizio)
-            totalValue: 0                     // Valore totale rosa (per ordinamento)
-        });
-    }
-
-    // ── Creazione documento Firebase ────────────────────────────────────
-    const roomRef = doc(db, 'rooms', roomId);
-
-    const roomData = {
-        hostId: state.user.uid,
-        password: password,
-        status: 'lobby',                      // Stato iniziale: in attesa di partecipanti
-        participantIds: [state.user.uid],    // Host è il primo partecipante
-        connectedUsers: [state.user.uid],
-        participantNames: {
-            [state.user.uid]: state.user.displayName || state.user.email
-        },
-        teams: teams,
-        currentTurnIndex: 0,
-        roundNumber: 1,
-        draftOrder: [],                       // Riempito quando inizia il draft
-        currentPick: null,                    // Giocatore selezionato per preview
-        settings: {
-            blockGK: blockGK,                 // Se true, prende automaticamente tutti 3 GK della squadra
-            strictRoles: strictRoles,         // Se true, ordine obbligatorio P->D->C->A
-            timerDuration: timerDuration      // Secondi per turno (0 = illimitato)
-        },
-        createdAt: serverTimestamp()
-    };
-
+    const roomId = generateRoomId();
+    const password = generateRoomId(4);
+    const teamCount = parseInt(document.getElementById('input-team-count').value, 10);
+    const teams = Array.from({ length: teamCount }, (_, i) => ({
+        id: `team-${i + 1}`, name: `Squadra ${i + 1}`, ownerUid: null, ownerName: null, credits: 500, roster: [], totalValue: 0,
+    }));
+    const btn = document.getElementById('btn-create-room');
+    btn.disabled = true;
     try {
-        await setDoc(roomRef, roomData);
-
-        // ── Mostra modal condivisione ──────────────────────────────────
+        await setDoc(doc(db, 'rooms', roomId), {
+            hostId: state.user.uid,
+            password,
+            status: 'lobby',
+            participantIds: [state.user.uid],
+            participantNames: { [state.user.uid]: myName() },
+            teams,
+            currentTurnIndex: 0,
+            roundNumber: 1,
+            draftOrder: [],
+            currentPick: null,
+            settings: {
+                blockGK: document.getElementById('input-block-gk').checked,
+                strictRoles: document.getElementById('input-strict-roles').checked,
+                timerDuration: parseInt(document.getElementById('input-timer-duration').value, 10) || 0,
+            },
+            createdAt: serverTimestamp(),
+        });
         document.getElementById('modal-room-id').textContent = roomId;
         document.getElementById('modal-room-pass').textContent = password;
-        document.getElementById('modal-room-created').classList.remove('hidden');
-
+        openModal('modal-room-created');
     } catch (e) {
         console.error(e);
-        showToast("Errore creazione stanza: " + e.message);
+        showToast("Non sono riuscito a creare l'asta: " + e.message);
+    } finally {
+        btn.disabled = false;
     }
 }
 
-/**
- * Entra in una stanza esistente richiedendo ID e password
- * 
- * Validazioni:
- * 1. Verifica che ID stanza sia compilato
- * 2. Verifica che la stanza esista su Firebase
- * 3. Verifica password (se impostata dall'host)
- * 
- * Se è il primo accesso:
- * - Aggiunge utente a connectedUsers
- * - Aggiunge UID a participantIds
- * 
- * Poi chiama enterRoom() per configurare i listener real-time.
- * 
- * @function joinRoom
- * @returns {Promise<void>}
- * 
- * @example
- * // Utente inserisce ID="AB12" e Password="XY34", clicca "Entra"
- * await joinRoom();
- */
 export async function joinRoom() {
-    // ── Lettura credenziali dal form ────────────────────────────────────
     const roomId = document.getElementById('input-room-id').value.trim().toUpperCase();
-    const password = document.getElementById('input-room-pass').value.trim();
-
-    if (!roomId) return showToast("Inserisci ID stanza");
-
-    // ── Verifica esistenza stanza ───────────────────────────────────────
-    const roomRef = doc(db, 'rooms', roomId);
-    const snap = await getDoc(roomRef);
-
-    if (!snap.exists()) return showToast("Stanza non trovata");
-
-    // ── Validazione password ────────────────────────────────────────────
-    const data = snap.data();
-    if (data.password && data.password !== password) {
-        return showToast("Password errata");
-    }
-
-    // ── Primo accesso: registra utente ──────────────────────────────────
-    const isParticipant = data.participantIds && data.participantIds.includes(state.user.uid);
-
-    if (!isParticipant) {
-        // Aggiungi nuovo utente alla stanza
-        await updateDoc(roomRef, {
-            connectedUsers: arrayUnion(state.user.uid),
-            participantIds: arrayUnion(state.user.uid),
-            [`participantNames.${state.user.uid}`]: state.user.displayName || state.user.email
-        });
-    }
-
-    // ── Entra nella stanza ──────────────────────────────────────────────
-    enterRoom(roomId, data.hostId === state.user.uid, password);
-}
-
-/**
- * Esce dalla stanza corrente e torna alla dashboard
- * 
- * Operazioni di cleanup:
- * - Resetta stato globale (currentRoomId, roomData, isHost)
- * - Chiama unsubscribe sul listener real-time
- * - Torna alla vista dashboard
- * 
- * Il sistema di heartbeat rimuoverà automaticamente l'utente dal connectedUsers
- * dopo che smette di inviare battiti (5 secondi + tempo cleanup).
- * 
- * @function leaveRoom
- * @returns {void}
- * 
- * @example
- * // Utente clicca "Esci dalla Lobby"
- * leaveRoom();
- */
-export function leaveRoom() {
-    // Esegui cleanup presenza se attivo
-    if (typeof state.presenceCleanup === 'function') {
-        state.presenceCleanup();
-        state.presenceCleanup = null;
-    }
-    state.heartbeatInterval = null;
-
-    // Cleanup stato
-    state.currentRoomId = null;
-    state.roomData = null;
-    state.isHost = false;
-
-    // Rimuovi listener real-time
-    if (roomUnsubscribe) {
-        roomUnsubscribe();
-        roomUnsubscribe = null;
-    }
-
-    // Cleanup chat
-    cleanupChat();
-
-    // Torna alla dashboard
-    switchView('dashboard');
-}
-
-/**
- * Elimina permanentemente una stanza dal database (solo host)
- * 
- * Chiede conferma prima di procedere.
- * Dopo l'eliminazione, tutti gli utenti connessi vedranno la stanza scomparire
- * grazie ai listener real-time e verranno reindirizzati alla dashboard.
- * 
- * @function deleteRoom
- * @param {string} roomId - ID della stanza da eliminare
- * @returns {Promise<void>}
- * 
- * @example
- * // Host clicca "Elimina" sulla stanza AB12
- * await deleteRoom('AB12');
- */
-export async function deleteRoom(roomId) {
-    if (!confirm("Sei sicuro di voler eliminare questa stanza?")) return;
-
+    const password = document.getElementById('input-room-pass').value.trim().toUpperCase();
+    if (!roomId) return showToast("Scrivi il codice dell'asta.");
+    const ref = doc(db, 'rooms', roomId);
     try {
-        await deleteDoc(doc(db, "rooms", roomId));
-        // Il listener onSnapshot gestirà automaticamente la rimozione dalla UI
+        // Members read the room straight away. Everyone else is let in by the rules only
+        // if the join write carries the right password.
+        let snap = await getDoc(ref).catch((e) => { if (e.code !== 'permission-denied') throw e; return null; });
+        if (snap && !snap.exists()) return showToast('Asta non trovata: controlla il codice.');
+        if (!snap?.data().participantIds?.includes(state.user.uid)) {
+            // rules from before 7.0 let anyone read the room: check the password here too
+            if (snap && snap.data().password && snap.data().password !== password) return showToast('Codice o password sbagliati.');
+            await updateDoc(ref, {
+                participantIds: arrayUnion(state.user.uid),
+                [`participantNames.${state.user.uid}`]: myName(),
+                [`joins.${state.user.uid}`]: password,
+            });
+            snap = await getDoc(ref);
+        }
+        if (!snap.exists()) return showToast('Asta non trovata.');
+        enterRoom(roomId, snap.data().hostId === state.user.uid);
+    } catch (e) {
+        if (e.code === 'not-found') showToast('Asta non trovata: controlla il codice.');
+        else if (e.code === 'permission-denied') showToast('Codice o password sbagliati.');
+        else { console.error(e); showToast("Non riesco a entrare nell'asta: " + e.message); }
+    }
+}
+
+export function leaveRoom() {
+    presenceCleanup?.();
+    presenceCleanup = null;
+    roomUnsubscribe?.();
+    roomUnsubscribe = null;
+    presenceUnsubscribe?.();
+    presenceUnsubscribe = null;
+    clearInterval(timerInterval);
+    cleanupChat();
+    Object.assign(state, { currentRoomId: null, roomData: null, isHost: false, presence: {}, summaryShown: false, lastTurnOwner: null, selectedUserUid: null });
+    document.querySelectorAll('dialog[open]').forEach((d) => d.close());
+    if (state.user) switchView('dashboard');
+}
+
+export async function deleteRoom(roomId) {
+    if (!confirm(`Elimini l'asta ${roomId}? Non si torna indietro.`)) return;
+    try {
+        await deleteDoc(doc(db, 'rooms', roomId));
     } catch (e) {
         console.error(e);
-        showToast("Errore eliminazione");
+        showToast("Non sono riuscito a eliminare l'asta.");
     }
 }
 
-/**
- * Entra in una stanza e configura tutto il sistema real-time
- * 
- * Questa è la funzione più complessa del modulo. Gestisce:
- * 
- * 1. Configurazione stato e UI iniziale
- * 2. Sistema di presenza basato su heartbeat (aggiornamento ogni 5s)
- * 3. Cleanup presenza quando utente esce (beforeunload/pagehide)
- * 4. Listener real-time Firebase per sincronizzazione stanza
- * 5. Deduplicazione array connectedUsers
- * 6. Aggiornamento header con ID/password stanza
- * 7. Routing automatico tra lobby e draft
- * 8. Modal automatiche (ordine turni, randomizer)
- * 9. Sistema nudge per notifiche sollecito
- * 10. Event listener per pulsanti modal ordine turni
- * 
- * Sistema Heartbeat:
- * - Ogni 5 secondi aggiorna lastSeen[uid] con timestamp corrente
- * - Aggiorna participantNames[uid] con nome visualizzato
- * - Mantiene uid in connectedUsers tramite arrayUnion
- * 
- * Listener Real-time:
- * - Si attiva ad ogni cambio nel documento Firebase
- * - Aggiorna state.roomData con i nuovi dati
- * - Chiama renderLobbyOrDraft() per aggiornare la vista
- * - Gestisce modal automatiche in base allo stato
- * 
- * @function enterRoom
- * @param {string} roomId - ID della stanza
- * @param {boolean} isHost - true se l'utente è l'host della stanza
- * @param {string|null} [password=null] - Password (solo per host, per visualizzazione persistente)
- * @returns {void}
- * 
- * @example
- * // Dopo joinRoom() o dopo creazione stanza
- * enterRoom('AB12', true, 'XY34');  // Host entra
- * enterRoom('AB12', false);         // Partecipante entra
- */
-export function enterRoom(roomId, isHost, password = null) {
-    // ── Inizializzazione stato ──────────────────────────────────────────
+function startPresence(roomId) {
+    const me = doc(db, 'rooms', roomId, 'presence', state.user.uid);
+    // online = Drafta is on screen: a phone in a pocket shows as offline, and can be nudged
+    const beat = () => { if (document.visibilityState === 'visible') setDoc(me, { at: Date.now() }).catch(() => {}); };
+    const gone = () => deleteDoc(me).catch(() => {});
+    const onVisibility = () => (document.visibilityState === 'visible' ? beat() : gone());
+    beat();
+    const iv = setInterval(beat, HEARTBEAT);
+    document.addEventListener('visibilitychange', onVisibility);
+    window.addEventListener('pagehide', gone);
+    presenceCleanup = () => {
+        clearInterval(iv);
+        document.removeEventListener('visibilitychange', onVisibility);
+        window.removeEventListener('pagehide', gone);
+        gone();
+    };
+    presenceUnsubscribe = onSnapshot(collection(db, 'rooms', roomId, 'presence'), (snap) => {
+        state.presence = Object.fromEntries(snap.docs.map((d) => [d.id, d.data().at || 0]));
+        renderPresence();
+    }, (e) => console.warn('presence', e));
+}
+
+export function enterRoom(roomId, isHost) {
+    leaveRoom();
     state.currentRoomId = roomId;
     state.isHost = isHost;
-    state.hasShownOrderModal = false; // Reset flag modal per mostrare la modal dell'ordine nella nuova stanza
+    state.hasShownOrderModal = false;
+    const enteredAt = Date.now();
 
-    // Mostra ID stanza nella lobby
     document.getElementById('lobby-room-id').textContent = roomId;
+    document.getElementById('txt-room-id-display').textContent = roomId;
 
-    // ── Configurazione UI per host ──────────────────────────────────────
-    if (isHost && password) {
-        document.getElementById('lobby-room-pass').textContent = password;
-        document.getElementById('lobby-pass-display').classList.remove('hidden');
-    } else {
-        document.getElementById('lobby-pass-display').classList.add('hidden');
-    }
-
-    // Mostra/nascondi controlli host
-    if (isHost) {
-        document.getElementById('host-controls').classList.remove('hidden');
-    } else {
-        document.getElementById('host-controls').classList.add('hidden');
-    }
-
-    // ── Cleanup listener precedente ─────────────────────────────────────
-    if (roomUnsubscribe) roomUnsubscribe();
-
-    const roomRef = doc(db, 'rooms', roomId);
-
-    // ── Sistema Presenza Basato su Heartbeat ────────────────────────────
-    // Più affidabile di beforeunload per rilevare utenti online
-
-    /**
-     * Aggiorna la presenza dell'utente su Firebase
-     * Viene chiamata all'ingresso e poi ogni 5 secondi
-     */
-    const updatePresence = () => {
-        updateDoc(roomRef, {
-            connectedUsers: arrayUnion(state.user.uid),         // Aggiunge UID (deduplica automatica)
-            [`participantNames.${state.user.uid}`]: state.user.displayName || state.user.email,  // Salva nome per lookup
-            [`lastSeen.${state.user.uid}`]: Date.now()          // Timestamp heartbeat
-        }).catch(err => {
-            console.error('Presence update error:', err);
-        });
-    };
-
-    // Aggiornamento presenza immediato all'ingresso
-    updatePresence();
-
-    // Heartbeat ogni 5 secondi per mantenere presenza
-    const heartbeatInterval = setInterval(updatePresence, 5000);
-
-    /**
-     * Rimuove la presenza dell'utente quando esce
-     * Best-effort, non garantito (browser può killare processo)
-     */
-    const removePresence = () => {
-        clearInterval(heartbeatInterval);
-        window.removeEventListener('beforeunload', removePresence);
-        window.removeEventListener('pagehide', removePresence);
-        if (state.user && state.user.uid) {
-            updateDoc(roomRef, {
-                connectedUsers: arrayRemove(state.user.uid)
-                // NON rimuoviamo participantNames per preservare storico
-            }).catch(e => console.error('Presence removal error:', e));
-        }
-    };
-
-    // Registra cleanup su eventi di uscita pagina
-    window.addEventListener('beforeunload', removePresence);
-    window.addEventListener('pagehide', removePresence);  // Migliore per mobile/iOS
-
-    // Salva riferimenti per cleanup manuale se necessario
-    state.presenceCleanup = removePresence;
-    state.heartbeatInterval = heartbeatInterval;
-
-    // ── Inizializzazione Chat ───────────────────────────────────────────
+    startPresence(roomId);
     initChat(roomId);
 
-    // ── Listener Real-Time Firebase ─────────────────────────────────────
-    // Si attiva ad ogni modifica del documento stanza
-    roomUnsubscribe = onSnapshot(doc(db, "rooms", roomId), (docSnap) => {
-        // ── Verifica esistenza stanza ──────────────────────────────────
-        if (!docSnap.exists()) {
-            showToast("La stanza non esiste più.");
-            showDashboard();
-            return;
+    roomUnsubscribe = onSnapshot(doc(db, 'rooms', roomId), (snap) => {
+        if (!snap.exists()) {
+            showToast("L'asta non esiste più.");
+            return leaveRoom();
         }
-
-        const data = docSnap.data();
-
-        // ── Deduplicazione array connectedUsers ────────────────────────
-        // Normalizza formato misto (sia oggetti {uid, name} che stringhe uid)
-        if (data.connectedUsers && Array.isArray(data.connectedUsers)) {
-            const uniqueUids = new Set();
-            data.connectedUsers.forEach(u => {
-                const uid = typeof u === 'string' ? u : u.uid;
-                if (uid) uniqueUids.add(uid);
-            });
-            data.connectedUsers = Array.from(uniqueUids);
-        }
-
-        // ── Aggiornamento stato globale ────────────────────────────────
+        const data = snap.data();
         state.roomData = data;
-        state.isHost = (state.user.uid === data.hostId);
+        state.isHost = data.hostId === state.user.uid;
 
-        // ── Aggiornamento classe CSS per styling host ──────────────────
-        if (state.isHost) {
-            document.body.classList.add('host-view');
-        } else {
-            document.body.classList.remove('host-view');
-        }
+        document.getElementById('lobby-room-pass').textContent = data.password || '';
+        document.getElementById('lobby-pass-display').classList.toggle('hidden', !data.password);
+        document.getElementById('txt-room-pass-display').textContent = data.password || '';
+        document.getElementById('host-controls').classList.toggle('hidden', !state.isHost);
+        document.getElementById('guest-waiting-msg').classList.toggle('hidden', state.isHost);
+        document.getElementById('btn-export-csv').classList.toggle('hidden', !state.isHost);
+        document.getElementById('btn-undo-pick').classList.toggle('hidden', !(state.isHost && data.lastPickState));
 
-        // ── Aggiornamento header stanza ────────────────────────────────
-        document.getElementById('txt-room-id-display').textContent = `ID: ${roomId}`;
-        const passEl = document.getElementById('txt-room-pass-display');
-        const btnCsv = document.getElementById('btn-export-csv');
-
-        // Mostra password e pulsante export solo all'host
-        if (state.isHost) {
-            passEl.textContent = `PSW: ${data.password}`;
-            passEl.style.display = 'block';
-            if (btnCsv) btnCsv.style.display = 'inline-block';
-        } else {
-            passEl.style.display = 'none';
-            if (btnCsv) btnCsv.style.display = 'none';
-        }
-
-        // Mostra/nascondi pulsante Undo per host
-        const btnUndo = document.getElementById('btn-undo-pick');
-        if (btnUndo) {
-            btnUndo.style.display = (state.isHost && data.lastPickState) ? 'inline-block' : 'none';
-        }
-
-        // Timer: mostra/nascondi in base a settings
-        const timerContainer = document.getElementById('timer-container');
-        const timerDuration = data.settings?.timerDuration || 0;
-        if (timerContainer) {
-            if (timerDuration > 0 && data.status === 'started') {
-                timerContainer.classList.remove('hidden');
-                updateTimerUI(data);
-            } else {
-                timerContainer.classList.add('hidden');
-            }
-        }
-
-        // Pulsante pausa timer solo per host
-        const btnTimerPause = document.getElementById('btn-timer-pause');
-        if (btnTimerPause) {
-            btnTimerPause.classList.toggle('hidden', !state.isHost || timerDuration === 0);
-        }
-
-        // Aggiorna avatar utente nell'header
-        const avatarEl = document.getElementById('header-user-avatar');
-        avatarEl.src = state.user.photoURL || 'https://via.placeholder.com/32';
-
-        // ── Sincronizzazione lista giocatori ────────────────────────────
-        syncPlayersIfNeeded(data);
-
-        // ── Rendering Draft History ────────────────────────────────────
+        updateTimerUI(data);
         renderDraftHistory(data);
-
-        // ── Check Draft Summary (fine draft) ──────────────────────────
+        renderLobbyOrDraft(data);
         checkAndShowDraftSummary(data);
 
-        // ── Routing automatico tra Lobby e Draft ───────────────────────
-        renderLobbyOrDraft(data);
-
-        // ── Logica Modal Automatiche ───────────────────────────────────
-
-        // Modal 1: Stanza Importata -> Modal Impostazioni Ordine Turni
-        if (state.isHost && data.status === 'started' && data.isImported && !data.orderSettingsApplied) {
-            const modal = document.getElementById('modal-order-settings');
-            if (modal && !state.hasShownOrderModal) {
-                modal.classList.remove('hidden');
-                state.hasShownOrderModal = true;
-            }
-        }
-        // Modal 2: Stanza Normale -> Modal Randomizer (solo primo turno assoluto)
-        else if (state.isHost && data.status === 'started' && !data.isImported &&
-            data.currentTurnIndex === 0 && data.roundNumber === 1) {
-            const modal = document.getElementById('modal-load-order');
-            if (modal) {
-                if (!state.hasShownOrderModal) {
-                    modal.classList.remove('hidden');
-                    state.hasShownOrderModal = true;
-                }
-                // Aggiorna preview ordine in tempo reale (per feedback randomizer)
-                if (!modal.classList.contains('hidden') && typeof renderOrderPreview === 'function') {
-                    renderOrderPreview(data.draftOrder);
-                }
-            }
+        const firstTurn = data.status === 'started' && !(data.draftHistory?.length);
+        if (state.isHost && firstTurn && data.isImported && !data.orderSettingsApplied && !state.hasShownOrderModal) {
+            state.hasShownOrderModal = true;
+            openModal('modal-order-settings');
+        } else if (state.isHost && firstTurn && !data.isImported) {
+            if (!state.hasShownOrderModal) { state.hasShownOrderModal = true; openModal('modal-load-order'); }
+            if (document.getElementById('modal-load-order').open) renderOrderPreview(data.draftOrder);
         }
 
-        // ── Sistema Nudge (sollecito utenti offline) ───────────────────
-        if (data.notification && data.notification.targetUid === state.user.uid) {
-            // Verifica se è una notifica nuova (evita elaborazioni duplicate)
-            if (!state.lastNudgeTimestamp || data.notification.timestamp > state.lastNudgeTimestamp) {
-                state.lastNudgeTimestamp = data.notification.timestamp;
-
-                // Mostra notifica browser nativa
-                if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
-                    new Notification('Sollecito Drafta', {
-                        body: data.notification.msg,
-                        icon: 'icons/icon-192x192.png'
-                    });
-                }
-
-                // Mostra anche toast in-app
-                showToast(`📲 ${data.notification.sender}: ${data.notification.msg}`);
-                playSound('nudge');
+        const n = data.notification;
+        if (n?.targetUid === state.user.uid && n.timestamp > enteredAt && n.timestamp !== state.lastNudgeTimestamp) {
+            state.lastNudgeTimestamp = n.timestamp;
+            showToast(`${n.sender}: ${n.msg}`);
+            playSound('nudge');
+            if (document.hidden && typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+                new Notification('Drafta', { body: n.msg, icon: 'icons/icon-192x192.png', tag: 'drafta-nudge' });
             }
         }
+    }, (e) => {
+        console.error(e);
+        showToast("Non riesco più a leggere l'asta.");
+        leaveRoom();
     });
-
-    // ── Event Listener Modal Ordine Turni ───────────────────────────────
-    const btnGen = document.getElementById('btn-gen-random-start');
-    const btnConf = document.getElementById('btn-confirm-start-order');
-
-    if (btnGen && btnConf) {
-        // Usa onclick invece di addEventListener per evitare listener duplicati su re-entry
-
-        /**
-         * Pulsante "Genera Ordine Casuale"
-         * Mescola l'ordine dei turni usando algoritmo Fisher-Yates
-         */
-        btnGen.onclick = async () => {
-            if (!state.isHost) return;
-            if (!state.roomData || !state.roomData.draftOrder) return;
-
-            let order = [...state.roomData.draftOrder];
-
-            // Algoritmo Fisher-Yates Shuffle
-            for (let i = order.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [order[i], order[j]] = [order[j], order[i]];
-            }
-
-            try {
-                await updateDoc(doc(db, 'rooms', state.currentRoomId), { draftOrder: order });
-            } catch (e) {
-                console.error("Error shuffling", e);
-            }
-        };
-
-        /**
-         * Pulsante "Conferma Ordine"
-         * Chiude la modal e inizia il draft con l'ordine attuale
-         */
-        btnConf.onclick = () => {
-            document.getElementById('modal-load-order').classList.add('hidden');
-        };
-    }
 }
 
-/**
- * Sincronizza la lista giocatori se la stanza ha un URL personalizzato
- * 
- * Alcune stanze possono usare liste giocatori customizzate (es. campionati stranieri)
- * caricate da un URL. Questa funzione verifica se roomData.dataSourceUrl esiste
- * e in caso positivo carica i giocatori da quell'URL.
- * 
- * @function syncPlayersIfNeeded
- * @param {Object} roomData - Dati completi della stanza
- * @returns {Promise<void>}
- * 
- * @example
- * // Stanza con giocatori custom
- * const roomData = { dataSourceUrl: 'https://example.com/players.json', ... };
- * await syncPlayersIfNeeded(roomData);
- * // Carica e aggiorna state.players con i dati custom
- */
-export async function syncPlayersIfNeeded(roomData) {
-    // Verifica se la stanza ha un URL giocatori personalizzato
-    if (roomData.dataSourceUrl) {
-        try {
-            // Carica giocatori dall'URL custom
-            await playerService.loadFromUrl(roomData.dataSourceUrl);
-            state.players = playerService.getPlayers();
+const STATUS = { lobby: 'in attesa', started: 'in corso' };
 
-            // Aggiorna lista giocatori nella UI
-            renderPlayerList();
-        } catch (e) {
-            console.error("Failed to sync players", e);
-            showToast("Impossibile caricare lista giocatori personalizzata");
-        }
-    }
-}
-
-/**
- * Carica e visualizza le stanze recenti a cui l'utente ha partecipato
- * 
- * Funzionalità:
- * - Query Firebase: trova tutte le stanze dove participantIds contiene uid
- * - Listener real-time: si aggiorna automaticamente quando stanze vengono create/eliminate
- * - Per ogni stanza mostra: ID, data creazione, pulsante join rapido
- * - Se utente è host: mostra anche pulsante "Elimina"
- * - Click su stanza: pre-compila ID e password, poi fa auto-join
- * 
- * @function loadRecentRooms
- * @param {string} uid - UID Firebase dell'utente
- * @returns {void}
- * 
- * @example
- * // Chiamato automaticamente dopo login
- * loadRecentRooms(user.uid);
- */
 export function loadRecentRooms(uid) {
+    stopRecentRooms();
     const container = document.getElementById('recent-rooms-container');
     const list = document.getElementById('recent-rooms-list');
-
-    // ── Query Firebase ──────────────────────────────────────────────────
-    // Trova stanze dove l'utente è in participantIds
-    const q = query(
-        collection(db, "rooms"),
-        where("participantIds", "array-contains", uid)
-    );
-
-    // ── Listener Real-Time ──────────────────────────────────────────────
-    onSnapshot(q, (snapshot) => {
-        list.innerHTML = '';
-
-        // Nascondi sezione se nessuna stanza recente
-        if (snapshot.empty) {
-            container.classList.add('hidden');
-            return;
-        }
-
-        container.classList.remove('hidden');
-
-        // ── Rendering lista stanze ──────────────────────────────────────
-        snapshot.forEach(doc => {
-            const data = doc.data();
-            const li = document.createElement('li');
-            li.className = 'recent-item';
-
-            // Formattazione data creazione
-            let timeStr = "";
-            if (data.createdAt) {
-                timeStr = new Date(data.createdAt.seconds * 1000).toLocaleDateString();
-            }
-
-            // HTML elemento lista
-            li.innerHTML = `
-                <div>
-                   <span style="font-weight:bold">Stanza <code style="color:var(--primary)">${doc.id}</code></span>
-                   <small style="display:block; color:#888; font-size:0.75rem">${timeStr}</small>
-                </div>
-                <span>➔</span>
-            `;
-
-            // ── Click per auto-join ────────────────────────────────────
-            li.addEventListener('click', () => {
-                // Pre-compila campi con ID e password
-                document.getElementById('input-room-id').value = doc.id;
-                if (data.password) {
-                    document.getElementById('input-room-pass').value = data.password;
-                }
-                // Auto-join per UX migliore
-                joinRoom();
-            });
-
-            // ── Pulsante Elimina (solo per host) ───────────────────────
-            if (uid === data.hostId) {
-                const delBtn = document.createElement('button');
-                delBtn.className = 'btn-delete-room';
-                delBtn.textContent = 'Elimina';
-                delBtn.onclick = (e) => {
-                    e.stopPropagation(); // Previene join mentre si elimina
-                    deleteRoom(doc.id);
-                };
-                li.querySelector('div').appendChild(delBtn);
-            }
-
-            list.appendChild(li);
-        });
-    });
+    recentUnsubscribe = onSnapshot(query(collection(db, 'rooms'), where('participantIds', 'array-contains', uid)), (snap) => {
+        container.classList.toggle('hidden', snap.empty);
+        const rooms = snap.docs.sort((a, b) => (b.data().createdAt?.seconds || 0) - (a.data().createdAt?.seconds || 0));
+        list.innerHTML = rooms.map((d) => {
+            const r = d.data();
+            const date = r.createdAt ? new Date(r.createdAt.seconds * 1000).toLocaleDateString('it-IT', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+            const done = r.teams?.length && r.teams.every((t) => (t.roster?.length || 0) >= 25);
+            const info = [date, done ? 'conclusa' : STATUS[r.status], `${r.teams?.length || 0} squadre`].filter(Boolean).join(' · ');
+            return `<li>
+                <button class="recent-open" data-room="${esc(d.id)}" aria-label="Entra nell'asta ${esc(d.id)}, ${esc(info)}">
+                    <span><span class="mono">${esc(d.id)}</span><small>${esc(info)}</small></span>${icon('arrow-up-right')}
+                </button>
+                ${r.hostId === uid ? `<button class="icon-btn" data-delete="${esc(d.id)}" aria-label="Elimina l'asta ${esc(d.id)}" title="Elimina">${icon('trash-2')}</button>` : ''}
+            </li>`;
+        }).join('');
+    }, (e) => console.warn('recent rooms', e));
 }
 
-/**
- * Configura tutti gli event listener per la gestione stanze
- * 
- * Collega:
- * - Dashboard: pulsanti "Crea Stanza" e "Entra"
- * - Lobby: pulsante "Esci dalla Lobby"
- * - Modal stanza creata: pulsante "Entra nella Stanza"
- * 
- * Gestione permessi notifiche:
- * - Su click "Entra", richiede permessi notifiche se necessario (richiesto per iOS)
- * 
- * Da chiamare durante l'inizializzazione dell'app.
- * 
- * @function setupRoomListeners
- * @returns {void}
- * 
- * @example
- * // In app.js durante DOMContentLoaded
- * setupRoomListeners();
- */
-export function setupRoomListeners() {
-    // ── Dashboard: Creazione stanza ────────────────────────────────────
-    document.getElementById('btn-create-room').addEventListener('click', createRoom);
-
-    // ── Dashboard: Join stanza ──────────────────────────────────────────
-    document.getElementById('btn-join-room').addEventListener('click', () => {
-        // Richiesta permessi notifiche su user click (necessario per iOS)
-        if (Notification && Notification.permission === 'default') {
-            Notification.requestPermission().catch(err => console.log(err));
-        }
-        joinRoom();
-    });
-
-    // ── Lobby: Uscita ───────────────────────────────────────────────────
-    document.getElementById('btn-leave-lobby').addEventListener('click', leaveRoom);
-
-    // ── Draft: Uscita (click sul logo DRAFTA) ───────────────────────────
-    const draftLogoHome = document.getElementById('draft-logo-home');
-    if (draftLogoHome) {
-        draftLogoHome.addEventListener('click', () => {
-            if (confirm("Vuoi davvero uscire dal draft e tornare alla Home?")) {
-                leaveRoom();
-            }
-        });
-    }
-
-    // ── Modal Stanza Creata: Ingresso ───────────────────────────────────
-    document.getElementById('btn-modal-enter').addEventListener('click', () => {
-        try {
-            const roomId = document.getElementById('modal-room-id').innerText.trim();
-            const password = document.getElementById('modal-room-pass').innerText.trim();
-
-            showToast("Ingresso in corso..."); // Feedback utente
-
-            // Richiesta permessi notifiche (richiesto per iOS, deve essere sincrono al click)
-            try {
-                if (typeof Notification !== 'undefined' && Notification.permission === 'default') {
-                    Notification.requestPermission().catch(err => console.log('Notification permission error:', err));
-                }
-            } catch (notifyErr) {
-                console.warn('Notification API not supported or failed:', notifyErr);
-            }
-
-            // Entra nella stanza appena creata
-            enterRoom(roomId, true, password);
-            document.getElementById('modal-room-created').classList.add('hidden');
-
-        } catch (e) {
-            console.error(e);
-            showToast("Errore pulsante: " + e.message);
-        }
-    });
-
-    // ── Modal Stanza Creata: Copia Link Invito ──────────────────────────
-    document.getElementById('btn-copy-room-link').addEventListener('click', () => {
-        const roomId = document.getElementById('modal-room-id').innerText.trim();
-        const password = document.getElementById('modal-room-pass').innerText.trim();
-        const baseUrl = window.location.origin + window.location.pathname;
-        const link = `${baseUrl}?room=${roomId}&pass=${password}`;
-
-        navigator.clipboard.writeText(link).then(() => {
-            showToast('📋 Link copiato negli appunti!');
-        }).catch(() => {
-            // Fallback per browser che non supportano Clipboard API
-            prompt('Copia questo link:', link);
-        });
-    });
-
-    // ── Profilo Utente: Copia Link Invito (con ID/PSW) ───────────────────
-    const btnProfileCopyLink = document.getElementById('btn-profile-copy-link');
-    if (btnProfileCopyLink) {
-        btnProfileCopyLink.addEventListener('click', () => {
-            if (!state.currentRoomId || !state.roomData) return;
-            const roomId = state.currentRoomId;
-            const password = state.roomData.password || '';
-            const baseUrl = window.location.origin + window.location.pathname;
-            const link = `${baseUrl}?room=${roomId}&pass=${password}`;
-
-            navigator.clipboard.writeText(link).then(() => {
-                showToast('📋 Link asta copiato negli appunti!');
-            }).catch(() => {
-                prompt('Copia questo link:', link);
-            });
-        });
-    }
+export function stopRecentRooms() {
+    recentUnsubscribe?.();
+    recentUnsubscribe = null;
 }
 
-/**
- * Invia un sollecito (nudge) a un utente che è offline o non risponde
- * 
- * Il sollecito viene salvato nel documento Firebase della stanza.
- * L'utente target riceverà:
- * - Notifica browser (se permessi concessi)
- * - Toast in-app (se app è aperta)
- * - Notifica push via FCM (se configurato server-side)
- * 
- * Il sistema previene duplicati controllando il timestamp della notifica.
- * 
- * @function sendNudge
- * @param {string} targetUid - UID Firebase dell'utente da sollecitare
- * @param {string} teamName - Nome della squadra di cui è il turno
- * @returns {Promise<void>}
- * 
- * @example
- * // Host clicca "Sollecita" su Team Alpha (owner: uid123)
- * await sendNudge('uid123', 'Team Alpha');
- * // Invia: "Toc toc! È il turno di Team Alpha!"
- */
 export async function sendNudge(targetUid, teamName) {
     try {
         await updateDoc(doc(db, 'rooms', state.currentRoomId), {
-            notification: {
-                targetUid: targetUid,
-                sender: state.user.displayName || state.user.email,
-                msg: `Toc toc! È il turno di ${teamName}!`,
-                timestamp: Date.now()  // Usato per prevenire elaborazioni duplicate
-            }
+            notification: { targetUid, sender: myName(), msg: `Toc toc! Tocca a ${teamName}.`, timestamp: Date.now() },
         });
-        showToast("Sollecito inviato!");
+        showToast('Sollecito inviato.');
     } catch (e) {
         console.error(e);
+        showToast('Sollecito non inviato.');
     }
 }
 
-// ── Esposizione Globale ─────────────────────────────────────────────────
-// Espone sendNudge globalmente per poterla chiamare da onclick handler nell'HTML
-window.sendNudge = sendNudge;
-
-// ── Timer Turno ─────────────────────────────────────────────────────────
-// Gestione countdown timer per turno. Sincronizzato tramite turnStartedAt.
-
-let timerInterval = null;
-
-/**
- * Aggiorna la UI del timer basandosi su turnStartedAt e timerDuration
- * 
- * @param {Object} data - Dati della stanza
- */
 function updateTimerUI(data) {
+    clearInterval(timerInterval);
+    const box = document.getElementById('timer-container');
+    const text = document.getElementById('timer-text');
+    const bar = document.getElementById('timer-bar-fill');
+    const pauseBtn = document.getElementById('btn-timer-pause');
     const duration = data.settings?.timerDuration || 0;
-    if (duration === 0) return;
+    const running = duration > 0 && data.status === 'started' && data.currentTurnIndex < (data.draftOrder?.length || 0);
+    box.classList.toggle('hidden', !running);
+    pauseBtn.classList.toggle('hidden', !state.isHost);
+    if (!running || !data.turnStartedAt) return;
 
-    const turnStartedAt = data.turnStartedAt;
-    if (!turnStartedAt) return;
+    pauseBtn.setAttribute('aria-label', data.timerPaused ? 'Riprendi il timer' : 'Metti in pausa il timer');
+    pauseBtn.querySelector('use').setAttribute('href', data.timerPaused ? '#i-play' : '#i-pause');
 
-    // Pulisci interval precedente
-    if (timerInterval) {
-        clearInterval(timerInterval);
-        timerInterval = null;
-    }
-
-    // Se timer è in pausa
+    const fmt = (s) => {
+        s = Math.ceil(s);
+        const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), pad = (n) => String(n).padStart(2, '0');
+        return s < 60 ? `${s}s` : h ? `${h}:${pad(m)}:${pad(s % 60)}` : `${m}:${pad(s % 60)}`;
+    };
+    const paint = (left) => {
+        bar.style.width = `${(left / duration) * 100}%`;
+        box.classList.toggle('is-low', left <= duration * 0.4);
+        box.classList.toggle('is-critical', left <= Math.max(10, duration * 0.1));
+    };
     if (data.timerPaused) {
-        const timerBar = document.getElementById('timer-bar-fill');
-        const timerText = document.getElementById('timer-text');
-        if (timerBar) timerBar.style.width = '100%';
-        if (timerText) timerText.textContent = '⏸️';
+        const left = Math.max(0, duration - (data.pausedElapsed || 0) / 1000);
+        paint(left);
+        text.textContent = `${fmt(left)} · pausa`;
         return;
     }
-
     const tick = () => {
-        const now = Date.now();
-        const elapsed = (now - turnStartedAt) / 1000;
-        const remaining = Math.max(0, duration - elapsed);
-        const pct = (remaining / duration) * 100;
-
-        const timerBar = document.getElementById('timer-bar-fill');
-        const timerText = document.getElementById('timer-text');
-
-        if (timerBar) {
-            timerBar.style.width = `${pct}%`;
-            // Colore: verde > giallo > rosso
-            if (remaining > duration * 0.4) {
-                timerBar.style.background = 'var(--primary)';
-            } else if (remaining > Math.max(10, duration * 0.1)) {
-                timerBar.style.background = '#ffcc00';
-            } else {
-                timerBar.style.background = '#ff4444';
-            }
-        }
-
-        if (timerText) {
-            const remSec = Math.ceil(remaining);
-            if (remSec < 60) {
-                timerText.textContent = `${remSec}s`;
-            } else {
-                const hrs = Math.floor(remSec / 3600);
-                const mins = Math.floor((remSec % 3600) / 60);
-                const secs = remSec % 60;
-                const pad = (num) => String(num).padStart(2, '0');
-                if (hrs > 0) {
-                    timerText.textContent = `${hrs}:${pad(mins)}:${pad(secs)}`;
-                } else {
-                    timerText.textContent = `${mins}:${pad(secs)}`;
-                }
-            }
-        }
-
-        // Auto-pick di ufficio se scaduto (solo host)
-        if (remaining <= 0 && state.isHost) {
+        const left = Math.max(0, duration - (Date.now() - data.turnStartedAt) / 1000);
+        paint(left);
+        text.textContent = fmt(left);
+        if (left <= 0) {
             clearInterval(timerInterval);
-            timerInterval = null;
-            autoPickForTimeout();
+            if (state.isHost) autoPickForTimeout();
         }
     };
+    tick();
+    timerInterval = setInterval(tick, 250);
+}
 
-    tick(); // Esegui subito
-    timerInterval = setInterval(tick, 250); // Aggiorna ogni 250ms per fluidità
+export function setupRoomListeners() {
+    document.getElementById('btn-create-room').addEventListener('click', createRoom);
+    document.getElementById('form-join').addEventListener('submit', (e) => { e.preventDefault(); joinRoom(); });
+    document.getElementById('btn-leave-lobby').addEventListener('click', leaveRoom);
+    document.getElementById('draft-logo-home').addEventListener('click', () => {
+        if (confirm("Esci dall'asta e torni alla home? Puoi rientrare quando vuoi.")) leaveRoom();
+    });
+
+    document.getElementById('recent-rooms-list').addEventListener('click', (e) => {
+        const del = e.target.closest('[data-delete]');
+        if (del) return deleteRoom(del.dataset.delete);
+        const open = e.target.closest('[data-room]');
+        if (!open) return;
+        document.getElementById('input-room-id').value = open.dataset.room;
+        joinRoom();
+    });
+
+    document.getElementById('btn-modal-enter').addEventListener('click', () => {
+        closeModal('modal-room-created');
+        enterRoom(document.getElementById('modal-room-id').textContent.trim(), true);
+    });
+
+    const copyInvite = (roomId, password) => copyText(inviteLink(roomId, password), 'Link copiato: mandalo a chi gioca.');
+    document.getElementById('btn-copy-room-link').addEventListener('click', () =>
+        copyInvite(document.getElementById('modal-room-id').textContent.trim(), document.getElementById('modal-room-pass').textContent.trim()));
+    for (const id of ['btn-profile-copy-link', 'btn-lobby-copy-link']) {
+        document.getElementById(id).addEventListener('click', () => {
+            if (state.currentRoomId) copyInvite(state.currentRoomId, state.roomData?.password);
+        });
+    }
+
+    document.getElementById('btn-gen-random-start').addEventListener('click', shuffleOrder);
+    document.getElementById('btn-confirm-start-order').addEventListener('click', () => closeModal('modal-load-order'));
 }

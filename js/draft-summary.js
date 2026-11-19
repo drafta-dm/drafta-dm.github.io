@@ -1,253 +1,88 @@
-// ============================================================================
-// MODULO: Riepilogo Fine Draft
-// ============================================================================
-// Mostra un riepilogo completo quando il draft è terminato.
-// Include statistiche per squadra, best pick, e tabella riassuntiva.
-// ============================================================================
+// End of the draft: every roster full, so a summary for everyone with a text report to share.
 
 import { state } from './state.js';
-import { getTeamColor, showToast } from './utils.js';
+import { getTeamColor, esc, icon, openModal, copyText } from './utils.js';
+import { ROLES, ROSTER_SIZE } from './draft-rules.js';
 
-const ROSTER_SLOTS = 25; // Slot totali per squadra (3P + 8D + 8C + 6A)
-
-/**
- * Verifica se il draft è completato e mostra il riepilogo
- * 
- * @param {Object} data - Dati della stanza Firebase
- * @returns {boolean} true se il draft è completato
- */
 export function checkAndShowDraftSummary(data) {
-    if (!data.teams || data.teams.length === 0) return false;
-
-    // Il draft è completo se TUTTE le squadre hanno il roster pieno
-    const allComplete = data.teams.every(t => (t.roster?.length || 0) >= ROSTER_SLOTS);
-
-    if (!allComplete) {
-        hideSummary();
-        return false;
-    }
-
-    // Mostra riepilogo solo se non già visibile
-    if (!state._summaryShown) {
-        state._summaryShown = true;
-        showDraftSummary(data);
-    }
-
-    return true;
+    const done = data.status === 'started' && data.teams?.length && data.teams.every((t) => (t.roster?.length || 0) >= ROSTER_SIZE);
+    if (!done) return void (state.summaryShown = false);
+    if (state.summaryShown) return;
+    state.summaryShown = true;
+    showDraftSummary(data);
 }
 
-/**
- * Genera e mostra il pannello riepilogo
- */
 function showDraftSummary(data) {
-    let container = document.getElementById('draft-summary-panel');
-    if (!container) {
-        container = document.createElement('div');
-        container.id = 'draft-summary-panel';
-        container.className = 'draft-summary-panel';
-        document.body.appendChild(container);
-    }
+    const picks = data.teams.flatMap((t) => (t.roster || []).map((r) => {
+        const p = state.byId.get(String(r.playerId));
+        return { name: r.name || p?.name || `#${r.playerId}`, role: r.role || p?.role, cost: r.cost || 0, team: t.name };
+    }));
+    const total = picks.reduce((s, p) => s + p.cost, 0);
+    const top = [...picks].sort((a, b) => b.cost - a.cost)[0];
+    const cheap = [...picks].sort((a, b) => a.cost - b.cost)[0];
 
-    const teams = data.teams;
+    const stats = data.teams.map((t) => {
+        const mine = picks.filter((p) => p.team === t.name);
+        const spent = mine.reduce((s, p) => s + p.cost, 0);
+        const best = (role) => mine.filter((p) => p.role === role).sort((a, b) => b.cost - a.cost).slice(0, 2);
+        const byRole = Object.fromEntries(ROLES.map((r) => [r, mine.filter((p) => p.role === r).reduce((s, p) => s + p.cost, 0)]));
+        return { id: t.id, name: t.name, value: t.totalValue || spent, avg: mine.length ? (spent / mine.length).toFixed(1) : 0, byRole, D: best('D'), C: best('C'), A: best('A') };
+    }).sort((a, b) => b.value - a.value);
 
-    // Calcola statistiche per squadra
-    const stats = teams.map(t => {
-        const roster = t.roster || [];
-        const totalSpent = roster.reduce((sum, r) => sum + (r.cost || 0), 0);
-        const avgCost = roster.length > 0 ? (totalSpent / roster.length).toFixed(1) : 0;
-        
-        // Trova i migliori 2 acquisti per ruolo (D, C, A)
-        const getBestOfRole = (role) => {
-            const rolePicks = roster
-                .map(r => {
-                    const p = state.players.find(pl => String(pl.id) === String(r.playerId));
-                    return p ? { name: p.name, cost: r.cost || 0, role: p.role } : null;
-                })
-                .filter(p => p && p.role === role);
+    const list = (arr) => arr.map((p) => `${p.name} (${p.cost})`).join(', ') || '–';
+    const report = [
+        'RIEPILOGO ASTA DRAFTA', '',
+        `Chiamata più cara: ${top ? `${top.name} (${top.cost}), ${top.team}` : '–'}`,
+        `Affare: ${cheap ? `${cheap.name} (${cheap.cost}), ${cheap.team}` : '–'}`,
+        `Valore totale: ${total} crediti, media ${(total / (picks.length || 1)).toFixed(1)}`, '',
+        ...stats.flatMap((s, i) => [
+            `#${i + 1} ${s.name}: ${s.value}`,
+            `   P ${s.byRole.P} · D ${s.byRole.D} · C ${s.byRole.C} · A ${s.byRole.A}`,
+            `   Top D: ${list(s.D)}`, `   Top C: ${list(s.C)}`, `   Top A: ${list(s.A)}`, '',
+        ]),
+    ].join('\n');
 
-            rolePicks.sort((a, b) => b.cost - a.cost);
-            return rolePicks.slice(0, 2);
-        };
-
-        const bestD = getBestOfRole('D');
-        const bestC = getBestOfRole('C');
-        const bestA = getBestOfRole('A');
-
-        // Calcola spesa per ruolo
-        const roleSpent = { P: 0, D: 0, C: 0, A: 0 };
-        roster.forEach(r => {
-            const p = state.players.find(pl => String(pl.id) === String(r.playerId));
-            if (p) {
-                roleSpent[p.role] += r.cost || 0;
-            }
-        });
-
-        return {
-            name: t.name,
-            id: t.id,
-            totalSpent,
-            avgCost,
-            bestD,
-            bestC,
-            bestA,
-            roleSpent,
-            rosterCount: roster.length,
-            totalValue: t.totalValue || totalSpent
-        };
-    });
-
-    // Ordina per valore totale decrescente
-    stats.sort((a, b) => b.totalValue - a.totalValue);
-
-    // Calcola highlights globali
-    let topPickOverall = null;
-    let cheapestPickOverall = null;
-    let totalDraftSpent = 0;
-    let totalDraftCount = 0;
-
-    teams.forEach(t => {
-        const roster = t.roster || [];
-        roster.forEach(r => {
-            const p = state.players.find(pl => String(pl.id) === String(r.playerId));
-            if (p) {
-                totalDraftSpent += r.cost || 0;
-                totalDraftCount++;
-
-                // Top Pick Assoluto
-                if (!topPickOverall || (r.cost || 0) > topPickOverall.cost) {
-                    topPickOverall = {
-                        name: p.name,
-                        cost: r.cost || 0,
-                        teamName: t.name
-                    };
-                }
-
-                // Giocatore più Economico Assoluto
-                if (!cheapestPickOverall || (r.cost || 0) < cheapestPickOverall.cost) {
-                    cheapestPickOverall = {
-                        name: p.name,
-                        cost: r.cost || 0,
-                        teamName: t.name
-                    };
-                }
-            }
-        });
-    });
-
-    const avgDraftCost = totalDraftCount > 0 ? (totalDraftSpent / totalDraftCount).toFixed(1) : 0;
-
-    // Genera report di testo per email e copia negli appunti
-    let reportText = `🏆 RIEPILOGO ASTA DRAFTA 🏆\n\n`;
-    reportText += `HIGHLIGHTS GENERALE:\n`;
-    reportText += `🔥 Chiamata Record: ${topPickOverall ? `${topPickOverall.name} (${topPickOverall.cost})` : 'N/A'} - Squadra: ${topPickOverall ? topPickOverall.teamName : '--'}\n`;
-    reportText += `💸 Giocatore più Economico: ${cheapestPickOverall ? `${cheapestPickOverall.name} (${cheapestPickOverall.cost})` : 'N/A'} - Squadra: ${cheapestPickOverall ? cheapestPickOverall.teamName : '--'}\n`;
-    reportText += `📊 Valore Totale Draft: ${totalDraftSpent} crediti (Media: ${avgDraftCost})\n\n`;
-    reportText += `--- CLASSIFICA ROSE ---\n\n`;
-    stats.forEach((s, i) => {
-        reportText += `#${i + 1} - ${s.name} (Valore: ${s.totalValue})\n`;
-        reportText += `   Spesa per ruolo -> P: ${s.roleSpent.P} | D: ${s.roleSpent.D} | C: ${s.roleSpent.C} | A: ${s.roleSpent.A}\n`;
-        reportText += `   🛡️ Top D: ${s.bestD.map(p => `${p.name} (${p.cost})`).join(', ') || '--'}\n`;
-        reportText += `   🔮 Top C: ${s.bestC.map(p => `${p.name} (${p.cost})`).join(', ') || '--'}\n`;
-        reportText += `   🎯 Top A: ${s.bestA.map(p => `${p.name} (${p.cost})`).join(', ') || '--'}\n\n`;
-    });
-
-    container.innerHTML = `
-        <div class="summary-overlay">
-            <div class="summary-content" style="max-width: 1000px; padding: 25px; background: var(--bg-surface); border-radius: 12px; border: 1px solid var(--primary); box-shadow: 0 4px 20px rgba(0,0,0,0.8);">
-                <h2 style="color:var(--primary); font-size: 2.2rem; margin-bottom: 5px;">🏆 Draft Completato!</h2>
-                <p class="summary-subtitle" style="margin-bottom: 20px;">Riepilogo finale dell'asta</p>
-                
-                <!-- HIGHLIGHTS GENERALI -->
-                <div class="summary-highlights" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px; padding: 15px; background: rgba(0,0,0,0.3); border-radius: 8px; text-align: left;">
-                    <div>
-                        <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; display:block;">🔥 Chiamata Record (Top Pick)</span>
-                        <strong style="font-size:1.1rem; color:var(--primary);">${topPickOverall ? `${topPickOverall.name} (${topPickOverall.cost})` : 'N/A'}</strong>
-                        <span style="font-size:0.75rem; color:var(--text-muted); display:block;">Squadra: ${topPickOverall ? topPickOverall.teamName : '--'}</span>
-                    </div>
-                    <div>
-                        <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; display:block;">💸 Giocatore più Economico</span>
-                        <strong style="font-size:1.1rem; color:var(--accent);">${cheapestPickOverall ? `${cheapestPickOverall.name} (${cheapestPickOverall.cost})` : 'N/A'}</strong>
-                        <span style="font-size:0.75rem; color:var(--text-muted); display:block;">Squadra: ${cheapestPickOverall ? cheapestPickOverall.teamName : '--'}</span>
-                    </div>
-                    <div>
-                        <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; display:block;">📊 Valore Totale Draft</span>
-                        <strong style="font-size:1.1rem; color:white;">${totalDraftSpent} crediti</strong>
-                        <span style="font-size:0.75rem; color:var(--text-muted); display:block;">Media giocatore: ${avgDraftCost}</span>
-                    </div>
-                </div>
-
-                <div class="summary-grid" style="margin-bottom: 25px;">
-                    ${stats.map((s, i) => `
-                        <div class="summary-team-card" style="border-color: ${getTeamColor(s.id, data)}">
-                            <div class="summary-rank" style="background: ${getTeamColor(s.id, data)}">#${i + 1}</div>
-                            <h3>${s.name}</h3>
-                            <div class="summary-stats" style="margin-bottom: 10px;">
-                                <div class="stat">
-                                    <span class="stat-label">Valore Rosa</span>
-                                    <span class="stat-value" style="color:var(--primary);">${s.totalValue}</span>
-                                </div>
-                                <div class="stat">
-                                    <span class="stat-label">Costo Medio</span>
-                                    <span class="stat-value">${s.avgCost}</span>
-                                </div>
-                            </div>
-                            
-                            <!-- Spesa per Ruolo -->
-                            <div class="summary-roles" style="display:flex; justify-content:space-between; gap:4px; font-size:0.75rem; color:var(--text-muted); margin-top:10px; border-top:1px dashed #333; padding-top:10px;">
-                                <span>P: <strong style="color:var(--role-gk, #ff4444)">${s.roleSpent.P}</strong></span>
-                                <span>D: <strong style="color:var(--role-def, #22c55e)">${s.roleSpent.D}</strong></span>
-                                <span>C: <strong style="color:var(--role-mid, #3b82f6)">${s.roleSpent.C}</strong></span>
-                                <span>A: <strong style="color:var(--role-att, #ffcc00)">${s.roleSpent.A}</strong></span>
-                            </div>
-
-                            <!-- Migliori acquisti per ruolo (top 2) -->
-                            <div class="summary-best-role-picks" style="margin-top:10px; padding-top:10px; border-top:1px solid #333; font-size:0.72rem; color:var(--text-muted); text-align:left;">
-                                <div style="margin-bottom:3px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
-                                    🛡️ <strong>Top D:</strong> <span style="color:white">${s.bestD.map(p => `${p.name} (${p.cost})`).join(', ') || '--'}</span>
-                                </div>
-                                <div style="margin-bottom:3px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
-                                    🔮 <strong>Top C:</strong> <span style="color:white">${s.bestC.map(p => `${p.name} (${p.cost})`).join(', ') || '--'}</span>
-                                </div>
-                                <div style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
-                                    🎯 <strong>Top A:</strong> <span style="color:white">${s.bestA.map(p => `${p.name} (${p.cost})`).join(', ') || '--'}</span>
-                                </div>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-
-                <!-- AZIONI ADMIN -->
-                <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:15px;">
-                    <button id="btn-email-summary" class="btn btn-outline" style="padding: 12px 24px; font-weight: 500;">✉️ Invia per Email</button>
-                    <button id="btn-copy-summary" class="btn btn-outline" style="padding: 12px 24px; font-weight: 500;">📋 Copia Report Testo</button>
-                    <button id="btn-close-summary" class="btn btn-primary" style="padding: 12px 24px;">Chiudi Riepilogo</button>
-                </div>
-            </div>
+    const box = document.getElementById('draft-summary-panel');
+    box.innerHTML = `
+        <div class="summary-head">
+            <span class="icon-tile">${icon('trophy')}</span>
+            <p class="kicker">Asta finita</p>
+            <h2 id="summary-title" class="h-section">Rose <span class="serif grad">complete.</span></h2>
         </div>
-    `;
-
-    container.classList.remove('hidden');
-
-    document.getElementById('btn-close-summary')?.addEventListener('click', () => {
-        container.classList.add('hidden');
-    });
-
-    document.getElementById('btn-email-summary')?.addEventListener('click', () => {
-        const mailtoUrl = `mailto:?subject=${encodeURIComponent("Riepilogo Asta Drafta!")}&body=${encodeURIComponent(reportText)}`;
-        window.location.href = mailtoUrl;
-    });
-
-    document.getElementById('btn-copy-summary')?.addEventListener('click', async () => {
-        try {
-            await navigator.clipboard.writeText(reportText);
-            showToast('📋 Report copiato negli appunti!');
-        } catch (err) {
-            console.error('Copy report failed:', err);
-            showToast('Impossibile copiare il report.');
-        }
-    });
+        <div class="summary-highlights">
+            <div><span class="kicker">Chiamata più cara</span><strong>${top ? `${esc(top.name)} · ${top.cost}` : '–'}</strong><small>${esc(top?.team || '')}</small></div>
+            <div><span class="kicker">L'affare</span><strong>${cheap ? `${esc(cheap.name)} · ${cheap.cost}` : '–'}</strong><small>${esc(cheap?.team || '')}</small></div>
+            <div><span class="kicker">Valore totale</span><strong>${total} crediti</strong><small>media ${(total / (picks.length || 1)).toFixed(1)} a giocatore</small></div>
+        </div>
+        <div class="summary-grid">${stats.map((s, i) => `
+            <article class="summary-team-card" style="--team:${esc(getTeamColor(s.id, data))}">
+                <span class="summary-rank">#${i + 1}</span>
+                <h3>${esc(s.name)}</h3>
+                <div class="summary-stats"><div><span>Valore rosa</span><b>${s.value}</b></div><div><span>Media</span><b>${s.avg}</b></div></div>
+                <div class="summary-roles">${ROLES.map((r) => `<span class="role-${r}">${r} <b>${s.byRole[r]}</b></span>`).join('')}</div>
+                <div class="summary-best">${['D', 'C', 'A'].map((r) => `<div><b>Top ${r}:</b> ${esc(list(s[r]))}</div>`).join('')}</div>
+            </article>`).join('')}
+        </div>
+        <div class="actions">
+            <a class="btn btn-ghost" href="mailto:?subject=${encodeURIComponent('Riepilogo asta Drafta')}&body=${encodeURIComponent(report)}">${icon('mail')}Manda per email</a>
+            <button class="btn btn-ghost" data-copy-report>${icon('copy')}Copia il riepilogo</button>
+            ${state.isHost ? `<button class="btn btn-ghost" data-export>${icon('download')}Esporta CSV</button>` : ''}
+            <button class="btn btn-primary" data-close>Chiudi</button>
+        </div>`;
+    box.querySelector('[data-copy-report]').addEventListener('click', () => copyText(report, 'Riepilogo copiato.'));
+    box.querySelector('[data-export]')?.addEventListener('click', () => document.getElementById('btn-export-csv').click());
+    openModal('draft-summary-panel');
+    confetti();
 }
 
-function hideSummary() {
-    state._summaryShown = false;
+// A short burst of paper in the team colours. Skipped with reduced motion (CSS).
+function confetti() {
+    const layer = document.createElement('div');
+    layer.className = 'confetti';
+    layer.setAttribute('aria-hidden', 'true');
+    const colors = ['#2fe37f', '#c6f36b', '#fbbf24', '#60a5fa', '#f87171', '#ecf3ee'];
+    layer.innerHTML = Array.from({ length: 70 }, (_, i) =>
+        `<i style="--x:${Math.random() * 100}%;--c:${colors[i % colors.length]};--d:${Math.random() * 0.6}s;--t:${2.2 + Math.random() * 1.6}s;--r:${Math.random() * 900 - 450}deg;--drift:${Math.random() * 160 - 80}px"></i>`).join('');
+    document.getElementById('draft-summary-panel').appendChild(layer);
+    setTimeout(() => layer.remove(), 4500);
 }

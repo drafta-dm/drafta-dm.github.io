@@ -1,476 +1,174 @@
-// ============================================================================
-// MODULO: Lobby e Preparazione Draft
-// ============================================================================
-// Gestisce l'interfaccia della lobby pre-draft e l'assegnazione delle squadre.
-// Funzionalità principali:
-// - Visualizzazione utenti connessi in tempo reale
-// - Gestione nomi squadre (modificabili dall'host)
-// - Assegnazione utenti alle squadre tramite click
-// - Modal avanzata per gestione squadre (Team Manager)
-// - Routing automatico tra lobby e draft in base allo stato della stanza
-// - Preservazione del focus durante i re-render
-// ============================================================================
+// Lobby: who joined, which team they coach, and the switch to the draft view.
 
-// Import Firebase per aggiornamenti stanza
 import { db, doc, updateDoc } from './firebase-modules.js';
+import { state, views } from './state.js';
+import { showToast, switchView, getTeamColor, TEAM_PALETTE, esc, icon, openModal, closeModal } from './utils.js';
+import { renderPlayerList } from './player-filters.js';
+import { updateDraftUI, setDraftTab } from './ui-renderer.js';
 
-// Import moduli interni
-import { state, views } from './state.js';                  // Stato globale e riferimenti view
-import { showToast, switchView, getTeamColor, TEAM_PALETTE } from './utils.js';         // Utility UI
-import { renderPlayerList } from './player-filters.js';    // Rendering lista giocatori
-import { updateDraftUI } from './ui-renderer.js';          // Aggiornamento UI draft
+const ONLINE_FOR = 180_000;
+export const isOnline = (uid) => uid === state.user?.uid || Date.now() - (state.presence[uid] || 0) < ONLINE_FOR;
+const nameOf = (uid) => state.roomData?.participantNames?.[uid] || `Giocatore ${uid.slice(0, 4)}`;
 
-/**
- * Routing intelligente tra lobby e draft based sullo stato della stanza
- * 
- * Analizza lo stato della stanza e decide quale view mostrare:
- * - Se status = 'started' o 'drafting' → Mostra vista Draft
- * - Altrimenti → Mostra vista Lobby
- * 
- * Gestisce anche il rendering iniziale quando si cambia view.
- * 
- * @function renderLobbyOrDraft
- * @param {Object} data - Dati completi della stanza Firebase
- * @returns {void}
- * 
- * @example
- * // Chiamato automaticamente dal listener real-time della stanza
- * onSnapshot(roomRef, (snap) => {
- *   const data = snap.data();
- *   renderLobbyOrDraft(data);
- * });
- */
 export function renderLobbyOrDraft(data) {
-    const mobileNav = document.getElementById('mobile-bottom-nav');
-
-    if (data.status === 'started' || data.status === 'drafting') {
-        // ── Modalità Draft ──────────────────────────────────────────────
+    if (data.status === 'started') {
         if (views.draft.classList.contains('hidden')) {
             switchView('draft');
-            renderPlayerList(); // Rendering iniziale lista giocatori
-
-            // Gestione Mobile: default visualizzazione tab giocatori all'ingresso nel draft
-            if (window.innerWidth <= 768) {
-                document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
-                    if (btn.dataset.target === 'players') {
-                        btn.classList.add('active');
-                    } else {
-                        btn.classList.remove('active');
-                    }
-                });
-
-                const leftPanel = document.querySelector('.draft-left-panel');
-                const rightPanel = document.querySelector('.draft-right-panel');
-                const chatPanel = document.getElementById('chat-panel');
-                const historyPanel = document.getElementById('draft-history-panel');
-
-                if (leftPanel) leftPanel.style.display = '';
-                if (rightPanel) rightPanel.style.display = 'none';
-                if (chatPanel) chatPanel.classList.add('hidden');
-                if (historyPanel) historyPanel.classList.add('hidden');
-            }
+            renderPlayerList();
+            setDraftTab('players');
         }
         updateDraftUI(data);
-
-        // Mostra mobile nav durante il draft
-        if (mobileNav) mobileNav.classList.remove('hidden');
-
     } else {
-        // ── Modalità Lobby ──────────────────────────────────────────────
-        if (views.lobby.classList.contains('hidden')) {
-            switchView('lobby');
-        }
+        if (views.lobby.classList.contains('hidden')) switchView('lobby');
         renderLobby(data);
-
-        // Nascondi mobile nav in lobby
-        if (mobileNav) mobileNav.classList.add('hidden');
     }
 }
 
-/**
- * Renderizza l'intera interfaccia della lobby
- * 
- * Aggiorna:
- * - Contatore squadre nell'header
- * - Lista utenti connessi
- * - Griglia squadre con assegnazioni
- * 
- * @function renderLobby
- * @param {Object} data - Dati della stanza
- * @returns {void}
- */
+// Presence changes only touch the dots and the nudge buttons, not the whole view.
+export function renderPresence() {
+    document.querySelectorAll('[data-presence]').forEach((el) => {
+        const on = isOnline(el.dataset.presence);
+        if (el.classList.contains('status')) {
+            el.classList.toggle('on', on);
+            el.title = on ? 'Ha Drafta aperta' : 'Non ha Drafta aperta';
+        } else {
+            el.hidden = on;
+        }
+    });
+}
+
 export function renderLobby(data) {
-    // Aggiorna contatore squadre nell'header
+    const ids = data.participantIds || [];
+    document.getElementById('connected-count').textContent = `(${ids.length})`;
     document.getElementById('team-count-display').textContent = `(${data.teams.length})`;
-
-    // Rendering componenti lobby
-    renderConnectedUsers(data);
-    renderTeamsGrid(data);
+    document.getElementById('lobby-hint').textContent = state.isHost
+        ? 'Tocca un partecipante, poi lo slot della sua squadra. Rinomina le squadre direttamente, con la matita scegli colore e allenatore.'
+        : "L'host sta assegnando le squadre. Quando avvia l'asta, si parte da qui.";
+    renderPeople(data);
+    renderSlots(data);
+    renderPresence();
 }
 
-/**
- * Renderizza la lista degli utenti connessi alla stanza
- * 
- * Per ogni utente mostra:
- * - Nome (recuperato da participantNames o user object)
- * - Stato assegnazione (grigio se già assegnato a una squadra)
- * - Selezione visiva se cliccato dall'host
- * 
- * Solo l'host può cliccare sugli utenti non assegnati per selezionarli.
- * Dopo la selezione, l'host può cliccare su uno slot squadra per completare l'assegnazione.
- *
- * @function renderConnectedUsers
- * @param {Object} data - Dati della stanza
- * @returns {void}
- */
-export function renderConnectedUsers(data) {
+function renderPeople(data) {
     const list = document.getElementById('lobby-connected-list');
-    list.innerHTML = '';
-
-    // Aggiorna contatore utenti connessi
-    document.getElementById('connected-count').innerText = `(${data.connectedUsers.length})`;
-
-    data.connectedUsers.forEach(u => {
-        // Normalizza formato (supporta sia string UID che object {uid, name})
-        const uid = typeof u === 'string' ? u : u.uid;
-
-        // Verifica se l'utente è già assegnato a una squadra
-        const isAssigned = data.teams.some(t => t.ownerUid === uid);
-
-        // Crea elemento lista
-        const li = document.createElement('li');
-        li.className = `user-item ${isAssigned ? 'assigned' : ''}`;
-
-        // Evidenzia utente selezionato (se host e non assegnato)
-        if (!isAssigned && state.selectedUserUid === uid) {
-            li.classList.add('selected');
-        }
-
-        // Recupera nome visualizzato dell'utente
-        const userDisplayName = data.participantNames?.[uid] ||
-            (typeof u === 'object' && u.name) || // Fallback formato vecchio
-            (state.user.uid === uid ? state.user.displayName : `User ${uid.substring(0, 6)}`);
-
-        li.innerHTML = `<span>${userDisplayName}</span>`;
-
-        // ── Interazione Host: selezione utente ──────────────────────────
-        if (state.isHost && !isAssigned) {
-            li.addEventListener('click', () => {
-                // Seleziona utente per assegnazione a squadra
-                state.selectedUserUid = uid;
-
-                // Re-render per mostrare selezione visiva
-                renderConnectedUsers(state.roomData);
-                renderTeamsGrid(state.roomData); // Mostra "Place here" sugli slot
-            });
-        }
-
-        list.appendChild(li);
-    });
+    list.innerHTML = (data.participantIds || []).map((uid) => {
+        const team = data.teams.find((t) => t.ownerUid === uid);
+        const inner = `<span class="status" data-presence="${esc(uid)}"></span><span class="name">${esc(nameOf(uid))}${uid === data.hostId ? ' · host' : ''}</span>${team ? `<small>${esc(team.name)}</small>` : ''}`;
+        if (!state.isHost || team) return `<li><div class="person ${team ? 'is-assigned' : ''}">${inner}</div></li>`;
+        return `<li><button class="person" data-uid="${esc(uid)}" aria-pressed="${state.selectedUserUid === uid}">${inner}</button></li>`;
+    }).join('');
 }
 
-/**
- * Renderizza la griglia delle squadre con sistema di preservazione del focus
- * 
- * Per ogni squadra mostra:
- * - Numero slot (Slot 1, Slot 2, ...)
- * - Input modificabile per il nome squadra (solo host)
- * - Proprietario assegnato o "Non assegnato"
- * - Highlight se è lo slot target per l'assegnazione
- * 
- * Sistema di preservazione focus:
- * Prima del re-render, salva quale input aveva il focus e la posizione del cursore.
- * Dopo il re-render, ripristina il focus sullo stesso input alla stessa posizione.
- * Questo evita che l'utente perda il focus mentre digita durante gli aggiornamenti real-time.
- * 
- * @function renderTeamsGrid
- * @param {Object} data - Dati della stanza
- * @returns {void}
- */
-export function renderTeamsGrid(data) {
+function renderSlots(data) {
     const grid = document.getElementById('lobby-teams-grid');
+    // keep focus and caret in the name being typed while snapshots re-render the grid
+    const active = document.activeElement?.classList.contains('team-name-edit') ? document.activeElement : null;
+    const focus = active && { id: active.id, pos: active.selectionStart };
 
-    // ── Preservazione Focus ─────────────────────────────────────────────
-    // Salva quale input era focalizzato e la posizione del cursore
-    let focusedElementId = null;
-    let focusedCursorPos = null;
-    if (document.activeElement &&
-        document.activeElement.tagName === 'INPUT' &&
-        document.activeElement.classList.contains('team-name-edit')) {
-        focusedElementId = document.activeElement.id;
-        focusedCursorPos = document.activeElement.selectionStart;
-    }
-
-    grid.innerHTML = '';
-
-    // ── Rendering slot squadre ──────────────────────────────────────────
-    data.teams.forEach((team, index) => {
-        const div = document.createElement('div');
-        div.className = 'team-slot';
-
-        // Highlight se è il target per l'assegnazione corrente
-        if (state.selectedUserUid && !team.ownerUid) {
-            div.classList.add('active-assignment');
-        }
-
-        // ID univoco per l'input (usato per preservare il focus)
-        const inputId = `team-input-${index}`;
-
-        div.innerHTML = `
-            <div>
-                <h4>Slot ${index + 1}</h4>
-                <input type="text" 
-                       id="${inputId}" 
-                       class="team-name-edit" 
-                       value="${team.name}" 
-                       ${state.isHost ? '' : 'disabled'}>
+    grid.innerHTML = data.teams.map((team, i) => {
+        const target = state.isHost && state.selectedUserUid && !team.ownerUid;
+        return `<div class="slot ${target ? 'is-target' : ''}" style="--team:${esc(getTeamColor(team.id, data))}">
+            <div class="slot-top">
+                <span class="kicker">Slot ${i + 1}</span>
+                ${state.isHost ? `<button class="icon-btn icon-btn-sm" data-edit="${esc(team.id)}" aria-label="Modifica ${esc(team.name)}">${icon('pencil')}</button>` : ''}
             </div>
-            <div class="team-owner">
-                ${team.ownerName ? `👤 ${team.ownerName}` : '<i>Non assegnato</i>'}
-            </div>
-        `;
+            <input type="text" id="team-input-${i}" class="field team-name-edit" data-index="${i}" value="${esc(team.name)}" maxlength="30" aria-label="Nome della squadra ${i + 1}" ${state.isHost ? '' : 'disabled'}>
+            ${target
+                ? `<button class="slot-assign" data-assign="${i}">Assegna a ${esc(nameOf(state.selectedUserUid))}</button>`
+                : `<div class="slot-owner">${icon('user')}${team.ownerUid ? `<b>${esc(team.ownerName || nameOf(team.ownerUid))}</b>` : '<span>Nessun allenatore</span>'}</div>`}
+        </div>`;
+    }).join('');
 
-        // ── Interazioni Host ────────────────────────────────────────────
-        if (state.isHost) {
-            const input = div.querySelector('input');
-
-            // Aggiornamento nome squadra quando si esce dall'input
-            input.addEventListener('change', (e) => {
-                updateTeamName(index, e.target.value);
-            });
-
-            // Click su slot per assegnare utente selezionato
-            div.addEventListener('click', (e) => {
-                // Ignora click sull'input (per permettere editing)
-                if (e.target.tagName === 'INPUT') return;
-
-                // Se c'è un utente selezionato e lo slot è libero, assegna
-                if (state.selectedUserUid && !team.ownerUid) {
-                    assignUserToTeam(index, state.selectedUserUid);
-                }
-            });
-        }
-
-        grid.appendChild(div);
-    });
-
-    // ── Ripristino Focus ────────────────────────────────────────────────
-    // Ripristina il focus sull'input che lo aveva prima del re-render
-    if (focusedElementId) {
-        const el = document.getElementById(focusedElementId);
-        if (el) {
-            el.focus();
-            // Ripristina anche la posizione del cursore
-            if (typeof focusedCursorPos === 'number') {
-                el.setSelectionRange(focusedCursorPos, focusedCursorPos);
-            }
-        }
+    if (focus) {
+        const el = document.getElementById(focus.id);
+        el?.focus();
+        el?.setSelectionRange(focus.pos, focus.pos);
     }
 }
 
-/**
- * Aggiorna il nome di una squadra su Firebase
- * 
- * @function updateTeamName
- * @param {number} index - Indice della squadra nell'array teams
- * @param {string} newName - Nuovo nome da assegnare
- * @returns {Promise<void>}
- * 
- * @example
- * updateTeamName(0, 'I Campioni'); // Rinomina la prima squadra
- */
-export async function updateTeamName(index, newName) {
-    const roomRef = doc(db, 'rooms', state.currentRoomId);
-    const newTeams = [...state.roomData.teams];
-    newTeams[index].name = newName;
-    await updateDoc(roomRef, { teams: newTeams });
-}
-
-/**
- * Assegna un utente a una squadra su Firebase
- * 
- * Aggiorna sia l'UID che il nome visualizzato del proprietario.
- * Resetta la selezione utente dopo l'assegnazione.
- * 
- * @function assignUserToTeam
- * @param {number} teamIndex - Indice della squadra nell'array teams
- * @param {string} userUid - UID Firebase dell'utente da assegnare
- * @returns {Promise<void>}
- * 
- * @example
- * assignUserToTeam(2, 'abc123xyz'); // Assegna utente alla terza squadra
- */
-export async function assignUserToTeam(teamIndex, userUid) {
-    // Recupera nome utente da participantNames o fallback
-    const userName = state.roomData.participantNames?.[userUid] ||
-        (state.user.uid === userUid ? state.user.displayName : `User ${userUid.substring(0, 4)}`);
-
-    const roomRef = doc(db, 'rooms', state.currentRoomId);
-    const newTeams = [...state.roomData.teams];
-    newTeams[teamIndex].ownerUid = userUid;
-    newTeams[teamIndex].ownerName = userName;
-
-    await updateDoc(roomRef, { teams: newTeams });
-
-    // Reset selezione utente
-    state.selectedUserUid = null;
-}
-
-/**
- * Salva le modifiche dalla modal Team Manager su Firebase
- * 
- * Permette di modificare:
- * - Nome squadra
- * - Utente assegnato (con validazione per evitare doppi assegnamenti)
- * 
- * @function saveTeamManager
- * @returns {Promise<void>}
- */
-export async function saveTeamManager() {
-    const teamId = document.getElementById('tm-team-id').value;
-    const name = document.getElementById('tm-team-name').value;
-    const userId = document.getElementById('tm-user-select').value;
-    const color = document.getElementById('tm-team-color').value;
-
-    // Trova squadra da modificare
-    const teamIndex = state.roomData.teams.findIndex(t => t.id === teamId);
-    if (teamIndex === -1) return;
-
-    const newTeams = [...state.roomData.teams];
-    newTeams[teamIndex].name = name;
-    newTeams[teamIndex].color = color;
-
-    // Assegna o rimuove proprietario
-    if (userId) {
-        const userName = state.roomData.participantNames?.[userId] ||
-            (userId === state.user.uid ? state.user.displayName : `User ${userId.substring(0, 6)}`);
-
-        newTeams[teamIndex].ownerUid = userId;
-        newTeams[teamIndex].ownerName = userName;
-    } else {
-        newTeams[teamIndex].ownerUid = null;
-        newTeams[teamIndex].ownerName = null;
-    }
-
+async function saveTeams(teams, okMsg) {
     try {
-        await updateDoc(doc(db, 'rooms', state.currentRoomId), { teams: newTeams });
-        showToast("Squadra aggiornata!");
-        document.getElementById('modal-team-manager').classList.add('hidden');
-    } catch (err) {
-        console.error(err);
-        showToast("Errore aggiornamento");
+        await updateDoc(doc(db, 'rooms', state.currentRoomId), { teams });
+        if (okMsg) showToast(okMsg);
+        return true;
+    } catch (e) {
+        console.error(e);
+        showToast('Modifica non salvata: ' + e.message);
+        return false;
     }
 }
 
-/**
- * Gestisce il click su una squadra per aprire la modal Team Manager (solo host)
- * 
- * Funzione globale chiamabile dal template HTML.
- * Popola la select con gli utenti connessi, disabilitando quelli già assegnati ad altre squadre.
- * 
- * @function assignTeam
- * @param {string} teamId - ID della squadra da gestire
- * @global
- */
-window.assignTeam = function (teamId) {
+function openTeamManager(teamId) {
     if (!state.isHost) return;
-
-    const team = state.roomData.teams.find(t => t.id === teamId);
+    const data = state.roomData;
+    const team = data.teams.find((t) => t.id === teamId);
     if (!team) return;
-
-    // ── Popola campi modal ──────────────────────────────────────────────
     document.getElementById('tm-team-id').value = team.id;
     document.getElementById('tm-team-name').value = team.name;
 
-    // Colore squadra
-    const currentColor = team.color || getTeamColor(team.id);
-    document.getElementById('tm-team-color').value = currentColor;
-    const colorPickerContainer = document.getElementById('tm-color-picker');
-    colorPickerContainer.innerHTML = '';
+    const current = (team.color || getTeamColor(team.id)).toLowerCase();
+    document.getElementById('tm-color-picker').innerHTML = TEAM_PALETTE.map((c, i) =>
+        `<label title="Colore ${i + 1}"><input type="radio" name="tm-color" value="${c}" aria-label="Colore ${i + 1}" ${c.toLowerCase() === current ? 'checked' : ''}><span style="--c:${c}"></span></label>`).join('');
 
-    TEAM_PALETTE.forEach(color => {
-        const bubble = document.createElement('div');
-        bubble.className = 'color-bubble';
-        bubble.style.background = color;
-        bubble.style.borderRadius = '50%';
-        bubble.style.aspectRatio = '1';
-        bubble.style.cursor = 'pointer';
-        bubble.style.border = color.toLowerCase() === currentColor.toLowerCase() ? '2px solid white' : '2px solid transparent';
-        bubble.style.transition = 'transform 0.2s, border-color 0.2s';
-        if (color.toLowerCase() === currentColor.toLowerCase()) {
-            bubble.style.boxShadow = '0 0 6px rgba(255,255,255,0.6)';
-        }
-
-        bubble.addEventListener('click', () => {
-            const bubbles = colorPickerContainer.querySelectorAll('.color-bubble');
-            bubbles.forEach(b => {
-                b.style.border = '2px solid transparent';
-                b.style.boxShadow = 'none';
-            });
-            bubble.style.border = '2px solid white';
-            bubble.style.boxShadow = '0 0 6px rgba(255,255,255,0.6)';
-            document.getElementById('tm-team-color').value = color;
-        });
-
-        bubble.addEventListener('mouseenter', () => bubble.style.transform = 'scale(1.15)');
-        bubble.addEventListener('mouseleave', () => bubble.style.transform = 'scale(1)');
-
-        colorPickerContainer.appendChild(bubble);
+    const options = (data.participantIds || []).map((uid) => {
+        const other = data.teams.find((t) => t.ownerUid === uid && t.id !== team.id);
+        return `<option value="${esc(uid)}" ${uid === team.ownerUid ? 'selected' : ''} ${other ? 'disabled' : ''}>${esc(nameOf(uid))}${other ? ` (già in ${esc(other.name)})` : ''}</option>`;
     });
-
-    const select = document.getElementById('tm-user-select');
-    select.innerHTML = '<option value="">-- Seleziona Utente --</option>';
-
-    // ── Popola select utenti ────────────────────────────────────────────
-    state.roomData.connectedUsers.forEach(uid => {
-        // Verifica se l'utente è già assegnato a un'ALTRA squadra
-        const otherTeamOwner = state.roomData.teams.find(t => t.ownerUid === uid && t.id !== team.id);
-
-        const opt = document.createElement('option');
-        opt.value = uid;
-
-        const userName = state.roomData.participantNames?.[uid] ||
-            (uid === state.user.uid ? state.user.displayName : `User ${uid.substring(0, 6)}`);
-
-        let label = userName;
-
-        // Disabilita se già assegnato altrove
-        if (otherTeamOwner) {
-            label += ` (Già su ${otherTeamOwner.name})`;
-            opt.disabled = true;
-        }
-
-        opt.textContent = label;
-        if (uid === team.ownerUid) opt.selected = true; // Preseleziona owner corrente
-        select.appendChild(opt);
-    });
-
-    // Aggiungi host come fallback se non in connectedUsers
-    if (!state.roomData.connectedUsers.includes(state.user.uid)) {
-        const opt = document.createElement('option');
-        opt.value = state.user.uid;
-        opt.textContent = `${state.user.displayName || 'Me'} (Host)`;
-        if (state.user.uid === team.ownerUid) opt.selected = true;
-        select.appendChild(opt);
-    }
-
-    // Mostra modal
-    document.getElementById('modal-team-manager').classList.remove('hidden');
+    document.getElementById('tm-user-select').innerHTML = `<option value="">Nessuno</option>${options.join('')}`;
+    openModal('modal-team-manager');
 }
 
-/**
- * Configura gli event listener per la lobby
- * 
- * Collega il pulsante "Salva" della modal Team Manager.
- * Da chiamare durante l'inizializzazione dell'app.
- * 
- * @function setupLobbyListeners
- * @returns {void}
- * 
- * @example
- * // In app.js durante DOMContentLoaded
- * setupLobbyListeners();
- */
+async function saveTeamManager(e) {
+    e.preventDefault();
+    const teamId = document.getElementById('tm-team-id').value;
+    const uid = document.getElementById('tm-user-select').value || null;
+    const teams = structuredClone(state.roomData.teams);
+    const team = teams.find((t) => t.id === teamId);
+    if (!team) return;
+    team.name = document.getElementById('tm-team-name').value.trim() || team.name;
+    team.color = document.querySelector('input[name="tm-color"]:checked')?.value || team.color || null;
+    team.ownerUid = uid;
+    team.ownerName = uid ? nameOf(uid) : null;
+    if (await saveTeams(teams, 'Squadra aggiornata.')) closeModal('modal-team-manager');
+}
+
 export function setupLobbyListeners() {
-    document.getElementById('btn-tm-save').addEventListener('click', saveTeamManager);
+    document.getElementById('form-team-manager').addEventListener('submit', saveTeamManager);
+
+    document.getElementById('lobby-connected-list').addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-uid]');
+        if (!btn || !state.isHost) return;
+        state.selectedUserUid = state.selectedUserUid === btn.dataset.uid ? null : btn.dataset.uid;
+        renderLobby(state.roomData);
+        // on a phone the slots are below the list: bring them up
+        if (state.selectedUserUid && matchMedia('(max-width: 879px)').matches) document.getElementById('lobby-teams-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    const grid = document.getElementById('lobby-teams-grid');
+    grid.addEventListener('click', async (e) => {
+        const edit = e.target.closest('[data-edit]');
+        if (edit) return openTeamManager(edit.dataset.edit);
+        const assign = e.target.closest('[data-assign]');
+        if (!assign || !state.selectedUserUid) return;
+        const teams = structuredClone(state.roomData.teams);
+        const team = teams[+assign.dataset.assign];
+        team.ownerUid = state.selectedUserUid;
+        team.ownerName = nameOf(state.selectedUserUid);
+        state.selectedUserUid = null;
+        await saveTeams(teams);
+    });
+    grid.addEventListener('change', (e) => {
+        if (!e.target.classList.contains('team-name-edit') || !state.isHost) return;
+        const name = e.target.value.trim();
+        if (!name) return renderLobby(state.roomData);
+        const teams = structuredClone(state.roomData.teams);
+        teams[+e.target.dataset.index].name = name;
+        saveTeams(teams);
+    });
+
+    // the team columns of the draft open the same dialog
+    document.getElementById('teams-matrix').addEventListener('click', (e) => {
+        const head = e.target.closest('[data-edit]');
+        if (head) openTeamManager(head.dataset.edit);
+    });
 }

@@ -1,61 +1,42 @@
-name: Update Players Database
+name: Update players
 
 on:
   schedule:
-    # Ogni giorno alle 07:00 UTC (09:00 ora italiana)
-    - cron: "0 7 * * *"
-  # Permette di lanciare il workflow manualmente da GitHub
+    - cron: "0 7 * * *"   # every day, 09:00 in Italy (08:00 in winter)
   workflow_dispatch:
-
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   update-players:
     runs-on: ubuntu-latest
     permissions:
-      contents: write   # necessario per il git push di players.js
+      contents: write   # to push js/data/players.js
 
     steps:
-      - name: Checkout del repository
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v4
 
-      - name: Setup Python 3.12
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: Installa dipendenze Python
-        run: |
-          pip install requests openpyxl
+      - run: pip install requests openpyxl
 
-      - name: Download Excel da Fantacalcio.it
+      - name: Download the price list of the current season
         env:
           FANTACALCIO_USERNAME: ${{ secrets.FANTACALCIO_USERNAME }}
           FANTACALCIO_PASSWORD: ${{ secrets.FANTACALCIO_PASSWORD }}
-        run: |
-          python -u scripts/download_excel.py
+        run: python -u scripts/download_excel.py
 
-      - name: Verifica che il file Excel sia stato scaricato
+      - name: Convert to js/data/players.js
+        run: python -u scripts/convert_excel_to_js.py
+
+      - name: Commit only when the players changed, not just the date
         run: |
-          if [ -f "scripts/Quotazioni_Fantacalcio_Stagione_2025_26.xlsx" ]; then
-            echo "✅ File Excel trovato"
-            ls -lh scripts/Quotazioni_Fantacalcio_Stagione_2025_26.xlsx
-          else
-            echo "❌ File Excel NON trovato - il download è fallito"
-            exit 1
+          if git diff --quiet -I'playersLastUpdated' -- js/data/players.js; then
+            echo "No changes in the price list."
+            exit 0
           fi
-
-      - name: Converti Excel in JS
-        run: |
-          python -u scripts/convert_excel_to_js.py
-
-      - name: Commit e push di players.js aggiornato
-        run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add js/data/players.js
-          git diff --cached --quiet || git commit -m "chore: aggiornamento automatico players.js [$(date +'%Y-%m-%d')]"
+          git commit -m "Players and prices updated from Fantacalcio.it ($(date +'%Y-%m-%d'))"
           git push

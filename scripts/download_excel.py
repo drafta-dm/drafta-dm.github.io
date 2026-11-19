@@ -1,111 +1,72 @@
 """
-Script per scaricare le Quotazioni Fantacalcio da fantacalcio.it
-usando l'API REST del sito (niente browser, niente Playwright).
+Downloads the Fantacalcio.it price list (Excel) for the current season.
 
-Utilizzo:
-  python scripts/download_excel.py
+The season id is read from the public price page, so the script follows the new season
+by itself (it was stuck on 2025/26 with the id written in the code).
 
-Variabili d'ambiente:
-  FANTACALCIO_USERNAME   (default: laravalafava)
-  FANTACALCIO_PASSWORD   (default: laravalafava)
+Usage:  FANTACALCIO_USERNAME=... FANTACALCIO_PASSWORD=... python scripts/download_excel.py
+Writes: scripts/quotazioni.xlsx and scripts/season.txt
 """
 
 import os
+import re
 import sys
 import requests
 
 BASE_URL = "https://www.fantacalcio.it"
-LOGIN_ENDPOINT = f"{BASE_URL}/api/v1/User/login"
-DOWNLOAD_ENDPOINT = f"{BASE_URL}/api/v1/Excel/prices/20/1"
-
+HERE = os.path.dirname(os.path.abspath(__file__))
 HEADERS = {
-    "User-Agent": (
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-        "AppleWebKit/537.36 (KHTML, like Gecko) "
-        "Chrome/124.0.0.0 Safari/537.36"
-    ),
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
     "Accept": "application/json, text/plain, */*",
-    "Accept-Language": "it-IT,it;q=0.9,en-US;q=0.8",
-    "Content-Type": "application/json",
+    "Accept-Language": "it-IT,it;q=0.9",
     "Origin": BASE_URL,
     "Referer": f"{BASE_URL}/login",
 }
 
 
-def download():
-    username = os.environ.get("FANTACALCIO_USERNAME", "laravalafava")
-    password = os.environ.get("FANTACALCIO_PASSWORD", "laravalafava")
+def fail(msg):
+    print(f"[ERRORE] {msg}", flush=True)
+    sys.exit(1)
 
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    target_excel = os.path.join(script_dir, "Quotazioni_Fantacalcio_Stagione_2025_26.xlsx")
+
+def current_season(session):
+    page = session.get(f"{BASE_URL}/quotazioni-fantacalcio", timeout=30).text
+    found = re.findall(r"Excel/prices/(\d+)/1", page)
+    if not found:
+        fail("id della stagione non trovato nella pagina delle quotazioni")
+    return max(int(s) for s in found)
+
+
+def download():
+    username = os.environ.get("FANTACALCIO_USERNAME")
+    password = os.environ.get("FANTACALCIO_PASSWORD")
+    if not username or not password:
+        fail("servono FANTACALCIO_USERNAME e FANTACALCIO_PASSWORD")
 
     session = requests.Session()
     session.headers.update(HEADERS)
 
-    # ── 1. Login ────────────────────────────────────────────────────────────
-    print(f"Login come '{username}'...", flush=True)
-    login_resp = session.post(
-        LOGIN_ENDPOINT,
-        json={"username": username, "password": password},
-        timeout=30,
-    )
+    season = current_season(session)
+    print(f"Stagione Fantacalcio.it: {season}", flush=True)
 
-    print(f"  Status login: {login_resp.status_code}", flush=True)
+    login = session.post(f"{BASE_URL}/api/v1/User/login", json={"username": username, "password": password}, timeout=30)
+    if login.status_code != 200 or not login.json().get("success"):
+        fail(f"login non riuscita (HTTP {login.status_code})")
+    print("[OK] Login", flush=True)
 
-    if login_resp.status_code != 200:
-        print(f"❌ Login fallita (HTTP {login_resp.status_code})", flush=True)
-        print(f"   Risposta: {login_resp.text[:500]}", flush=True)
-        sys.exit(1)
+    res = session.get(f"{BASE_URL}/api/v1/Excel/prices/{season}/1", timeout=60,
+                      headers={"Accept": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, */*",
+                               "Referer": f"{BASE_URL}/quotazioni-fantacalcio"})
+    if res.status_code != 200 or "html" in res.headers.get("Content-Type", ""):
+        fail(f"download non riuscito (HTTP {res.status_code}, {res.headers.get('Content-Type')})")
+    if len(res.content) < 10_000:
+        fail(f"file troppo piccolo per essere il listone ({len(res.content)} byte)")
 
-    login_data = login_resp.json()
-    print(f"  Risposta login: {login_data}", flush=True)
-
-    if not login_data.get("success"):
-        errors = login_data.get("errors", [])
-        msg = "; ".join(e.get("message", str(e)) for e in errors) if errors else str(login_data)
-        print(f"❌ Login fallita: {msg}", flush=True)
-        sys.exit(1)
-
-    print("[OK] Login riuscita!", flush=True)
-
-    # -- 2. Download Excel ---------------------------------------------------
-    print(f"Download Excel da {DOWNLOAD_ENDPOINT}...", flush=True)
-    dl_resp = session.get(
-        DOWNLOAD_ENDPOINT,
-        stream=True,
-        timeout=60,
-        headers={
-            "Accept": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, */*",
-            "Referer": f"{BASE_URL}/quotazioni-fantacalcio",
-        },
-    )
-
-    print(f"  Status download: {dl_resp.status_code}", flush=True)
-    print(f"  Content-Type: {dl_resp.headers.get('Content-Type', 'N/A')}", flush=True)
-
-    if dl_resp.status_code != 200:
-        print(f"[ERRORE] Download fallito (HTTP {dl_resp.status_code})", flush=True)
-        print(f"   Risposta: {dl_resp.text[:500]}", flush=True)
-        sys.exit(1)
-
-    # Verifica che sia davvero un file Excel (non una pagina di errore HTML)
-    content_type = dl_resp.headers.get("Content-Type", "")
-    if "html" in content_type:
-        print("[ERRORE] Il server ha risposto con HTML invece che con un file Excel.", flush=True)
-        print("   Probabile sessione non autenticata o reindirizzamento al login.", flush=True)
-        sys.exit(1)
-
-    # Salva il file
-    with open(target_excel, "wb") as f:
-        for chunk in dl_resp.iter_content(chunk_size=8192):
-            f.write(chunk)
-
-    size = os.path.getsize(target_excel)
-    print(f"[OK] File salvato in: {target_excel} ({size:,} bytes)", flush=True)
-
-    if size < 10_000:
-        print("[WARN] Il file sembra troppo piccolo per essere un Excel valido.", flush=True)
-        sys.exit(1)
+    with open(os.path.join(HERE, "quotazioni.xlsx"), "wb") as f:
+        f.write(res.content)
+    with open(os.path.join(HERE, "season.txt"), "w") as f:
+        f.write(str(season))
+    print(f"[OK] scripts/quotazioni.xlsx ({len(res.content):,} byte)", flush=True)
 
 
 if __name__ == "__main__":
