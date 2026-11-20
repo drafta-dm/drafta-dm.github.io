@@ -50,15 +50,15 @@ function showDraftSummary(data) {
             <h2 id="summary-title" class="h-section">Rose <span class="serif grad">complete.</span></h2>
         </div>
         <div class="summary-highlights">
-            <div><span class="kicker">Chiamata più cara</span><strong>${top ? `${esc(top.name)} · ${top.cost}` : '–'}</strong><small>${esc(top?.team || '')}</small></div>
-            <div><span class="kicker">L'affare</span><strong>${cheap ? `${esc(cheap.name)} · ${cheap.cost}` : '–'}</strong><small>${esc(cheap?.team || '')}</small></div>
-            <div><span class="kicker">Valore totale</span><strong>${total} crediti</strong><small>media ${(total / (picks.length || 1)).toFixed(1)} a giocatore</small></div>
+            <div><span class="kicker">Chiamata più cara</span><strong>${top ? `${esc(top.name)} · ${esc(top.cost)}` : '–'}</strong><small>${esc(top?.team || '')}</small></div>
+            <div><span class="kicker">L'affare</span><strong>${cheap ? `${esc(cheap.name)} · ${esc(cheap.cost)}` : '–'}</strong><small>${esc(cheap?.team || '')}</small></div>
+            <div><span class="kicker">Valore totale</span><strong>${esc(total)} crediti</strong><small>media ${(total / (picks.length || 1)).toFixed(1)} a giocatore</small></div>
         </div>
         <div class="summary-grid">${stats.map((s, i) => `
             <article class="summary-team-card" style="--team:${esc(getTeamColor(s.id, data))}">
                 <span class="summary-rank">#${i + 1}</span>
                 <h3>${esc(s.name)}</h3>
-                <div class="summary-stats"><div><span>Valore rosa</span><b>${s.value}</b></div><div><span>Media</span><b>${s.avg}</b></div></div>
+                <div class="summary-stats"><div><span>Valore rosa</span><b>${esc(s.value)}</b></div><div><span>Media</span><b>${esc(s.avg)}</b></div></div>
                 <div class="summary-roles">${ROLES.map((r) => `<span class="role-${r}">${r} <b>${s.byRole[r]}</b></span>`).join('')}</div>
                 <div class="summary-best">${['D', 'C', 'A'].map((r) => `<div><b>Top ${r}:</b> ${esc(list(s[r]))}</div>`).join('')}</div>
             </article>`).join('')}

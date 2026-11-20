@@ -24,9 +24,9 @@ service cloud.firestore {
       allow update: if signedIn() && (
         // the host can do anything
         resource.data.hostId == request.auth.uid
-        // members play the draft, but don't touch host, password, rules or who is in
+        // members play the draft, but don't touch host, password, rules, who is in or anyone's name
         || (request.auth.uid in resource.data.participantIds
-            && unchanged(['hostId', 'password', 'settings', 'participantIds', 'joins']))
+            && unchanged(['hostId', 'password', 'settings', 'participantIds', 'participantNames', 'joins']))
         // joining: only yourself, with the room's password in joins.<uid>
         || (!(request.auth.uid in resource.data.participantIds)
             && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['participantIds', 'participantNames', 'joins'])

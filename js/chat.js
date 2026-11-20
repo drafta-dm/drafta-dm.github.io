@@ -34,7 +34,7 @@ function renderMessage(msg) {
     const mine = msg.uid === state.user?.uid;
     const time = msg.createdAt?.toDate ? msg.createdAt.toDate().toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' }) : '';
     return `<div class="chat-msg ${mine ? 'chat-msg-mine' : ''}">
-        <div class="chat-msg-header"><span class="chat-msg-name">${mine ? 'Tu' : esc(msg.displayName || 'Anonimo')}</span><span>${time}</span></div>
+        <div class="chat-msg-header"><span class="chat-msg-name">${mine ? 'Tu' : esc(state.roomData?.participantNames?.[msg.uid] || 'Giocatore')}</span><span>${time}</span></div>
         <div class="chat-msg-text">${esc(msg.text)}</div>
     </div>`;
 }

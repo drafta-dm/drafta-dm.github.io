@@ -35,16 +35,19 @@ exports.onRoomUpdate = onDocumentUpdated("rooms/{roomId}", async (event) => {
     const after = event.data.after.data();
     const roomId = event.params.roomId;
     const jobs = [];
+    // any member can write the room: notify only people who are in it, with short texts
+    const inRoom = (uid) => typeof uid === "string" && (after.participantIds || []).includes(uid);
+    const cut = (s, n) => String(s ?? "").slice(0, n);
 
     // compare the team on turn, not the index: with a dynamic order the index stays 0 every pick
     const teamOnTurn = (d) => d.status === "started" ? d.draftOrder?.[d.currentTurnIndex] : null;
     const teamId = teamOnTurn(after);
     if (teamId && teamId !== teamOnTurn(before)) {
         const team = after.teams?.find((t) => t.id === teamId);
-        if (team?.ownerUid) {
+        if (inRoom(team?.ownerUid)) {
             jobs.push(push(team.ownerUid, {
                 title: "Tocca a te",
-                body: `${team.name}: fai la tua scelta nel draft.`,
+                body: `${cut(team.name, 30)}: fai la tua scelta nel draft.`,
                 tag: "drafta-turn",
                 data: { type: "turn_notification", roomId, teamId },
             }));
@@ -52,10 +55,10 @@ exports.onRoomUpdate = onDocumentUpdated("rooms/{roomId}", async (event) => {
     }
 
     const n = after.notification;
-    if (n?.targetUid && n.timestamp !== before.notification?.timestamp) {
+    if (inRoom(n?.targetUid) && n.timestamp !== before.notification?.timestamp) {
         jobs.push(push(n.targetUid, {
             title: "Sollecito",
-            body: `${n.sender}: ${n.msg}`,
+            body: `${cut(n.sender, 40)}: ${cut(n.msg, 120)}`,
             tag: "drafta-nudge",
             data: { type: "nudge_notification", roomId },
         }));

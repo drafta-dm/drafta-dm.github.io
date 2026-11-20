@@ -55,7 +55,7 @@ export function renderTeamsMatrix(data) {
         const counts = countRoles(team.roster, state.byId);
         const owner = team.ownerUid;
         const head = `<span class="matrix-title">${active ? '<span class="now">di turno</span>' : ''}<h3>${esc(team.name)}</h3>${state.isHost ? icon('pencil') : ''}</span>
-            <span class="matrix-meta"><span title="Valore della rosa">${icon('gem')}${team.totalValue || 0}</span><span title="Giocatori in rosa">${icon('users')}${team.roster.length}/25</span></span>`;
+            <span class="matrix-meta"><span title="Valore della rosa">${icon('gem')}${esc(team.totalValue || 0)}</span><span title="Giocatori in rosa">${icon('users')}${team.roster.length}/25</span></span>`;
         return `<section class="matrix-column ${active ? 'active-turn' : ''}" style="--team:${esc(getTeamColor(team.id, data))}" aria-label="${esc(team.name)}${active ? ', di turno' : ''}">
             <div class="matrix-top">
                 ${state.isHost ? `<button class="matrix-header" data-edit="${esc(team.id)}" aria-label="Modifica ${esc(team.name)}">${head}</button>` : `<div class="matrix-header">${head}</div>`}
@@ -83,7 +83,7 @@ function rosterRows(roster, fresh) {
     return ROLES.flatMap((role) => Array.from({ length: SLOTS[role] }, (_, i) => {
         const p = byRole[role][i];
         return p
-            ? `<li class="roster-item role-${role} ${p.id === fresh ? 'is-new' : ''}"><span class="r">${role}</span><span class="roster-name">${esc(p.name)}</span><span class="roster-cost">${p.cost ?? ''}</span></li>`
+            ? `<li class="roster-item role-${role} ${p.id === fresh ? 'is-new' : ''}"><span class="r">${role}</span><span class="roster-name">${esc(p.name)}</span><span class="roster-cost">${esc(p.cost)}</span></li>`
             : `<li class="roster-item empty"><span class="r">${role}</span><span class="roster-name"></span></li>`;
     })).join('');
 }

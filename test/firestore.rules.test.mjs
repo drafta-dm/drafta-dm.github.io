@@ -39,6 +39,7 @@ await check('member changes password', assertFails(updateDoc(doc(as('bob'), 'roo
 await check('member kicks someone', assertFails(updateDoc(doc(as('bob'), 'rooms/R1'), { participantIds: ['bob'] })));
 await check('member takes over host', assertFails(updateDoc(doc(as('bob'), 'rooms/R1'), { hostId: 'bob' })));
 await check('member deletes room', assertFails(deleteDoc(doc(as('bob'), 'rooms/R1'))));
+await check('member renames someone else', assertFails(updateDoc(doc(as('bob'), 'rooms/R1'), { 'participantNames.host': 'pwned' })));
 await check('host changes settings', assertSucceeds(updateDoc(doc(as('host'), 'rooms/R1'), { 'settings.sortMode': 'strict' })));
 
 // chat and presence
