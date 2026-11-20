@@ -1,157 +1,89 @@
-export const playersLastUpdated = "2026-11-19T16:25:02Z";
+export const playersLastUpdated = "2026-11-20T15:57:45Z";
+
+export const playersSeason = 21;
 
 export const playersDB = [
     {
-        "id": "4431",
-        "name": "Carnesecchi",
-        "team": "Atalanta",
+        "id": "6482",
+        "name": "Mandas",
+        "team": "Lazio",
         "role": "P",
-        "cost": 80
-    },
-    {
-        "id": "2170",
-        "name": "Milinkovic-Savic V.",
-        "team": "Napoli",
-        "role": "P",
-        "cost": 37
+        "cost": 64
     },
     {
         "id": "5841",
         "name": "Svilar",
         "team": "Roma",
         "role": "P",
-        "cost": 105
+        "cost": 65
     },
     {
         "id": "6966",
         "name": "Butez",
         "team": "Como",
         "role": "P",
-        "cost": 95
+        "cost": 56
     },
     {
         "id": "4312",
         "name": "Maignan",
         "team": "Milan",
         "role": "P",
-        "cost": 88
-    },
-    {
-        "id": "5876",
-        "name": "Di Gregorio",
-        "team": "Juventus",
-        "role": "P",
-        "cost": 30
-    },
-    {
-        "id": "2134",
-        "name": "Falcone",
-        "team": "Lecce",
-        "role": "P",
-        "cost": 35
-    },
-    {
-        "id": "6462",
-        "name": "Okoye",
-        "team": "Udinese",
-        "role": "P",
-        "cost": 14
-    },
-    {
-        "id": "2428",
-        "name": "Sommer",
-        "team": "Inter",
-        "role": "P",
-        "cost": 60
+        "cost": 48
     },
     {
         "id": "4360",
         "name": "Caprile",
         "team": "Cagliari",
         "role": "P",
-        "cost": 20
+        "cost": 30
     },
     {
-        "id": "761",
-        "name": "Audero",
-        "team": "Cremonese",
-        "role": "P",
-        "cost": 11
-    },
-    {
-        "id": "2521",
-        "name": "De Gea",
-        "team": "Fiorentina",
+        "id": "6415",
+        "name": "Palmisani",
+        "team": "Frosinone",
         "role": "P",
         "cost": 28
     },
     {
-        "id": "4957",
-        "name": "Montip\u00f2",
-        "team": "Verona",
+        "id": "4964",
+        "name": "Vicario",
+        "team": "Juventus",
         "role": "P",
-        "cost": 5
+        "cost": 53
+    },
+    {
+        "id": "4431",
+        "name": "Carnesecchi",
+        "team": "Atalanta",
+        "role": "P",
+        "cost": 34
     },
     {
         "id": "133",
         "name": "Skorupski",
         "team": "Bologna",
         "role": "P",
-        "cost": 14
-    },
-    {
-        "id": "2814",
-        "name": "Provedel",
-        "team": "Lazio",
-        "role": "P",
-        "cost": 15
-    },
-    {
-        "id": "6641",
-        "name": "Suzuki",
-        "team": "Parma",
-        "role": "P",
-        "cost": 8
-    },
-    {
-        "id": "4236",
-        "name": "Muric",
-        "team": "Sassuolo",
-        "role": "P",
-        "cost": 6
+        "cost": 21
     },
     {
         "id": "7332",
         "name": "Bijlow",
         "team": "Genoa",
         "role": "P",
-        "cost": 10
+        "cost": 14
     },
     {
-        "id": "188",
-        "name": "Leali",
-        "team": "Genoa",
+        "id": "5116",
+        "name": "Martinez Jo.",
+        "team": "Inter",
         "role": "P",
-        "cost": 1
+        "cost": 51
     },
     {
-        "id": "6662",
-        "name": "Corvi",
-        "team": "Parma",
-        "role": "P",
-        "cost": 5
-    },
-    {
-        "id": "5320",
-        "name": "Paleari",
-        "team": "Torino",
-        "role": "P",
-        "cost": 9
-    },
-    {
-        "id": "218",
-        "name": "Perin",
-        "team": "Juventus",
+        "id": "6248",
+        "name": "Stankovic F.",
+        "team": "Venezia",
         "role": "P",
         "cost": 10
     },
@@ -160,19 +92,96 @@ export const playersDB = [
         "name": "Meret",
         "team": "Napoli",
         "role": "P",
+        "cost": 42
+    },
+    {
+        "id": "2170",
+        "name": "Milinkovic-Savic V.",
+        "team": "Napoli",
+        "role": "P",
+        "cost": 15
+    },
+    {
+        "id": "7411",
+        "name": "Daffara",
+        "team": "Parma",
+        "role": "P",
+        "cost": 15
+    },
+    {
+        "id": "610",
+        "name": "Gollini",
+        "team": "Roma",
+        "role": "P",
         "cost": 20
+    },
+    {
+        "id": "6534",
+        "name": "Perri",
+        "team": "Torino",
+        "role": "P",
+        "cost": 13
+    },
+    {
+        "id": "6344",
+        "name": "Sanchez Ro.",
+        "team": "Como",
+        "role": "P",
+        "cost": 4
+    },
+    {
+        "id": "7301",
+        "name": "Tornqvist",
+        "team": "Monza",
+        "role": "P",
+        "cost": 6
+    },
+    {
+        "id": "2521",
+        "name": "De Gea",
+        "team": "Fiorentina",
+        "role": "P",
+        "cost": 13
+    },
+    {
+        "id": "2134",
+        "name": "Falcone",
+        "team": "Lecce",
+        "role": "P",
+        "cost": 17
+    },
+    {
+        "id": "6462",
+        "name": "Okoye",
+        "team": "Udinese",
+        "role": "P",
+        "cost": 9
+    },
+    {
+        "id": "6662",
+        "name": "Corvi",
+        "team": "Parma",
+        "role": "P",
+        "cost": 2
+    },
+    {
+        "id": "2814",
+        "name": "Provedel",
+        "team": "Inter",
+        "role": "P",
+        "cost": 10
+    },
+    {
+        "id": "4236",
+        "name": "Muric",
+        "team": "Sassuolo",
+        "role": "P",
+        "cost": 2
     },
     {
         "id": "4867",
         "name": "Turati",
         "team": "Sassuolo",
-        "role": "P",
-        "cost": 5
-    },
-    {
-        "id": "2861",
-        "name": "Semper",
-        "team": "Pisa",
         "role": "P",
         "cost": 3
     },
@@ -181,49 +190,21 @@ export const playersDB = [
         "name": "Pessina Mas.",
         "team": "Bologna",
         "role": "P",
-        "cost": 2
+        "cost": 1
     },
     {
-        "id": "5116",
-        "name": "Martinez Jo.",
-        "team": "Inter",
+        "id": "4485",
+        "name": "Thiam",
+        "team": "Monza",
         "role": "P",
         "cost": 1
     },
     {
-        "id": "7337",
-        "name": "Motta",
-        "team": "Lazio",
-        "role": "P",
-        "cost": 15
-    },
-    {
-        "id": "2722",
-        "name": "Ravaglia F.",
-        "team": "Bologna",
+        "id": "6125",
+        "name": "Vasquez D.",
+        "team": "Roma",
         "role": "P",
         "cost": 3
-    },
-    {
-        "id": "6417",
-        "name": "Furlanetto",
-        "team": "Lazio",
-        "role": "P",
-        "cost": 1
-    },
-    {
-        "id": "6403",
-        "name": "Christensen O.",
-        "team": "Fiorentina",
-        "role": "P",
-        "cost": 1
-    },
-    {
-        "id": "2297",
-        "name": "Rossi F.",
-        "team": "Atalanta",
-        "role": "P",
-        "cost": 1
     },
     {
         "id": "4",
@@ -233,8 +214,15 @@ export const playersDB = [
         "cost": 1
     },
     {
-        "id": "4929",
-        "name": "Ciocci",
+        "id": "7533",
+        "name": "Happonen",
+        "team": "Bologna",
+        "role": "P",
+        "cost": 1
+    },
+    {
+        "id": "6650",
+        "name": "Sherri",
         "team": "Cagliari",
         "role": "P",
         "cost": 1
@@ -247,22 +235,43 @@ export const playersDB = [
         "cost": 1
     },
     {
-        "id": "6505",
-        "name": "Nava",
-        "team": "Cremonese",
+        "id": "6403",
+        "name": "Christensen O.",
+        "team": "Fiorentina",
         "role": "P",
         "cost": 1
     },
     {
-        "id": "6991",
-        "name": "Siegrist",
-        "team": "Genoa",
+        "id": "158",
+        "name": "Lezzerini",
+        "team": "Fiorentina",
+        "role": "P",
+        "cost": 1
+    },
+    {
+        "id": "7463",
+        "name": "Desplanches",
+        "team": "Frosinone",
+        "role": "P",
+        "cost": 1
+    },
+    {
+        "id": "7466",
+        "name": "Lolic",
+        "team": "Frosinone",
         "role": "P",
         "cost": 1
     },
     {
         "id": "219",
         "name": "Sommariva",
+        "team": "Genoa",
+        "role": "P",
+        "cost": 1
+    },
+    {
+        "id": "6569",
+        "name": "Stolz",
         "team": "Genoa",
         "role": "P",
         "cost": 1
@@ -282,16 +291,16 @@ export const playersDB = [
         "cost": 1
     },
     {
-        "id": "2401",
-        "name": "Fruchtl",
-        "team": "Lecce",
+        "id": "7337",
+        "name": "Motta",
+        "team": "Lazio",
         "role": "P",
         "cost": 1
     },
     {
-        "id": "6523",
-        "name": "Samooja",
-        "team": "Lecce",
+        "id": "7534",
+        "name": "Renzetti",
+        "team": "Lazio",
         "role": "P",
         "cost": 1
     },
@@ -310,6 +319,13 @@ export const playersDB = [
         "cost": 1
     },
     {
+        "id": "7475",
+        "name": "Strajnar",
+        "team": "Monza",
+        "role": "P",
+        "cost": 1
+    },
+    {
         "id": "2845",
         "name": "Contini",
         "team": "Napoli",
@@ -317,50 +333,29 @@ export const playersDB = [
         "cost": 1
     },
     {
-        "id": "5338",
-        "name": "Rinaldi",
-        "team": "Parma",
-        "role": "P",
-        "cost": 1
-    },
-    {
-        "id": "2271",
-        "name": "Nicolas",
-        "team": "Pisa",
-        "role": "P",
-        "cost": 1
-    },
-    {
-        "id": "574",
-        "name": "Scuffet",
-        "team": "Pisa",
-        "role": "P",
-        "cost": 1
-    },
-    {
-        "id": "7169",
-        "name": "Zelezny",
+        "id": "7048",
+        "name": "De Marzi",
         "team": "Roma",
         "role": "P",
         "cost": 1
     },
     {
-        "id": "610",
-        "name": "Gollini",
-        "team": "Roma",
-        "role": "P",
-        "cost": 1
-    },
-    {
-        "id": "2127",
-        "name": "Satalino",
+        "id": "4518",
+        "name": "Russo A.",
         "team": "Sassuolo",
         "role": "P",
         "cost": 1
     },
     {
-        "id": "7179",
-        "name": "Israel",
+        "id": "7457",
+        "name": "Mascardi",
+        "team": "Torino",
+        "role": "P",
+        "cost": 1
+    },
+    {
+        "id": "7363",
+        "name": "Siviero",
         "team": "Torino",
         "role": "P",
         "cost": 1
@@ -373,100 +368,93 @@ export const playersDB = [
         "cost": 1
     },
     {
-        "id": "6842",
-        "name": "Sava",
-        "team": "Udinese",
+        "id": "6671",
+        "name": "Grandi",
+        "team": "Venezia",
         "role": "P",
         "cost": 1
     },
     {
-        "id": "511",
-        "name": "Perilli",
-        "team": "Verona",
+        "id": "7531",
+        "name": "Pozzi",
+        "team": "Venezia",
         "role": "P",
         "cost": 1
     },
     {
-        "id": "7185",
-        "name": "Nunziante",
-        "team": "Udinese",
+        "id": "2127",
+        "name": "Satalino",
+        "team": "Sassuolo",
         "role": "P",
         "cost": 1
     },
     {
-        "id": "158",
-        "name": "Lezzerini",
-        "team": "Fiorentina",
+        "id": "7557",
+        "name": "Penev",
+        "team": "Lecce",
         "role": "P",
         "cost": 1
     },
     {
-        "id": "2211",
-        "name": "Silvestri",
-        "team": "Cremonese",
+        "id": "7560",
+        "name": "Pisseri",
+        "team": "Frosinone",
         "role": "P",
         "cost": 1
     },
     {
-        "id": "7236",
-        "name": "Toniolo",
-        "team": "Verona",
-        "role": "P",
-        "cost": 1
-    },
-    {
-        "id": "7261",
-        "name": "Cavlina",
-        "team": "Como",
-        "role": "P",
-        "cost": 1
-    },
-    {
-        "id": "7285",
-        "name": "Ferrante",
-        "team": "Napoli",
-        "role": "P",
-        "cost": 1
-    },
-    {
-        "id": "7042",
-        "name": "Calligaris",
-        "team": "Inter",
-        "role": "P",
-        "cost": 1
-    },
-    {
-        "id": "7301",
-        "name": "Tornqvist",
-        "team": "Como",
-        "role": "P",
-        "cost": 1
-    },
-    {
-        "id": "6650",
-        "name": "Sherri",
+        "id": "3",
+        "name": "Radunovic",
         "team": "Cagliari",
         "role": "P",
         "cost": 1
     },
     {
-        "id": "7363",
-        "name": "Siviero",
-        "team": "Torino",
+        "id": "4957",
+        "name": "Montipò",
+        "team": "Venezia",
         "role": "P",
         "cost": 1
     },
     {
-        "id": "7382",
-        "name": "Pannozzo",
-        "team": "Lazio",
+        "id": "4468",
+        "name": "Bleve",
+        "team": "Lecce",
         "role": "P",
         "cost": 1
     },
     {
-        "id": "7383",
-        "name": "Giacomone",
-        "team": "Lazio",
+        "id": "7603",
+        "name": "Grabara",
+        "team": "Juventus",
+        "role": "P",
+        "cost": 1
+    },
+    {
+        "id": "7611",
+        "name": "Mrozek",
+        "team": "Udinese",
+        "role": "P",
+        "cost": 1
+    },
+    {
+        "id": "2874",
+        "name": "Ghidotti",
+        "team": "Parma",
+        "role": "P",
+        "cost": 1
+    },
+    {
+        "id": "7626",
+        "name": "Pompei",
+        "team": "Atalanta",
+        "role": "P",
+        "cost": 1
+    },
+    {
+        "id": "283",
+        "name": "Neto",
+        "team": "Juventus",
         "role": "P",
         "cost": 1
     },
@@ -475,565 +463,586 @@ export const playersDB = [
         "name": "Dimarco",
         "team": "Inter",
         "role": "D",
-        "cost": 320
+        "cost": 135
     },
     {
         "id": "2788",
         "name": "Bremer",
         "team": "Juventus",
         "role": "D",
-        "cost": 74
-    },
-    {
-        "id": "5022",
-        "name": "Pavlovic",
-        "team": "Milan",
-        "role": "D",
-        "cost": 60
-    },
-    {
-        "id": "6832",
-        "name": "Palestra",
-        "team": "Cagliari",
-        "role": "D",
         "cost": 75
-    },
-    {
-        "id": "6893",
-        "name": "Kempf",
-        "team": "Como",
-        "role": "D",
-        "cost": 18
-    },
-    {
-        "id": "1852",
-        "name": "Spinazzola",
-        "team": "Napoli",
-        "role": "D",
-        "cost": 33
-    },
-    {
-        "id": "5526",
-        "name": "Scalvini",
-        "team": "Atalanta",
-        "role": "D",
-        "cost": 22
-    },
-    {
-        "id": "6217",
-        "name": "Bisseck",
-        "team": "Inter",
-        "role": "D",
-        "cost": 41
-    },
-    {
-        "id": "2296",
-        "name": "Mancini",
-        "team": "Roma",
-        "role": "D",
-        "cost": 54
-    },
-    {
-        "id": "5750",
-        "name": "Ostigard",
-        "team": "Genoa",
-        "role": "D",
-        "cost": 50
-    },
-    {
-        "id": "4976",
-        "name": "Kalulu",
-        "team": "Juventus",
-        "role": "D",
-        "cost": 68
-    },
-    {
-        "id": "4657",
-        "name": "Celik",
-        "team": "Roma",
-        "role": "D",
-        "cost": 14
-    },
-    {
-        "id": "7181",
-        "name": "Wesley",
-        "team": "Roma",
-        "role": "D",
-        "cost": 46
-    },
-    {
-        "id": "6956",
-        "name": "Solet",
-        "team": "Udinese",
-        "role": "D",
-        "cost": 55
-    },
-    {
-        "id": "2120",
-        "name": "Bastoni",
-        "team": "Inter",
-        "role": "D",
-        "cost": 40
-    },
-    {
-        "id": "4807",
-        "name": "Hermoso",
-        "team": "Roma",
-        "role": "D",
-        "cost": 25
-    },
-    {
-        "id": "6986",
-        "name": "Rensch",
-        "team": "Roma",
-        "role": "D",
-        "cost": 17
-    },
-    {
-        "id": "4159",
-        "name": "Akanji",
-        "team": "Inter",
-        "role": "D",
-        "cost": 64
-    },
-    {
-        "id": "554",
-        "name": "Zappacosta",
-        "team": "Atalanta",
-        "role": "D",
-        "cost": 18
-    },
-    {
-        "id": "5513",
-        "name": "Dumfries",
-        "team": "Inter",
-        "role": "D",
-        "cost": 56
-    },
-    {
-        "id": "4317",
-        "name": "N'Dicka",
-        "team": "Roma",
-        "role": "D",
-        "cost": 51
-    },
-    {
-        "id": "2160",
-        "name": "Gosens",
-        "team": "Fiorentina",
-        "role": "D",
-        "cost": 19
-    },
-    {
-        "id": "5514",
-        "name": "Vasquez",
-        "team": "Genoa",
-        "role": "D",
-        "cost": 26
-    },
-    {
-        "id": "6766",
-        "name": "Kelly L.",
-        "team": "Juventus",
-        "role": "D",
-        "cost": 27
-    },
-    {
-        "id": "4409",
-        "name": "Rrahmani",
-        "team": "Napoli",
-        "role": "D",
-        "cost": 45
-    },
-    {
-        "id": "5862",
-        "name": "Valeri",
-        "team": "Parma",
-        "role": "D",
-        "cost": 22
-    },
-    {
-        "id": "6485",
-        "name": "Kristensen T.",
-        "team": "Udinese",
-        "role": "D",
-        "cost": 14
-    },
-    {
-        "id": "7211",
-        "name": "Athekame",
-        "team": "Milan",
-        "role": "D",
-        "cost": 9
-    },
-    {
-        "id": "5678",
-        "name": "Holm",
-        "team": "Juventus",
-        "role": "D",
-        "cost": 8
-    },
-    {
-        "id": "4734",
-        "name": "Miranda J.",
-        "team": "Bologna",
-        "role": "D",
-        "cost": 25
-    },
-    {
-        "id": "4994",
-        "name": "Vojvoda",
-        "team": "Como",
-        "role": "D",
-        "cost": 12
-    },
-    {
-        "id": "6867",
-        "name": "Valle",
-        "team": "Como",
-        "role": "D",
-        "cost": 17
-    },
-    {
-        "id": "5885",
-        "name": "Dod\u00f2",
-        "team": "Fiorentina",
-        "role": "D",
-        "cost": 30
-    },
-    {
-        "id": "2593",
-        "name": "Martin",
-        "team": "Genoa",
-        "role": "D",
-        "cost": 11
-    },
-    {
-        "id": "5877",
-        "name": "Carlos Augusto",
-        "team": "Inter",
-        "role": "D",
-        "cost": 15
-    },
-    {
-        "id": "6989",
-        "name": "Tiago Gabriel",
-        "team": "Lecce",
-        "role": "D",
-        "cost": 25
-    },
-    {
-        "id": "4502",
-        "name": "Gallo",
-        "team": "Lecce",
-        "role": "D",
-        "cost": 15
-    },
-    {
-        "id": "6496",
-        "name": "Bartesaghi",
-        "team": "Milan",
-        "role": "D",
-        "cost": 15
-    },
-    {
-        "id": "6202",
-        "name": "Beukema",
-        "team": "Napoli",
-        "role": "D",
-        "cost": 10
-    },
-    {
-        "id": "2816",
-        "name": "Di Lorenzo",
-        "team": "Napoli",
-        "role": "D",
-        "cost": 28
-    },
-    {
-        "id": "6664",
-        "name": "Delprato",
-        "team": "Parma",
-        "role": "D",
-        "cost": 22
-    },
-    {
-        "id": "4263",
-        "name": "Kabasele",
-        "team": "Udinese",
-        "role": "D",
-        "cost": 9
     },
     {
         "id": "6869",
         "name": "Ramon",
         "team": "Como",
         "role": "D",
-        "cost": 23
+        "cost": 41
     },
     {
-        "id": "7220",
-        "name": "Belghali",
-        "team": "Verona",
+        "id": "7181",
+        "name": "Wesley",
+        "team": "Roma",
         "role": "D",
-        "cost": 12
+        "cost": 87
     },
     {
-        "id": "5427",
-        "name": "Gutierrez",
-        "team": "Napoli",
-        "role": "D",
-        "cost": 12
-    },
-    {
-        "id": "7329",
-        "name": "Obrador",
-        "team": "Torino",
-        "role": "D",
-        "cost": 16
-    },
-    {
-        "id": "4210",
-        "name": "Mina",
-        "team": "Cagliari",
-        "role": "D",
-        "cost": 12
-    },
-    {
-        "id": "5435",
-        "name": "Moreno Alb.",
-        "team": "Como",
-        "role": "D",
-        "cost": 10
-    },
-    {
-        "id": "5520",
-        "name": "Cambiaso",
-        "team": "Juventus",
-        "role": "D",
-        "cost": 17
-    },
-    {
-        "id": "5835",
-        "name": "Baschirotto",
-        "team": "Cremonese",
-        "role": "D",
-        "cost": 13
-    },
-    {
-        "id": "7143",
-        "name": "Angori",
-        "team": "Pisa",
-        "role": "D",
-        "cost": 13
-    },
-    {
-        "id": "6642",
-        "name": "Coco",
-        "team": "Torino",
-        "role": "D",
-        "cost": 12
-    },
-    {
-        "id": "7219",
-        "name": "Bernasconi",
-        "team": "Atalanta",
-        "role": "D",
-        "cost": 12
-    },
-    {
-        "id": "393",
-        "name": "Luperto",
-        "team": "Cremonese",
-        "role": "D",
-        "cost": 12
-    },
-    {
-        "id": "4433",
-        "name": "Zortea",
+        "id": "4734",
+        "name": "Miranda J.",
         "team": "Bologna",
         "role": "D",
-        "cost": 12
+        "cost": 41
+    },
+    {
+        "id": "6531",
+        "name": "Jimenez A.",
+        "team": "Fiorentina",
+        "role": "D",
+        "cost": 40
+    },
+    {
+        "id": "5877",
+        "name": "Carlos Augusto",
+        "team": "Inter",
+        "role": "D",
+        "cost": 45
+    },
+    {
+        "id": "5620",
+        "name": "Tavares N.",
+        "team": "Lazio",
+        "role": "D",
+        "cost": 95
     },
     {
         "id": "5833",
         "name": "Gila",
-        "team": "Lazio",
-        "role": "D",
-        "cost": 16
-    },
-    {
-        "id": "460",
-        "name": "Romagnoli",
-        "team": "Lazio",
-        "role": "D",
-        "cost": 16
-    },
-    {
-        "id": "2188",
-        "name": "Marusic",
-        "team": "Lazio",
-        "role": "D",
-        "cost": 12
-    },
-    {
-        "id": "4751",
-        "name": "Tomori",
         "team": "Milan",
+        "role": "D",
+        "cost": 35
+    },
+    {
+        "id": "7414",
+        "name": "Kaiki",
+        "team": "Como",
         "role": "D",
         "cost": 21
     },
     {
-        "id": "2724",
-        "name": "Buongiorno",
-        "team": "Napoli",
-        "role": "D",
-        "cost": 13
-    },
-    {
-        "id": "6663",
-        "name": "Circati",
-        "team": "Parma",
-        "role": "D",
-        "cost": 13
-    },
-    {
-        "id": "7155",
-        "name": "Muharemovic",
-        "team": "Sassuolo",
-        "role": "D",
-        "cost": 18
-    },
-    {
-        "id": "4665",
-        "name": "Maripan",
-        "team": "Torino",
-        "role": "D",
-        "cost": 8
-    },
-    {
-        "id": "6631",
-        "name": "Ghilardi",
+        "id": "4807",
+        "name": "Hermoso",
         "team": "Roma",
         "role": "D",
-        "cost": 11
+        "cost": 45
     },
     {
-        "id": "6672",
-        "name": "Idzes",
-        "team": "Sassuolo",
+        "id": "4998",
+        "name": "Molina N.",
+        "team": "Roma",
         "role": "D",
-        "cost": 12
+        "cost": 42
     },
     {
-        "id": "4137",
-        "name": "Diego Carlos",
-        "team": "Como",
+        "id": "6217",
+        "name": "Bisseck",
+        "team": "Inter",
         "role": "D",
-        "cost": 12
+        "cost": 29
     },
     {
-        "id": "6550",
-        "name": "Garcia U.",
-        "team": "Sassuolo",
+        "id": "7485",
+        "name": "Mangas",
+        "team": "Monza",
+        "role": "D",
+        "cost": 20
+    },
+    {
+        "id": "5555",
+        "name": "Kamara H.",
+        "team": "Udinese",
         "role": "D",
         "cost": 17
     },
     {
-        "id": "787",
-        "name": "Djimsiti",
-        "team": "Atalanta",
+        "id": "6821",
+        "name": "Hainaut",
+        "team": "Venezia",
         "role": "D",
-        "cost": 13
+        "cost": 30
     },
     {
-        "id": "2640",
-        "name": "Kolasinac",
-        "team": "Atalanta",
+        "id": "4705",
+        "name": "Balerdi",
+        "team": "Roma",
         "role": "D",
-        "cost": 12
+        "cost": 34
     },
     {
-        "id": "6042",
-        "name": "Lucum\u00ec",
-        "team": "Bologna",
+        "id": "7220",
+        "name": "Belghali",
+        "team": "Torino",
         "role": "D",
-        "cost": 12
+        "cost": 28
     },
     {
-        "id": "5701",
-        "name": "Obert",
-        "team": "Cagliari",
-        "role": "D",
-        "cost": 13
-    },
-    {
-        "id": "6660",
-        "name": "Marcandalli",
-        "team": "Genoa",
-        "role": "D",
-        "cost": 12
-    },
-    {
-        "id": "6814",
-        "name": "Norton-Cuffy",
-        "team": "Genoa",
+        "id": "7469",
+        "name": "Bracaglia",
+        "team": "Frosinone",
         "role": "D",
         "cost": 14
+    },
+    {
+        "id": "6238",
+        "name": "Oyono A.",
+        "team": "Frosinone",
+        "role": "D",
+        "cost": 12
+    },
+    {
+        "id": "2120",
+        "name": "Bastoni",
+        "team": "Inter",
+        "role": "D",
+        "cost": 37
+    },
+    {
+        "id": "6989",
+        "name": "Tiago Gabriel",
+        "team": "Lecce",
+        "role": "D",
+        "cost": 21
+    },
+    {
+        "id": "4409",
+        "name": "Rrahmani",
+        "team": "Napoli",
+        "role": "D",
+        "cost": 44
+    },
+    {
+        "id": "2296",
+        "name": "Mancini",
+        "team": "Roma",
+        "role": "D",
+        "cost": 49
+    },
+    {
+        "id": "4317",
+        "name": "Ndicka",
+        "team": "Roma",
+        "role": "D",
+        "cost": 34
+    },
+    {
+        "id": "4159",
+        "name": "Akanji",
+        "team": "Inter",
+        "role": "D",
+        "cost": 29
+    },
+    {
+        "id": "5022",
+        "name": "Pavlovic",
+        "team": "Milan",
+        "role": "D",
+        "cost": 53
+    },
+    {
+        "id": "2816",
+        "name": "Di Lorenzo",
+        "team": "Napoli",
+        "role": "D",
+        "cost": 32
+    },
+    {
+        "id": "5498",
+        "name": "Casale",
+        "team": "Bologna",
+        "role": "D",
+        "cost": 7
+    },
+    {
+        "id": "4976",
+        "name": "Kalulu",
+        "team": "Juventus",
+        "role": "D",
+        "cost": 24
+    },
+    {
+        "id": "7131",
+        "name": "Floriani Mussolini",
+        "team": "Lazio",
+        "role": "D",
+        "cost": 20
+    },
+    {
+        "id": "5851",
+        "name": "Doig",
+        "team": "Sassuolo",
+        "role": "D",
+        "cost": 12
+    },
+    {
+        "id": "6495",
+        "name": "Comuzzo",
+        "team": "Torino",
+        "role": "D",
+        "cost": 13
+    },
+    {
+        "id": "6537",
+        "name": "Goglichidze",
+        "team": "Monza",
+        "role": "D",
+        "cost": 5
+    },
+    {
+        "id": "7467",
+        "name": "Calvani",
+        "team": "Frosinone",
+        "role": "D",
+        "cost": 16
     },
     {
         "id": "7012",
         "name": "Provstgaard",
         "team": "Lazio",
         "role": "D",
+        "cost": 18
+    },
+    {
+        "id": "6642",
+        "name": "Coco",
+        "team": "Torino",
+        "role": "D",
+        "cost": 13
+    },
+    {
+        "id": "6021",
+        "name": "Abankwah",
+        "team": "Udinese",
+        "role": "D",
         "cost": 12
     },
     {
-        "id": "5812",
-        "name": "Terracciano F.",
-        "team": "Cremonese",
+        "id": "6727",
+        "name": "Couto",
+        "team": "Como",
+        "role": "D",
+        "cost": 22
+    },
+    {
+        "id": "5675",
+        "name": "Theate",
+        "team": "Bologna",
         "role": "D",
         "cost": 11
     },
     {
-        "id": "4772",
-        "name": "Angelino",
-        "team": "Roma",
+        "id": "2404",
+        "name": "Alaba",
+        "team": "Udinese",
+        "role": "D",
+        "cost": 12
+    },
+    {
+        "id": "6893",
+        "name": "Kempf",
+        "team": "Como",
+        "role": "D",
+        "cost": 15
+    },
+    {
+        "id": "6867",
+        "name": "Valle",
+        "team": "Como",
+        "role": "D",
+        "cost": 20
+    },
+    {
+        "id": "5750",
+        "name": "Ostigard",
+        "team": "Genoa",
+        "role": "D",
+        "cost": 26
+    },
+    {
+        "id": "5831",
+        "name": "Gatti",
+        "team": "Juventus",
+        "role": "D",
+        "cost": 12
+    },
+    {
+        "id": "4817",
+        "name": "Pedraza",
+        "team": "Lazio",
         "role": "D",
         "cost": 7
     },
     {
-        "id": "6426",
-        "name": "Pedersen",
-        "team": "Torino",
+        "id": "6990",
+        "name": "Veiga D.",
+        "team": "Lecce",
         "role": "D",
         "cost": 12
+    },
+    {
+        "id": "4502",
+        "name": "Gallo",
+        "team": "Lecce",
+        "role": "D",
+        "cost": 12
+    },
+    {
+        "id": "7238",
+        "name": "Kouadio",
+        "team": "Monza",
+        "role": "D",
+        "cost": 13
+    },
+    {
+        "id": "5838",
+        "name": "Birindelli",
+        "team": "Monza",
+        "role": "D",
+        "cost": 12
+    },
+    {
+        "id": "5862",
+        "name": "Valeri",
+        "team": "Parma",
+        "role": "D",
+        "cost": 20
+    },
+    {
+        "id": "6631",
+        "name": "Ghilardi",
+        "team": "Roma",
+        "role": "D",
+        "cost": 15
+    },
+    {
+        "id": "6956",
+        "name": "Solet",
+        "team": "Udinese",
+        "role": "D",
+        "cost": 20
+    },
+    {
+        "id": "5641",
+        "name": "Chalobah T.",
+        "team": "Como",
+        "role": "D",
+        "cost": 15
+    },
+    {
+        "id": "5982",
+        "name": "Spence",
+        "team": "Inter",
+        "role": "D",
+        "cost": 17
+    },
+    {
+        "id": "7564",
+        "name": "Leysen F.",
+        "team": "Sassuolo",
+        "role": "D",
+        "cost": 4
+    },
+    {
+        "id": "7599",
+        "name": "Lulli",
+        "team": "Roma",
+        "role": "D",
+        "cost": 20
     },
     {
         "id": "6047",
         "name": "Ehizibue",
-        "team": "Udinese",
+        "team": "Genoa",
+        "role": "D",
+        "cost": 9
+    },
+    {
+        "id": "5526",
+        "name": "Scalvini",
+        "team": "Atalanta",
+        "role": "D",
+        "cost": 16
+    },
+    {
+        "id": "4433",
+        "name": "Zortea",
+        "team": "Bologna",
+        "role": "D",
+        "cost": 15
+    },
+    {
+        "id": "7274",
+        "name": "Zè Pedro",
+        "team": "Cagliari",
+        "role": "D",
+        "cost": 13
+    },
+    {
+        "id": "7175",
+        "name": "Joao Mario",
+        "team": "Fiorentina",
+        "role": "D",
+        "cost": 13
+    },
+    {
+        "id": "4952",
+        "name": "Monterisi",
+        "team": "Frosinone",
         "role": "D",
         "cost": 10
     },
     {
-        "id": "6639",
-        "name": "Frese",
-        "team": "Verona",
+        "id": "6320",
+        "name": "Doekhi",
+        "team": "Lazio",
+        "role": "D",
+        "cost": 11
+    },
+    {
+        "id": "4751",
+        "name": "Tomori",
+        "team": "Milan",
+        "role": "D",
+        "cost": 10
+    },
+    {
+        "id": "5739",
+        "name": "De Winter",
+        "team": "Milan",
+        "role": "D",
+        "cost": 16
+    },
+    {
+        "id": "5010",
+        "name": "Ismajli",
+        "team": "Torino",
+        "role": "D",
+        "cost": 9
+    },
+    {
+        "id": "4375",
+        "name": "Terzic",
+        "team": "Frosinone",
+        "role": "D",
+        "cost": 5
+    },
+    {
+        "id": "2640",
+        "name": "Kolasinac",
+        "team": "Atalanta",
+        "role": "D",
+        "cost": 10
+    },
+    {
+        "id": "6042",
+        "name": "Lucumì",
+        "team": "Juventus",
+        "role": "D",
+        "cost": 14
+    },
+    {
+        "id": "4210",
+        "name": "Mina",
+        "team": "Cagliari",
+        "role": "D",
+        "cost": 11
+    },
+    {
+        "id": "5603",
+        "name": "Pongracic",
+        "team": "Fiorentina",
+        "role": "D",
+        "cost": 8
+    },
+    {
+        "id": "5514",
+        "name": "Vasquez",
+        "team": "Genoa",
+        "role": "D",
+        "cost": 18
+    },
+    {
+        "id": "2514",
+        "name": "Stones",
+        "team": "Inter",
+        "role": "D",
+        "cost": 8
+    },
+    {
+        "id": "4657",
+        "name": "Celik",
+        "team": "Juventus",
+        "role": "D",
+        "cost": 11
+    },
+    {
+        "id": "6638",
+        "name": "Marin R.",
+        "team": "Napoli",
+        "role": "D",
+        "cost": 22
+    },
+    {
+        "id": "1852",
+        "name": "Spinazzola",
+        "team": "Napoli",
+        "role": "D",
+        "cost": 11
+    },
+    {
+        "id": "5481",
+        "name": "Mazzocchi",
+        "team": "Venezia",
+        "role": "D",
+        "cost": 10
+    },
+    {
+        "id": "6664",
+        "name": "Delprato",
+        "team": "Parma",
+        "role": "D",
+        "cost": 18
+    },
+    {
+        "id": "6925",
+        "name": "Palma",
+        "team": "Udinese",
+        "role": "D",
+        "cost": 6
+    },
+    {
+        "id": "6681",
+        "name": "Sagrado",
+        "team": "Venezia",
+        "role": "D",
+        "cost": 3
+    },
+    {
+        "id": "7154",
+        "name": "Odenthal",
+        "team": "Sassuolo",
+        "role": "D",
+        "cost": 5
+    },
+    {
+        "id": "7580",
+        "name": "Sutalo J.",
+        "team": "Lazio",
         "role": "D",
         "cost": 12
     },
     {
-        "id": "6046",
-        "name": "Hien",
-        "team": "Atalanta",
-        "role": "D",
-        "cost": 10
-    },
-    {
-        "id": "5578",
-        "name": "Kossounou",
-        "team": "Atalanta",
+        "id": "6319",
+        "name": "Leite",
+        "team": "Lazio",
         "role": "D",
         "cost": 8
     },
@@ -1042,567 +1051,14 @@ export const playersDB = [
         "name": "Bellanova",
         "team": "Atalanta",
         "role": "D",
-        "cost": 11
-    },
-    {
-        "id": "4461",
-        "name": "Zappa",
-        "team": "Cagliari",
-        "role": "D",
-        "cost": 8
-    },
-    {
-        "id": "7014",
-        "name": "Smolcic I.",
-        "team": "Como",
-        "role": "D",
-        "cost": 12
-    },
-    {
-        "id": "6013",
-        "name": "Barbieri",
-        "team": "Cremonese",
-        "role": "D",
-        "cost": 10
-    },
-    {
-        "id": "4378",
-        "name": "Ranieri L.",
-        "team": "Fiorentina",
-        "role": "D",
-        "cost": 10
-    },
-    {
-        "id": "5449",
-        "name": "Parisi",
-        "team": "Fiorentina",
-        "role": "D",
-        "cost": 12
-    },
-    {
-        "id": "5739",
-        "name": "De Winter",
-        "team": "Milan",
-        "role": "D",
-        "cost": 10
-    },
-    {
-        "id": "6039",
-        "name": "Cabal",
-        "team": "Juventus",
-        "role": "D",
-        "cost": 9
-    },
-    {
-        "id": "7175",
-        "name": "Joao Mario",
-        "team": "Bologna",
-        "role": "D",
-        "cost": 12
-    },
-    {
-        "id": "5620",
-        "name": "Tavares N.",
-        "team": "Lazio",
-        "role": "D",
         "cost": 18
     },
     {
-        "id": "5527",
-        "name": "Zanoli",
-        "team": "Udinese",
-        "role": "D",
-        "cost": 12
-    },
-    {
-        "id": "2273",
-        "name": "Caracciolo A.",
-        "team": "Pisa",
-        "role": "D",
-        "cost": 10
-    },
-    {
-        "id": "5010",
-        "name": "Ismajli",
-        "team": "Torino",
-        "role": "D",
-        "cost": 14
-    },
-    {
-        "id": "5555",
-        "name": "Kamara H.",
-        "team": "Udinese",
-        "role": "D",
-        "cost": 15
-    },
-    {
-        "id": "5532",
-        "name": "Bradaric",
-        "team": "Verona",
-        "role": "D",
-        "cost": 11
-    },
-    {
-        "id": "7240",
-        "name": "Siebert",
-        "team": "Lecce",
-        "role": "D",
-        "cost": 14
-    },
-    {
-        "id": "7352",
-        "name": "Edmundsson",
-        "team": "Verona",
-        "role": "D",
-        "cost": 12
-    },
-    {
-        "id": "7125",
-        "name": "Idrissi R.",
-        "team": "Cagliari",
-        "role": "D",
-        "cost": 9
-    },
-    {
-        "id": "6230",
-        "name": "Dossena",
-        "team": "Cagliari",
-        "role": "D",
-        "cost": 8
-    },
-    {
-        "id": "6896",
-        "name": "Van Der Brempt",
-        "team": "Como",
-        "role": "D",
-        "cost": 8
-    },
-    {
-        "id": "7131",
-        "name": "Floriani Mussolini",
-        "team": "Cremonese",
-        "role": "D",
-        "cost": 12
-    },
-    {
-        "id": "5603",
-        "name": "Pongracic",
-        "team": "Fiorentina",
-        "role": "D",
-        "cost": 12
-    },
-    {
-        "id": "513",
-        "name": "Acerbi",
-        "team": "Inter",
-        "role": "D",
-        "cost": 10
-    },
-    {
-        "id": "5831",
-        "name": "Gatti",
-        "team": "Juventus",
-        "role": "D",
-        "cost": 8
-    },
-    {
-        "id": "2728",
-        "name": "Pellegrini Lu.",
-        "team": "Lazio",
-        "role": "D",
-        "cost": 9
-    },
-    {
-        "id": "6990",
-        "name": "Veiga D.",
-        "team": "Lecce",
-        "role": "D",
-        "cost": 13
-    },
-    {
-        "id": "4401",
-        "name": "Gabbia",
-        "team": "Milan",
-        "role": "D",
-        "cost": 14
-    },
-    {
-        "id": "5840",
-        "name": "Olivera",
-        "team": "Napoli",
-        "role": "D",
-        "cost": 14
-    },
-    {
-        "id": "5307",
-        "name": "Valenti",
-        "team": "Parma",
-        "role": "D",
-        "cost": 10
-    },
-    {
-        "id": "7139",
-        "name": "Canestrelli",
-        "team": "Pisa",
-        "role": "D",
-        "cost": 11
-    },
-    {
-        "id": "4374",
-        "name": "Walukiewicz",
-        "team": "Sassuolo",
-        "role": "D",
-        "cost": 12
-    },
-    {
-        "id": "5820",
-        "name": "Bertola",
-        "team": "Udinese",
-        "role": "D",
-        "cost": 9
-    },
-    {
-        "id": "5994",
-        "name": "Ebosse",
-        "team": "Torino",
-        "role": "D",
-        "cost": 7
-    },
-    {
-        "id": "697",
-        "name": "Cuadrado",
-        "team": "Pisa",
-        "role": "D",
-        "cost": 8
-    },
-    {
-        "id": "7018",
-        "name": "Nelsson",
-        "team": "Verona",
-        "role": "D",
-        "cost": 11
-    },
-    {
-        "id": "7235",
-        "name": "Troilo",
-        "team": "Parma",
-        "role": "D",
-        "cost": 12
-    },
-    {
-        "id": "7274",
-        "name": "Z\u00e8 Pedro",
-        "team": "Cagliari",
-        "role": "D",
-        "cost": 11
-    },
-    {
-        "id": "6916",
-        "name": "Ahanor",
+        "id": "554",
+        "name": "Zappacosta",
         "team": "Atalanta",
         "role": "D",
-        "cost": 10
-    },
-    {
-        "id": "7068",
-        "name": "Vitik",
-        "team": "Bologna",
-        "role": "D",
-        "cost": 7
-    },
-    {
-        "id": "612",
-        "name": "Bianchetti",
-        "team": "Cremonese",
-        "role": "D",
-        "cost": 9
-    },
-    {
-        "id": "7130",
-        "name": "Folino",
-        "team": "Cremonese",
-        "role": "D",
-        "cost": 8
-    },
-    {
-        "id": "770",
-        "name": "Pezzella Giu.",
-        "team": "Cremonese",
-        "role": "D",
-        "cost": 10
-    },
-    {
-        "id": "6495",
-        "name": "Comuzzo",
-        "team": "Fiorentina",
-        "role": "D",
-        "cost": 11
-    },
-    {
-        "id": "256",
-        "name": "Juan Jesus",
-        "team": "Napoli",
-        "role": "D",
-        "cost": 10
-    },
-    {
-        "id": "5481",
-        "name": "Mazzocchi",
-        "team": "Napoli",
-        "role": "D",
-        "cost": 7
-    },
-    {
-        "id": "5851",
-        "name": "Doig",
-        "team": "Sassuolo",
-        "role": "D",
-        "cost": 10
-    },
-    {
-        "id": "4385",
-        "name": "Lazaro",
-        "team": "Torino",
-        "role": "D",
-        "cost": 11
-    },
-    {
-        "id": "6992",
-        "name": "Oyegoke",
-        "team": "Verona",
-        "role": "D",
-        "cost": 4
-    },
-    {
-        "id": "7212",
-        "name": "Heggem",
-        "team": "Bologna",
-        "role": "D",
-        "cost": 12
-    },
-    {
-        "id": "7255",
-        "name": "Britschgi",
-        "team": "Parma",
-        "role": "D",
-        "cost": 8
-    },
-    {
-        "id": "7268",
-        "name": "Rodriguez Ju.",
-        "team": "Cagliari",
-        "role": "D",
-        "cost": 10
-    },
-    {
-        "id": "6665",
-        "name": "Coulibaly W.",
-        "team": "Sassuolo",
-        "role": "D",
-        "cost": 4
-    },
-    {
-        "id": "487",
-        "name": "De Silvestri",
-        "team": "Bologna",
-        "role": "D",
-        "cost": 8
-    },
-    {
-        "id": "791",
-        "name": "Sabelli",
-        "team": "Genoa",
-        "role": "D",
-        "cost": 10
-    },
-    {
-        "id": "322",
-        "name": "De Vrij",
-        "team": "Inter",
-        "role": "D",
-        "cost": 9
-    },
-    {
-        "id": "2525",
-        "name": "Darmian",
-        "team": "Inter",
-        "role": "D",
-        "cost": 8
-    },
-    {
-        "id": "327",
-        "name": "Patric",
-        "team": "Lazio",
-        "role": "D",
-        "cost": 10
-    },
-    {
-        "id": "2263",
-        "name": "Lazzari",
-        "team": "Lazio",
-        "role": "D",
-        "cost": 9
-    },
-    {
-        "id": "6809",
-        "name": "Marianucci",
-        "team": "Torino",
-        "role": "D",
-        "cost": 8
-    },
-    {
-        "id": "2745",
-        "name": "Calabresi",
-        "team": "Pisa",
-        "role": "D",
-        "cost": 6
-    },
-    {
-        "id": "6211",
-        "name": "Zemura",
-        "team": "Udinese",
-        "role": "D",
-        "cost": 8
-    },
-    {
-        "id": "6957",
-        "name": "Valentini N.",
-        "team": "Verona",
-        "role": "D",
-        "cost": 8
-    },
-    {
-        "id": "7253",
-        "name": "Bella-Kotchap",
-        "team": "Verona",
-        "role": "D",
-        "cost": 10
-    },
-    {
-        "id": "5168",
-        "name": "Tsimikas",
-        "team": "Roma",
-        "role": "D",
-        "cost": 8
-    },
-    {
-        "id": "7335",
-        "name": "Zatterstrom",
-        "team": "Genoa",
-        "role": "D",
-        "cost": 8
-    },
-    {
-        "id": "6149",
-        "name": "Carboni F.",
-        "team": "Parma",
-        "role": "D",
-        "cost": 4
-    },
-    {
-        "id": "7353",
-        "name": "Pedro Felipe",
-        "team": "Sassuolo",
-        "role": "D",
-        "cost": 3
-    },
-    {
-        "id": "2653",
-        "name": "Lykogiannis",
-        "team": "Bologna",
-        "role": "D",
-        "cost": 10
-    },
-    {
-        "id": "7069",
-        "name": "Fortini",
-        "team": "Fiorentina",
-        "role": "D",
-        "cost": 9
-    },
-    {
-        "id": "6977",
-        "name": "Otoa",
-        "team": "Genoa",
-        "role": "D",
-        "cost": 9
-    },
-    {
-        "id": "294",
-        "name": "Rugani",
-        "team": "Fiorentina",
-        "role": "D",
-        "cost": 10
-    },
-    {
-        "id": "6632",
-        "name": "Gaspar K.",
-        "team": "Lecce",
-        "role": "D",
-        "cost": 10
-    },
-    {
-        "id": "6883",
-        "name": "Jean",
-        "team": "Lecce",
-        "role": "D",
-        "cost": 3
-    },
-    {
-        "id": "5273",
-        "name": "Estupinan",
-        "team": "Milan",
-        "role": "D",
-        "cost": 8
-    },
-    {
-        "id": "252",
-        "name": "Biraghi",
-        "team": "Torino",
-        "role": "D",
-        "cost": 5
-    },
-    {
-        "id": "7011",
-        "name": "Slotsager",
-        "team": "Verona",
-        "role": "D",
-        "cost": 7
-    },
-    {
-        "id": "7202",
-        "name": "Ndiaye",
-        "team": "Parma",
-        "role": "D",
-        "cost": 5
-    },
-    {
-        "id": "7222",
-        "name": "Cham",
-        "team": "Verona",
-        "role": "D",
-        "cost": 6
-    },
-    {
-        "id": "7260",
-        "name": "Ziolkowski",
-        "team": "Roma",
-        "role": "D",
-        "cost": 9
-    },
-    {
-        "id": "5156",
-        "name": "Nkounkou",
-        "team": "Torino",
-        "role": "D",
-        "cost": 8
-    },
-    {
-        "id": "7312",
-        "name": "Arizala",
-        "team": "Udinese",
-        "role": "D",
-        "cost": 1
+        "cost": 13
     },
     {
         "id": "7326",
@@ -1612,149 +1068,737 @@ export const playersDB = [
         "cost": 7
     },
     {
-        "id": "2006",
-        "name": "Lirola",
-        "team": "Verona",
+        "id": "7268",
+        "name": "Rodriguez Ju.",
+        "team": "Cagliari",
+        "role": "D",
+        "cost": 11
+    },
+    {
+        "id": "5701",
+        "name": "Obert",
+        "team": "Cagliari",
+        "role": "D",
+        "cost": 12
+    },
+    {
+        "id": "5365",
+        "name": "Dragusin",
+        "team": "Fiorentina",
+        "role": "D",
+        "cost": 12
+    },
+    {
+        "id": "7294",
+        "name": "Valdepenas",
+        "team": "Fiorentina",
+        "role": "D",
+        "cost": 10
+    },
+    {
+        "id": "5885",
+        "name": "Dodò",
+        "team": "Fiorentina",
         "role": "D",
         "cost": 7
     },
     {
-        "id": "7356",
-        "name": "Mlacic",
-        "team": "Udinese",
+        "id": "6660",
+        "name": "Marcandalli",
+        "team": "Genoa",
         "role": "D",
-        "cost": 9
+        "cost": 11
     },
     {
-        "id": "7377",
-        "name": "Balbo",
-        "team": "Fiorentina",
+        "id": "5520",
+        "name": "Cambiaso",
+        "team": "Juventus",
+        "role": "D",
+        "cost": 8
+    },
+    {
+        "id": "7240",
+        "name": "Siebert",
+        "team": "Lecce",
+        "role": "D",
+        "cost": 12
+    },
+    {
+        "id": "5840",
+        "name": "Olivera",
+        "team": "Napoli",
+        "role": "D",
+        "cost": 10
+    },
+    {
+        "id": "7235",
+        "name": "Troilo",
+        "team": "Parma",
+        "role": "D",
+        "cost": 13
+    },
+    {
+        "id": "7526",
+        "name": "Comert",
+        "team": "Torino",
         "role": "D",
         "cost": 4
     },
     {
-        "id": "5498",
-        "name": "Casale",
+        "id": "4994",
+        "name": "Vojvoda",
+        "team": "Udinese",
+        "role": "D",
+        "cost": 13
+    },
+    {
+        "id": "5695",
+        "name": "Haps",
+        "team": "Venezia",
+        "role": "D",
+        "cost": 8
+    },
+    {
+        "id": "7563",
+        "name": "Favasuli",
+        "team": "Napoli",
+        "role": "D",
+        "cost": 8
+    },
+    {
+        "id": "7069",
+        "name": "Fortini",
+        "team": "Torino",
+        "role": "D",
+        "cost": 4
+    },
+    {
+        "id": "7573",
+        "name": "Cinquegrano",
+        "team": "Sassuolo",
+        "role": "D",
+        "cost": 10
+    },
+    {
+        "id": "256",
+        "name": "Juan Jesus",
+        "team": "Venezia",
+        "role": "D",
+        "cost": 11
+    },
+    {
+        "id": "4137",
+        "name": "Diego Carlos",
+        "team": "Parma",
+        "role": "D",
+        "cost": 10
+    },
+    {
+        "id": "2525",
+        "name": "Darmian",
         "team": "Bologna",
         "role": "D",
-        "cost": 9
+        "cost": 10
     },
     {
-        "id": "418",
-        "name": "Goldaniga",
-        "team": "Como",
+        "id": "7219",
+        "name": "Bernasconi",
+        "team": "Atalanta",
         "role": "D",
-        "cost": 6
+        "cost": 11
     },
     {
-        "id": "1891",
-        "name": "Ceccherini",
-        "team": "Cremonese",
+        "id": "7212",
+        "name": "Heggem",
+        "team": "Bologna",
         "role": "D",
-        "cost": 7
+        "cost": 10
     },
     {
-        "id": "5899",
-        "name": "Gigot",
-        "team": "Lazio",
+        "id": "5678",
+        "name": "Holm",
+        "team": "Bologna",
         "role": "D",
         "cost": 3
     },
     {
-        "id": "140",
-        "name": "Hysaj",
+        "id": "7532",
+        "name": "Kofler",
+        "team": "Cagliari",
+        "role": "D",
+        "cost": 2
+    },
+    {
+        "id": "7014",
+        "name": "Smolcic I.",
+        "team": "Como",
+        "role": "D",
+        "cost": 8
+    },
+    {
+        "id": "7410",
+        "name": "Viery",
+        "team": "Fiorentina",
+        "role": "D",
+        "cost": 10
+    },
+    {
+        "id": "5757",
+        "name": "Cittadini",
+        "team": "Frosinone",
+        "role": "D",
+        "cost": 10
+    },
+    {
+        "id": "6039",
+        "name": "Cabal",
+        "team": "Juventus",
+        "role": "D",
+        "cost": 4
+    },
+    {
+        "id": "6632",
+        "name": "Gaspar K.",
+        "team": "Lecce",
+        "role": "D",
+        "cost": 8
+    },
+    {
+        "id": "6496",
+        "name": "Bartesaghi",
+        "team": "Milan",
+        "role": "D",
+        "cost": 10
+    },
+    {
+        "id": "6659",
+        "name": "Lucchesi",
+        "team": "Monza",
+        "role": "D",
+        "cost": 11
+    },
+    {
+        "id": "4925",
+        "name": "Carboni A.",
+        "team": "Monza",
+        "role": "D",
+        "cost": 10
+    },
+    {
+        "id": "7476",
+        "name": "Bakoune",
+        "team": "Monza",
+        "role": "D",
+        "cost": 2
+    },
+    {
+        "id": "7255",
+        "name": "Britschgi",
+        "team": "Parma",
+        "role": "D",
+        "cost": 10
+    },
+    {
+        "id": "7529",
+        "name": "Koulierakis",
+        "team": "Roma",
+        "role": "D",
+        "cost": 8
+    },
+    {
+        "id": "6672",
+        "name": "Idzes",
+        "team": "Sassuolo",
+        "role": "D",
+        "cost": 10
+    },
+    {
+        "id": "5994",
+        "name": "Ebosse",
+        "team": "Udinese",
+        "role": "D",
+        "cost": 5
+    },
+    {
+        "id": "7538",
+        "name": "Halhal",
+        "team": "Venezia",
+        "role": "D",
+        "cost": 7
+    },
+    {
+        "id": "4845",
+        "name": "Correia T.",
+        "team": "Venezia",
+        "role": "D",
+        "cost": 7
+    },
+    {
+        "id": "7329",
+        "name": "Obrador",
+        "team": "Sassuolo",
+        "role": "D",
+        "cost": 5
+    },
+    {
+        "id": "4664",
+        "name": "Badiashile",
+        "team": "Napoli",
+        "role": "D",
+        "cost": 7
+    },
+    {
+        "id": "6826",
+        "name": "Dembelè A.",
+        "team": "Lecce",
+        "role": "D",
+        "cost": 1
+    },
+    {
+        "id": "7621",
+        "name": "Sugawara",
+        "team": "Cagliari",
+        "role": "D",
+        "cost": 8
+    },
+    {
+        "id": "6046",
+        "name": "Hien",
+        "team": "Atalanta",
+        "role": "D",
+        "cost": 8
+    },
+    {
+        "id": "7068",
+        "name": "Vitik",
+        "team": "Bologna",
+        "role": "D",
+        "cost": 5
+    },
+    {
+        "id": "5424",
+        "name": "Amey",
+        "team": "Frosinone",
+        "role": "D",
+        "cost": 1
+    },
+    {
+        "id": "7537",
+        "name": "Mitaj",
+        "team": "Genoa",
+        "role": "D",
+        "cost": 5
+    },
+    {
+        "id": "4177",
+        "name": "Pavard",
+        "team": "Inter",
+        "role": "D",
+        "cost": 10
+    },
+    {
+        "id": "6766",
+        "name": "Kelly L.",
+        "team": "Juventus",
+        "role": "D",
+        "cost": 10
+    },
+    {
+        "id": "2263",
+        "name": "Lazzari",
         "team": "Lazio",
         "role": "D",
         "cost": 4
     },
     {
-        "id": "7164",
-        "name": "Perez M.",
-        "team": "Lecce",
+        "id": "2188",
+        "name": "Marusic",
+        "team": "Lazio",
         "role": "D",
-        "cost": 2
+        "cost": 7
+    },
+    {
+        "id": "4401",
+        "name": "Gabbia",
+        "team": "Milan",
+        "role": "D",
+        "cost": 7
+    },
+    {
+        "id": "7525",
+        "name": "Diawara S.",
+        "team": "Milan",
+        "role": "D",
+        "cost": 10
+    },
+    {
+        "id": "5273",
+        "name": "Estupinan",
+        "team": "Milan",
+        "role": "D",
+        "cost": 9
+    },
+    {
+        "id": "6202",
+        "name": "Beukema",
+        "team": "Napoli",
+        "role": "D",
+        "cost": 7
+    },
+    {
+        "id": "2724",
+        "name": "Buongiorno",
+        "team": "Napoli",
+        "role": "D",
+        "cost": 7
+    },
+    {
+        "id": "6986",
+        "name": "Rensch",
+        "team": "Roma",
+        "role": "D",
+        "cost": 12
+    },
+    {
+        "id": "4263",
+        "name": "Kabasele",
+        "team": "Udinese",
+        "role": "D",
+        "cost": 7
+    },
+    {
+        "id": "6485",
+        "name": "Kristensen T.",
+        "team": "Atalanta",
+        "role": "D",
+        "cost": 10
+    },
+    {
+        "id": "5820",
+        "name": "Bertola",
+        "team": "Udinese",
+        "role": "D",
+        "cost": 7
+    },
+    {
+        "id": "5527",
+        "name": "Zanoli",
+        "team": "Udinese",
+        "role": "D",
+        "cost": 8
+    },
+    {
+        "id": "6890",
+        "name": "Moreno M.",
+        "team": "Venezia",
+        "role": "D",
+        "cost": 6
+    },
+    {
+        "id": "7615",
+        "name": "Drobnic",
+        "team": "Parma",
+        "role": "D",
+        "cost": 1
+    },
+    {
+        "id": "4147",
+        "name": "Caleta-Car",
+        "team": "Sassuolo",
+        "role": "D",
+        "cost": 7
+    },
+    {
+        "id": "5751",
+        "name": "Patterson",
+        "team": "Torino",
+        "role": "D",
+        "cost": 4
+    },
+    {
+        "id": "2169",
+        "name": "Rodriguez R.",
+        "team": "Torino",
+        "role": "D",
+        "cost": 6
+    },
+    {
+        "id": "5578",
+        "name": "Kossounou",
+        "team": "Atalanta",
+        "role": "D",
+        "cost": 5
+    },
+    {
+        "id": "487",
+        "name": "De Silvestri",
+        "team": "Bologna",
+        "role": "D",
+        "cost": 1
+    },
+    {
+        "id": "7483",
+        "name": "Alhassane",
+        "team": "Bologna",
+        "role": "D",
+        "cost": 5
+    },
+    {
+        "id": "6896",
+        "name": "Van Der Brempt",
+        "team": "Sassuolo",
+        "role": "D",
+        "cost": 5
+    },
+    {
+        "id": "4378",
+        "name": "Ranieri L.",
+        "team": "Fiorentina",
+        "role": "D",
+        "cost": 9
+    },
+    {
+        "id": "6977",
+        "name": "Otoa",
+        "team": "Genoa",
+        "role": "D",
+        "cost": 7
+    },
+    {
+        "id": "791",
+        "name": "Sabelli",
+        "team": "Genoa",
+        "role": "D",
+        "cost": 5
     },
     {
         "id": "7182",
         "name": "Ndaba",
         "team": "Lecce",
         "role": "D",
-        "cost": 7
+        "cost": 4
     },
     {
-        "id": "7140",
-        "name": "Coppola F.",
-        "team": "Pisa",
+        "id": "7202",
+        "name": "Ndiaye",
+        "team": "Parma",
         "role": "D",
         "cost": 4
     },
     {
-        "id": "2279",
-        "name": "Romagna",
-        "team": "Sassuolo",
+        "id": "5307",
+        "name": "Valenti",
+        "team": "Parma",
+        "role": "D",
+        "cost": 4
+    },
+    {
+        "id": "7312",
+        "name": "Arizala",
+        "team": "Udinese",
+        "role": "D",
+        "cost": 7
+    },
+    {
+        "id": "7253",
+        "name": "Bella-Kotchap",
+        "team": "Venezia",
         "role": "D",
         "cost": 8
+    },
+    {
+        "id": "6892",
+        "name": "Schingtienne",
+        "team": "Venezia",
+        "role": "D",
+        "cost": 4
+    },
+    {
+        "id": "5812",
+        "name": "Terracciano F.",
+        "team": "Milan",
+        "role": "D",
+        "cost": 2
+    },
+    {
+        "id": "7605",
+        "name": "Tchato",
+        "team": "Frosinone",
+        "role": "D",
+        "cost": 6
+    },
+    {
+        "id": "6601",
+        "name": "Kambwala",
+        "team": "Como",
+        "role": "D",
+        "cost": 4
+    },
+    {
+        "id": "7125",
+        "name": "Idrissi R.",
+        "team": "Cagliari",
+        "role": "D",
+        "cost": 1
+    },
+    {
+        "id": "418",
+        "name": "Goldaniga",
+        "team": "Como",
+        "role": "D",
+        "cost": 1
+    },
+    {
+        "id": "5449",
+        "name": "Parisi",
+        "team": "Fiorentina",
+        "role": "D",
+        "cost": 7
+    },
+    {
+        "id": "7540",
+        "name": "Akpoguma",
+        "team": "Frosinone",
+        "role": "D",
+        "cost": 4
+    },
+    {
+        "id": "7413",
+        "name": "Puczka",
+        "team": "Genoa",
+        "role": "D",
+        "cost": 1
+    },
+    {
+        "id": "294",
+        "name": "Rugani",
+        "team": "Juventus",
+        "role": "D",
+        "cost": 1
+    },
+    {
+        "id": "2728",
+        "name": "Pellegrini Lu.",
+        "team": "Lazio",
+        "role": "D",
+        "cost": 2
+    },
+    {
+        "id": "6883",
+        "name": "Jean",
+        "team": "Lecce",
+        "role": "D",
+        "cost": 1
+    },
+    {
+        "id": "5399",
+        "name": "Antov",
+        "team": "Monza",
+        "role": "D",
+        "cost": 1
+    },
+    {
+        "id": "6809",
+        "name": "Marianucci",
+        "team": "Napoli",
+        "role": "D",
+        "cost": 4
+    },
+    {
+        "id": "6149",
+        "name": "Carboni F.",
+        "team": "Parma",
+        "role": "D",
+        "cost": 3
+    },
+    {
+        "id": "7260",
+        "name": "Ziolkowski",
+        "team": "Monza",
+        "role": "D",
+        "cost": 2
+    },
+    {
+        "id": "4374",
+        "name": "Walukiewicz",
+        "team": "Sassuolo",
+        "role": "D",
+        "cost": 9
+    },
+    {
+        "id": "6985",
+        "name": "Candè",
+        "team": "Sassuolo",
+        "role": "D",
+        "cost": 3
     },
     {
         "id": "7156",
         "name": "Pieragnolo",
         "team": "Sassuolo",
         "role": "D",
-        "cost": 3
+        "cost": 1
     },
     {
-        "id": "7196",
-        "name": "Denoon",
-        "team": "Pisa",
+        "id": "252",
+        "name": "Biraghi",
+        "team": "Torino",
         "role": "D",
         "cost": 4
     },
     {
-        "id": "6985",
-        "name": "Cand\u00e8",
-        "team": "Sassuolo",
-        "role": "D",
-        "cost": 5
-    },
-    {
-        "id": "7238",
-        "name": "Kouadio",
-        "team": "Fiorentina",
+        "id": "6673",
+        "name": "Sverko",
+        "team": "Venezia",
         "role": "D",
         "cost": 1
     },
     {
-        "id": "6870",
-        "name": "Faye",
-        "team": "Cremonese",
+        "id": "7454",
+        "name": "Gomes",
+        "team": "Venezia",
         "role": "D",
-        "cost": 5
+        "cost": 1
     },
     {
-        "id": "7271",
-        "name": "Odogu",
-        "team": "Milan",
+        "id": "7478",
+        "name": "Franjic",
+        "team": "Venezia",
         "role": "D",
-        "cost": 5
+        "cost": 1
     },
     {
-        "id": "388",
-        "name": "Albiol",
-        "team": "Pisa",
-        "role": "D",
-        "cost": 8
-    },
-    {
-        "id": "7325",
-        "name": "Bozhinov",
-        "team": "Pisa",
-        "role": "D",
-        "cost": 8
-    },
-    {
-        "id": "7346",
-        "name": "Raterink",
+        "id": "7548",
+        "name": "Aurelio",
         "team": "Cagliari",
+        "role": "D",
+        "cost": 4
+    },
+    {
+        "id": "7553",
+        "name": "Omar Fayed",
+        "team": "Frosinone",
+        "role": "D",
+        "cost": 1
+    },
+    {
+        "id": "7604",
+        "name": "Maye",
+        "team": "Monza",
+        "role": "D",
+        "cost": 1
+    },
+    {
+        "id": "5742",
+        "name": "Drameh",
+        "team": "Genoa",
+        "role": "D",
+        "cost": 1
+    },
+    {
+        "id": "7633",
+        "name": "Obric",
+        "team": "Atalanta",
         "role": "D",
         "cost": 1
     },
@@ -1763,634 +1807,326 @@ export const playersDB = [
         "name": "Paz N.",
         "team": "Como",
         "role": "C",
-        "cost": 245
-    },
-    {
-        "id": "4777",
-        "name": "McTominay",
-        "team": "Napoli",
-        "role": "C",
-        "cost": 215
-    },
-    {
-        "id": "7126",
-        "name": "Baturina",
-        "team": "Como",
-        "role": "C",
-        "cost": 95
-    },
-    {
-        "id": "2194",
-        "name": "Calhanoglu",
-        "team": "Inter",
-        "role": "C",
-        "cost": 190
-    },
-    {
-        "id": "2423",
-        "name": "Pulisic",
-        "team": "Milan",
-        "role": "C",
-        "cost": 100
+        "cost": 220
     },
     {
         "id": "2379",
         "name": "Rabiot",
         "team": "Milan",
         "role": "C",
-        "cost": 195
+        "cost": 225
+    },
+    {
+        "id": "2423",
+        "name": "Pulisic",
+        "team": "Milan",
+        "role": "C",
+        "cost": 180
+    },
+    {
+        "id": "2194",
+        "name": "Calhanoglu",
+        "team": "Inter",
+        "role": "C",
+        "cost": 200
+    },
+    {
+        "id": "7556",
+        "name": "Mora",
+        "team": "Roma",
+        "role": "C",
+        "cost": 80
     },
     {
         "id": "2517",
         "name": "De Bruyne",
         "team": "Napoli",
         "role": "C",
-        "cost": 92
+        "cost": 111
     },
     {
-        "id": "5559",
-        "name": "Da Cunha",
+        "id": "7126",
+        "name": "Baturina",
         "team": "Como",
         "role": "C",
-        "cost": 80
-    },
-    {
-        "id": "152",
-        "name": "Zielinski",
-        "team": "Inter",
-        "role": "C",
-        "cost": 60
-    },
-    {
-        "id": "6908",
-        "name": "Atta",
-        "team": "Udinese",
-        "role": "C",
-        "cost": 85
-    },
-    {
-        "id": "2167",
-        "name": "Orsolini",
-        "team": "Bologna",
-        "role": "C",
-        "cost": 150
-    },
-    {
-        "id": "2766",
-        "name": "Zaniolo",
-        "team": "Udinese",
-        "role": "C",
-        "cost": 100
-    },
-    {
-        "id": "1870",
-        "name": "Barella",
-        "team": "Inter",
-        "role": "C",
-        "cost": 58
-    },
-    {
-        "id": "4973",
-        "name": "McKennie",
-        "team": "Juventus",
-        "role": "C",
-        "cost": 107
-    },
-    {
-        "id": "6884",
-        "name": "Conceicao",
-        "team": "Juventus",
-        "role": "C",
-        "cost": 65
-    },
-    {
-        "id": "2606",
-        "name": "Modric",
-        "team": "Milan",
-        "role": "C",
-        "cost": 90
-    },
-    {
-        "id": "1933",
-        "name": "Mandragora",
-        "team": "Fiorentina",
-        "role": "C",
-        "cost": 60
-    },
-    {
-        "id": "6717",
-        "name": "Kon\u00e8 I.",
-        "team": "Sassuolo",
-        "role": "C",
-        "cost": 67
-    },
-    {
-        "id": "5687",
-        "name": "Vlasic",
-        "team": "Torino",
-        "role": "C",
-        "cost": 100
-    },
-    {
-        "id": "6151",
-        "name": "Perrone",
-        "team": "Como",
-        "role": "C",
-        "cost": 50
-    },
-    {
-        "id": "4970",
-        "name": "Messias",
-        "team": "Genoa",
-        "role": "C",
-        "cost": 12
-    },
-    {
-        "id": "6398",
-        "name": "Isaksen",
-        "team": "Lazio",
-        "role": "C",
-        "cost": 35
-    },
-    {
-        "id": "4427",
-        "name": "Malinovskyi",
-        "team": "Genoa",
-        "role": "C",
-        "cost": 34
-    },
-    {
-        "id": "4892",
-        "name": "Saelemaekers",
-        "team": "Milan",
-        "role": "C",
-        "cost": 36
-    },
-    {
-        "id": "4220",
-        "name": "Zambo Anguissa",
-        "team": "Napoli",
-        "role": "C",
-        "cost": 20
-    },
-    {
-        "id": "6666",
-        "name": "Bernab\u00e8",
-        "team": "Parma",
-        "role": "C",
-        "cost": 23
-    },
-    {
-        "id": "5844",
-        "name": "Thorstvedt",
-        "team": "Sassuolo",
-        "role": "C",
-        "cost": 40
-    },
-    {
-        "id": "6844",
-        "name": "Rowe",
-        "team": "Bologna",
-        "role": "C",
-        "cost": 49
-    },
-    {
-        "id": "5422",
-        "name": "Zalewski",
-        "team": "Atalanta",
-        "role": "C",
-        "cost": 19
-    },
-    {
-        "id": "2529",
-        "name": "Mkhitaryan",
-        "team": "Inter",
-        "role": "C",
-        "cost": 14
-    },
-    {
-        "id": "5562",
-        "name": "Thuram K.",
-        "team": "Juventus",
-        "role": "C",
-        "cost": 41
-    },
-    {
-        "id": "6190",
-        "name": "Pisilli",
-        "team": "Roma",
-        "role": "C",
-        "cost": 17
-    },
-    {
-        "id": "6684",
-        "name": "Ekkelenkamp",
-        "team": "Udinese",
-        "role": "C",
-        "cost": 51
-    },
-    {
-        "id": "7314",
-        "name": "Taylor K.",
-        "team": "Lazio",
-        "role": "C",
-        "cost": 52
-    },
-    {
-        "id": "5792",
-        "name": "Ederson D.S.",
-        "team": "Atalanta",
-        "role": "C",
-        "cost": 30
-    },
-    {
-        "id": "184",
-        "name": "Bernardeschi",
-        "team": "Bologna",
-        "role": "C",
-        "cost": 33
-    },
-    {
-        "id": "2765",
-        "name": "Odgaard",
-        "team": "Bologna",
-        "role": "C",
-        "cost": 14
-    },
-    {
-        "id": "4364",
-        "name": "Gaetano",
-        "team": "Cagliari",
-        "role": "C",
-        "cost": 15
-    },
-    {
-        "id": "5036",
-        "name": "Caqueret",
-        "team": "Como",
-        "role": "C",
-        "cost": 18
-    },
-    {
-        "id": "4486",
-        "name": "Strefezza",
-        "team": "Parma",
-        "role": "C",
-        "cost": 50
-    },
-    {
-        "id": "5800",
-        "name": "Gudmundsson A.",
-        "team": "Fiorentina",
-        "role": "C",
-        "cost": 35
+        "cost": 155
     },
     {
         "id": "632",
         "name": "Zaccagni",
         "team": "Lazio",
         "role": "C",
-        "cost": 25
+        "cost": 117
     },
     {
-        "id": "5504",
-        "name": "Coulibaly L.",
-        "team": "Lecce",
+        "id": "7472",
+        "name": "Calò",
+        "team": "Frosinone",
         "role": "C",
-        "cost": 21
+        "cost": 100
+    },
+    {
+        "id": "2167",
+        "name": "Orsolini",
+        "team": "Bologna",
+        "role": "C",
+        "cost": 125
+    },
+    {
+        "id": "4777",
+        "name": "McTominay",
+        "team": "Napoli",
+        "role": "C",
+        "cost": 145
+    },
+    {
+        "id": "6398",
+        "name": "Isaksen",
+        "team": "Lazio",
+        "role": "C",
+        "cost": 60
+    },
+    {
+        "id": "7078",
+        "name": "Mastantuono",
+        "team": "Fiorentina",
+        "role": "C",
+        "cost": 87
+    },
+    {
+        "id": "6372",
+        "name": "Moreira",
+        "team": "Milan",
+        "role": "C",
+        "cost": 82
+    },
+    {
+        "id": "1870",
+        "name": "Barella",
+        "team": "Inter",
+        "role": "C",
+        "cost": 63
+    },
+    {
+        "id": "152",
+        "name": "Zielinski",
+        "team": "Inter",
+        "role": "C",
+        "cost": 42
+    },
+    {
+        "id": "7314",
+        "name": "Taylor K.",
+        "team": "Lazio",
+        "role": "C",
+        "cost": 60
+    },
+    {
+        "id": "7551",
+        "name": "Schmid",
+        "team": "Frosinone",
+        "role": "C",
+        "cost": 62
+    },
+    {
+        "id": "184",
+        "name": "Bernardeschi",
+        "team": "Bologna",
+        "role": "C",
+        "cost": 48
     },
     {
         "id": "536",
         "name": "Politano",
         "team": "Napoli",
         "role": "C",
-        "cost": 31
+        "cost": 51
     },
     {
-        "id": "779",
-        "name": "Cristante",
-        "team": "Roma",
-        "role": "C",
-        "cost": 26
-    },
-    {
-        "id": "5589",
-        "name": "Kon\u00e8 M.",
-        "team": "Roma",
-        "role": "C",
-        "cost": 39
-    },
-    {
-        "id": "530",
-        "name": "Pellegrini Lo.",
-        "team": "Roma",
-        "role": "C",
-        "cost": 24
-    },
-    {
-        "id": "5735",
-        "name": "Volpato",
-        "team": "Sassuolo",
-        "role": "C",
-        "cost": 17
-    },
-    {
-        "id": "5888",
-        "name": "Casadei",
-        "team": "Torino",
-        "role": "C",
-        "cost": 20
-    },
-    {
-        "id": "2077",
-        "name": "Pasalic",
-        "team": "Atalanta",
-        "role": "C",
-        "cost": 14
-    },
-    {
-        "id": "4404",
-        "name": "Thorsby",
-        "team": "Cremonese",
-        "role": "C",
-        "cost": 12
-    },
-    {
-        "id": "827",
-        "name": "Locatelli",
-        "team": "Juventus",
-        "role": "C",
-        "cost": 47
-    },
-    {
-        "id": "7351",
-        "name": "Santos A.",
-        "team": "Napoli",
-        "role": "C",
-        "cost": 54
-    },
-    {
-        "id": "7133",
-        "name": "Vandeputte",
-        "team": "Cremonese",
-        "role": "C",
-        "cost": 15
-    },
-    {
-        "id": "4465",
-        "name": "Fagioli",
-        "team": "Fiorentina",
-        "role": "C",
-        "cost": 35
-    },
-    {
-        "id": "7070",
-        "name": "Sucic P.",
-        "team": "Inter",
-        "role": "C",
-        "cost": 21
-    },
-    {
-        "id": "333",
-        "name": "Cataldi",
-        "team": "Lazio",
-        "role": "C",
-        "cost": 17
-    },
-    {
-        "id": "5674",
-        "name": "Basic",
-        "team": "Lazio",
-        "role": "C",
-        "cost": 25
-    },
-    {
-        "id": "5453",
-        "name": "Ricci S.",
-        "team": "Milan",
-        "role": "C",
-        "cost": 13
-    },
-    {
-        "id": "6898",
-        "name": "Keita M.",
-        "team": "Parma",
-        "role": "C",
-        "cost": 18
-    },
-    {
-        "id": "5651",
-        "name": "Harrison",
-        "team": "Fiorentina",
-        "role": "C",
-        "cost": 23
-    },
-    {
-        "id": "4947",
-        "name": "Brescianini",
-        "team": "Fiorentina",
-        "role": "C",
-        "cost": 15
-    },
-    {
-        "id": "4896",
-        "name": "Maldini",
-        "team": "Lazio",
-        "role": "C",
-        "cost": 20
-    },
-    {
-        "id": "6252",
-        "name": "Folorunsho",
-        "team": "Cagliari",
-        "role": "C",
-        "cost": 14
-    },
-    {
-        "id": "4686",
-        "name": "Fofana Y.",
-        "team": "Milan",
-        "role": "C",
-        "cost": 18
-    },
-    {
-        "id": "4199",
-        "name": "Loftus-Cheek",
-        "team": "Milan",
-        "role": "C",
-        "cost": 12
-    },
-    {
-        "id": "4287",
-        "name": "Lobotka",
-        "team": "Napoli",
-        "role": "C",
-        "cost": 20
-    },
-    {
-        "id": "6831",
-        "name": "Neres",
-        "team": "Napoli",
-        "role": "C",
-        "cost": 15
-    },
-    {
-        "id": "2334",
-        "name": "Leris",
-        "team": "Pisa",
-        "role": "C",
-        "cost": 12
-    },
-    {
-        "id": "1976",
-        "name": "Mazzitelli",
-        "team": "Cagliari",
-        "role": "C",
-        "cost": 12
-    },
-    {
-        "id": "22",
-        "name": "De Roon",
-        "team": "Atalanta",
-        "role": "C",
-        "cost": 22
-    },
-    {
-        "id": "5119",
-        "name": "Samardzic",
-        "team": "Atalanta",
-        "role": "C",
-        "cost": 11
-    },
-    {
-        "id": "6054",
-        "name": "Moro N.",
-        "team": "Bologna",
-        "role": "C",
-        "cost": 11
-    },
-    {
-        "id": "6294",
-        "name": "Ndour",
-        "team": "Fiorentina",
-        "role": "C",
-        "cost": 22
-    },
-    {
-        "id": "5791",
-        "name": "Frendrup",
-        "team": "Genoa",
-        "role": "C",
-        "cost": 15
-    },
-    {
-        "id": "4711",
-        "name": "Kostic",
-        "team": "Juventus",
-        "role": "C",
-        "cost": 8
-    },
-    {
-        "id": "795",
-        "name": "El Shaarawy",
-        "team": "Roma",
-        "role": "C",
-        "cost": 11
-    },
-    {
-        "id": "5823",
-        "name": "Baldanzi",
-        "team": "Genoa",
-        "role": "C",
-        "cost": 15
-    },
-    {
-        "id": "6680",
-        "name": "Karlstrom",
+        "id": "6684",
+        "name": "Ekkelenkamp",
         "team": "Udinese",
         "role": "C",
-        "cost": 15
+        "cost": 57
     },
     {
-        "id": "5761",
-        "name": "Zhegrova",
-        "team": "Juventus",
+        "id": "2848",
+        "name": "Frattesi",
+        "team": "Lazio",
         "role": "C",
-        "cost": 12
-    },
-    {
-        "id": "7318",
-        "name": "Gandelman",
-        "team": "Lecce",
-        "role": "C",
-        "cost": 13
-    },
-    {
-        "id": "788",
-        "name": "Freuler",
-        "team": "Bologna",
-        "role": "C",
-        "cost": 14
+        "cost": 120
     },
     {
         "id": "5298",
         "name": "Pobega",
         "team": "Bologna",
         "role": "C",
-        "cost": 13
+        "cost": 22
     },
     {
-        "id": "4870",
-        "name": "Adopo",
-        "team": "Cagliari",
+        "id": "5559",
+        "name": "Da Cunha",
+        "team": "Como",
         "role": "C",
-        "cost": 13
+        "cost": 51
     },
     {
-        "id": "6020",
-        "name": "Ellertsson",
+        "id": "4970",
+        "name": "Messias",
         "team": "Genoa",
         "role": "C",
-        "cost": 10
+        "cost": 18
     },
     {
-        "id": "5301",
-        "name": "Luis Henrique",
+        "id": "6274",
+        "name": "Diouf",
         "team": "Inter",
+        "role": "C",
+        "cost": 50
+    },
+    {
+        "id": "4436",
+        "name": "Cambiaghi",
+        "team": "Bologna",
+        "role": "C",
+        "cost": 35
+    },
+    {
+        "id": "5761",
+        "name": "Zhegrova",
+        "team": "Juventus",
+        "role": "C",
+        "cost": 16
+    },
+    {
+        "id": "7436",
+        "name": "Alajbegovic",
+        "team": "Juventus",
+        "role": "C",
+        "cost": 30
+    },
+    {
+        "id": "6884",
+        "name": "Conceicao",
+        "team": "Juventus",
+        "role": "C",
+        "cost": 40
+    },
+    {
+        "id": "5589",
+        "name": "Konè M.",
+        "team": "Roma",
+        "role": "C",
+        "cost": 45
+    },
+    {
+        "id": "6190",
+        "name": "Pisilli",
+        "team": "Roma",
+        "role": "C",
+        "cost": 36
+    },
+    {
+        "id": "5422",
+        "name": "Zalewski",
+        "team": "Atalanta",
+        "role": "C",
+        "cost": 14
+    },
+    {
+        "id": "1933",
+        "name": "Mandragora",
+        "team": "Torino",
+        "role": "C",
+        "cost": 30
+    },
+    {
+        "id": "2606",
+        "name": "Modric",
+        "team": "Milan",
+        "role": "C",
+        "cost": 55
+    },
+    {
+        "id": "779",
+        "name": "Cristante",
+        "team": "Roma",
+        "role": "C",
+        "cost": 42
+    },
+    {
+        "id": "6827",
+        "name": "Njie",
+        "team": "Fiorentina",
+        "role": "C",
+        "cost": 83
+    },
+    {
+        "id": "5119",
+        "name": "Samardzic",
+        "team": "Atalanta",
+        "role": "C",
+        "cost": 14
+    },
+    {
+        "id": "7311",
+        "name": "Romano",
+        "team": "Cagliari",
+        "role": "C",
+        "cost": 25
+    },
+    {
+        "id": "5036",
+        "name": "Caqueret",
+        "team": "Como",
+        "role": "C",
+        "cost": 19
+    },
+    {
+        "id": "5823",
+        "name": "Baldanzi",
+        "team": "Genoa",
+        "role": "C",
+        "cost": 19
+    },
+    {
+        "id": "7070",
+        "name": "Sucic P.",
+        "team": "Inter",
+        "role": "C",
+        "cost": 20
+    },
+    {
+        "id": "4973",
+        "name": "McKennie",
+        "team": "Juventus",
+        "role": "C",
+        "cost": 50
+    },
+    {
+        "id": "5685",
+        "name": "Koopmeiners",
+        "team": "Juventus",
         "role": "C",
         "cost": 12
     },
     {
-        "id": "6394",
-        "name": "Ramadani",
-        "team": "Lecce",
-        "role": "C",
-        "cost": 13
-    },
-    {
-        "id": "6271",
-        "name": "El Aynaoui",
-        "team": "Roma",
-        "role": "C",
-        "cost": 11
-    },
-    {
-        "id": "6815",
-        "name": "Fadera",
-        "team": "Sassuolo",
+        "id": "6629",
+        "name": "Dele-Bashiru",
+        "team": "Lazio",
         "role": "C",
         "cost": 10
     },
     {
-        "id": "2839",
-        "name": "Sottil",
+        "id": "5504",
+        "name": "Coulibaly L.",
         "team": "Lecce",
         "role": "C",
-        "cost": 9
+        "cost": 17
     },
     {
-        "id": "7223",
-        "name": "Vergara",
+        "id": "4287",
+        "name": "Lobotka",
         "team": "Napoli",
         "role": "C",
         "cost": 12
@@ -2400,47 +2136,54 @@ export const playersDB = [
         "name": "Matic",
         "team": "Sassuolo",
         "role": "C",
-        "cost": 13
-    },
-    {
-        "id": "4349",
-        "name": "Nicolussi Caviglia",
-        "team": "Parma",
-        "role": "C",
         "cost": 15
     },
     {
-        "id": "6424",
-        "name": "Prati",
-        "team": "Torino",
+        "id": "6677",
+        "name": "Adzic",
+        "team": "Sassuolo",
         "role": "C",
-        "cost": 11
+        "cost": 31
     },
     {
-        "id": "6640",
-        "name": "Felici",
-        "team": "Cagliari",
-        "role": "C",
-        "cost": 7
-    },
-    {
-        "id": "5813",
-        "name": "Miretti",
+        "id": "4179",
+        "name": "Gonzalez N.",
         "team": "Juventus",
         "role": "C",
-        "cost": 12
+        "cost": 25
     },
     {
-        "id": "6015",
-        "name": "Berisha M.",
-        "team": "Lecce",
+        "id": "6833",
+        "name": "Mbangula",
+        "team": "Bologna",
         "role": "C",
-        "cost": 9
+        "cost": 14
     },
     {
-        "id": "6549",
-        "name": "Pierotti",
-        "team": "Lecce",
+        "id": "4870",
+        "name": "Adopo",
+        "team": "Cagliari",
+        "role": "C",
+        "cost": 20
+    },
+    {
+        "id": "6020",
+        "name": "Ellertsson",
+        "team": "Genoa",
+        "role": "C",
+        "cost": 25
+    },
+    {
+        "id": "6191",
+        "name": "Belahyane",
+        "team": "Lazio",
+        "role": "C",
+        "cost": 13
+    },
+    {
+        "id": "5500",
+        "name": "Cancellieri",
+        "team": "Lazio",
         "role": "C",
         "cost": 13
     },
@@ -2449,21 +2192,259 @@ export const playersDB = [
         "name": "Gilmour",
         "team": "Napoli",
         "role": "C",
+        "cost": 11
+    },
+    {
+        "id": "7223",
+        "name": "Vergara",
+        "team": "Napoli",
+        "role": "C",
+        "cost": 13
+    },
+    {
+        "id": "7036",
+        "name": "Bakola",
+        "team": "Sassuolo",
+        "role": "C",
+        "cost": 15
+    },
+    {
+        "id": "5687",
+        "name": "Vlasic",
+        "team": "Torino",
+        "role": "C",
+        "cost": 52
+    },
+    {
+        "id": "2766",
+        "name": "Zaniolo",
+        "team": "Udinese",
+        "role": "C",
+        "cost": 47
+    },
+    {
+        "id": "6618",
+        "name": "Cissè A.",
+        "team": "Milan",
+        "role": "C",
+        "cost": 82
+    },
+    {
+        "id": "795",
+        "name": "El Shaarawy",
+        "team": "Genoa",
+        "role": "C",
+        "cost": 24
+    },
+    {
+        "id": "5792",
+        "name": "Ederson D.S.",
+        "team": "Atalanta",
+        "role": "C",
+        "cost": 34
+    },
+    {
+        "id": "4364",
+        "name": "Gaetano",
+        "team": "Atalanta",
+        "role": "C",
+        "cost": 14
+    },
+    {
+        "id": "5858",
+        "name": "Ferguson",
+        "team": "Bologna",
+        "role": "C",
+        "cost": 22
+    },
+    {
+        "id": "6151",
+        "name": "Perrone",
+        "team": "Como",
+        "role": "C",
+        "cost": 20
+    },
+    {
+        "id": "5800",
+        "name": "Gudmundsson A.",
+        "team": "Lazio",
+        "role": "C",
+        "cost": 15
+    },
+    {
+        "id": "6917",
+        "name": "Masini",
+        "team": "Frosinone",
+        "role": "C",
+        "cost": 14
+    },
+    {
+        "id": "4892",
+        "name": "Saelemaekers",
+        "team": "Milan",
+        "role": "C",
+        "cost": 20
+    },
+    {
+        "id": "4856",
+        "name": "Chukwueze",
+        "team": "Milan",
+        "role": "C",
+        "cost": 18
+    },
+    {
+        "id": "7060",
+        "name": "Cacciamani",
+        "team": "Torino",
+        "role": "C",
+        "cost": 18
+    },
+    {
+        "id": "7535",
+        "name": "Fitz-Jim",
+        "team": "Torino",
+        "role": "C",
+        "cost": 18
+    },
+    {
+        "id": "1850",
+        "name": "Kessiè",
+        "team": "Atalanta",
+        "role": "C",
+        "cost": 17
+    },
+    {
+        "id": "7618",
+        "name": "Hutchinson",
+        "team": "Milan",
+        "role": "C",
+        "cost": 21
+    },
+    {
+        "id": "7625",
+        "name": "Goncalves P.",
+        "team": "Fiorentina",
+        "role": "C",
+        "cost": 33
+    },
+    {
+        "id": "6678",
+        "name": "Liberali",
+        "team": "Como",
+        "role": "C",
+        "cost": 16
+    },
+    {
+        "id": "6908",
+        "name": "Atta",
+        "team": "Fiorentina",
+        "role": "C",
+        "cost": 30
+    },
+    {
+        "id": "6206",
+        "name": "Fabbian",
+        "team": "Parma",
+        "role": "C",
+        "cost": 20
+    },
+    {
+        "id": "7473",
+        "name": "Cichella",
+        "team": "Frosinone",
+        "role": "C",
+        "cost": 10
+    },
+    {
+        "id": "4911",
+        "name": "Douglas Luiz",
+        "team": "Juventus",
+        "role": "C",
+        "cost": 27
+    },
+    {
+        "id": "6593",
+        "name": "Akinsanmiro",
+        "team": "Monza",
+        "role": "C",
         "cost": 12
     },
     {
-        "id": "6170",
-        "name": "Gineitis",
-        "team": "Torino",
+        "id": "5878",
+        "name": "Colpani",
+        "team": "Monza",
         "role": "C",
         "cost": 9
     },
     {
-        "id": "7028",
-        "name": "Bernede",
-        "team": "Verona",
+        "id": "4220",
+        "name": "Zambo Anguissa",
+        "team": "Napoli",
         "role": "C",
-        "cost": 11
+        "cost": 23
+    },
+    {
+        "id": "6994",
+        "name": "Perez K.",
+        "team": "Venezia",
+        "role": "C",
+        "cost": 20
+    },
+    {
+        "id": "7624",
+        "name": "Braganca",
+        "team": "Torino",
+        "role": "C",
+        "cost": 16
+    },
+    {
+        "id": "7412",
+        "name": "Milla",
+        "team": "Como",
+        "role": "C",
+        "cost": 21
+    },
+    {
+        "id": "4465",
+        "name": "Fagioli",
+        "team": "Fiorentina",
+        "role": "C",
+        "cost": 20
+    },
+    {
+        "id": "5791",
+        "name": "Frendrup",
+        "team": "Genoa",
+        "role": "C",
+        "cost": 15
+    },
+    {
+        "id": "5295",
+        "name": "Musah",
+        "team": "Milan",
+        "role": "C",
+        "cost": 17
+    },
+    {
+        "id": "5844",
+        "name": "Thorstvedt",
+        "team": "Sassuolo",
+        "role": "C",
+        "cost": 17
+    },
+    {
+        "id": "5735",
+        "name": "Volpato",
+        "team": "Sassuolo",
+        "role": "C",
+        "cost": 13
+    },
+    {
+        "id": "6680",
+        "name": "Karlstrom",
+        "team": "Udinese",
+        "role": "C",
+        "cost": 15
     },
     {
         "id": "7198",
@@ -2473,191 +2454,289 @@ export const playersDB = [
         "cost": 11
     },
     {
-        "id": "7208",
-        "name": "Miller L.",
-        "team": "Udinese",
+        "id": "5674",
+        "name": "Basic",
+        "team": "Venezia",
         "role": "C",
-        "cost": 11
+        "cost": 17
     },
     {
-        "id": "7209",
-        "name": "Sorensen O.",
-        "team": "Parma",
+        "id": "5172",
+        "name": "Jones C.",
+        "team": "Inter",
         "role": "C",
         "cost": 12
     },
     {
-        "id": "6005",
-        "name": "Ilkhan",
-        "team": "Torino",
+        "id": "4479",
+        "name": "Elmas",
+        "team": "Atalanta",
         "role": "C",
-        "cost": 8
+        "cost": 23
     },
     {
-        "id": "6274",
-        "name": "Diouf",
+        "id": "22",
+        "name": "De Roon",
+        "team": "Roma",
+        "role": "C",
+        "cost": 10
+    },
+    {
+        "id": "4260",
+        "name": "Winks",
+        "team": "Cagliari",
+        "role": "C",
+        "cost": 13
+    },
+    {
+        "id": "7129",
+        "name": "Rodriguez Je.",
+        "team": "Como",
+        "role": "C",
+        "cost": 14
+    },
+    {
+        "id": "6294",
+        "name": "Ndour",
+        "team": "Fiorentina",
+        "role": "C",
+        "cost": 18
+    },
+    {
+        "id": "2529",
+        "name": "Mkhitaryan",
         "team": "Inter",
         "role": "C",
         "cost": 13
     },
     {
-        "id": "4479",
-        "name": "Elmas",
-        "team": "Napoli",
+        "id": "5457",
+        "name": "Maleh",
+        "team": "Lecce",
         "role": "C",
-        "cost": 13
+        "cost": 7
     },
     {
-        "id": "801",
-        "name": "Gagliardini",
-        "team": "Verona",
+        "id": "7619",
+        "name": "Monteiro J.",
+        "team": "Lecce",
         "role": "C",
-        "cost": 12
+        "cost": 10
     },
     {
-        "id": "6024",
-        "name": "Sulemana I.",
+        "id": "6844",
+        "name": "Rowe",
+        "team": "Atalanta",
+        "role": "C",
+        "cost": 22
+    },
+    {
+        "id": "2765",
+        "name": "Odgaard",
+        "team": "Bologna",
+        "role": "C",
+        "cost": 25
+    },
+    {
+        "id": "6815",
+        "name": "Fadera",
         "team": "Cagliari",
         "role": "C",
         "cost": 10
     },
     {
-        "id": "5784",
-        "name": "Aebischer",
-        "team": "Pisa",
+        "id": "6506",
+        "name": "Fini ",
+        "team": "Frosinone",
+        "role": "C",
+        "cost": 10
+    },
+    {
+        "id": "827",
+        "name": "Locatelli",
+        "team": "Juventus",
+        "role": "C",
+        "cost": 15
+    },
+    {
+        "id": "7203",
+        "name": "Jashari",
+        "team": "Milan",
+        "role": "C",
+        "cost": 11
+    },
+    {
+        "id": "6898",
+        "name": "Keita M.",
+        "team": "Parma",
         "role": "C",
         "cost": 12
     },
     {
-        "id": "6206",
-        "name": "Fabbian",
-        "team": "Fiorentina",
+        "id": "6207",
+        "name": "Almqvist",
+        "team": "Parma",
         "role": "C",
-        "cost": 9
+        "cost": 5
+    },
+    {
+        "id": "6170",
+        "name": "Gineitis",
+        "team": "Torino",
+        "role": "C",
+        "cost": 10
+    },
+    {
+        "id": "5507",
+        "name": "Busio",
+        "team": "Venezia",
+        "role": "C",
+        "cost": 12
+    },
+    {
+        "id": "7628",
+        "name": "Sierro",
+        "team": "Parma",
+        "role": "C",
+        "cost": 15
+    },
+    {
+        "id": "2077",
+        "name": "Pasalic",
+        "team": "Atalanta",
+        "role": "C",
+        "cost": 13
+    },
+    {
+        "id": "6895",
+        "name": "Dominguez B.",
+        "team": "Sassuolo",
+        "role": "C",
+        "cost": 10
     },
     {
         "id": "1871",
         "name": "Deiola",
         "team": "Cagliari",
         "role": "C",
-        "cost": 11
+        "cost": 10
     },
     {
-        "id": "6629",
-        "name": "Dele-Bashiru",
-        "team": "Lazio",
-        "role": "C",
-        "cost": 14
-    },
-    {
-        "id": "5998",
-        "name": "Zerbin",
-        "team": "Cremonese",
-        "role": "C",
-        "cost": 9
-    },
-    {
-        "id": "7138",
-        "name": "Ordonez C.",
-        "team": "Parma",
-        "role": "C",
-        "cost": 12
-    },
-    {
-        "id": "5318",
-        "name": "Tramoni M.",
-        "team": "Pisa",
+        "id": "7464",
+        "name": "Oulai",
+        "team": "Fiorentina",
         "role": "C",
         "cost": 10
     },
     {
-        "id": "6246",
-        "name": "Lipani",
-        "team": "Sassuolo",
-        "role": "C",
-        "cost": 8
-    },
-    {
-        "id": "6458",
-        "name": "Serdar",
-        "team": "Verona",
-        "role": "C",
-        "cost": 10
-    },
-    {
-        "id": "5858",
-        "name": "Ferguson",
-        "team": "Bologna",
-        "role": "C",
-        "cost": 12
-    },
-    {
-        "id": "27",
-        "name": "Grassi",
-        "team": "Cremonese",
-        "role": "C",
-        "cost": 8
-    },
-    {
-        "id": "6917",
-        "name": "Masini",
-        "team": "Genoa",
+        "id": "4947",
+        "name": "Brescianini",
+        "team": "Fiorentina",
         "role": "C",
         "cost": 7
     },
     {
-        "id": "5457",
-        "name": "Maleh",
-        "team": "Cremonese",
-        "role": "C",
-        "cost": 5
-    },
-    {
-        "id": "5992",
-        "name": "Bondo",
-        "team": "Cremonese",
-        "role": "C",
-        "cost": 12
-    },
-    {
-        "id": "5295",
-        "name": "Musah",
-        "team": "Atalanta",
-        "role": "C",
-        "cost": 11
-    },
-    {
-        "id": "5290",
-        "name": "Estevez",
-        "team": "Parma",
+        "id": "5998",
+        "name": "Zerbin",
+        "team": "Frosinone",
         "role": "C",
         "cost": 8
     },
     {
-        "id": "7146",
-        "name": "Tour\u00e8 I.",
-        "team": "Pisa",
+        "id": "7341",
+        "name": "Amorim",
+        "team": "Genoa",
+        "role": "C",
+        "cost": 6
+    },
+    {
+        "id": "4459",
+        "name": "Rovella",
+        "team": "Lazio",
         "role": "C",
         "cost": 12
     },
     {
-        "id": "6593",
-        "name": "Akinsanmiro",
-        "team": "Pisa",
+        "id": "7248",
+        "name": "Gorter",
+        "team": "Lecce",
         "role": "C",
-        "cost": 11
+        "cost": 9
     },
     {
-        "id": "6481",
-        "name": "Payero",
-        "team": "Cremonese",
+        "id": "5888",
+        "name": "Casadei",
+        "team": "Torino",
         "role": "C",
         "cost": 8
     },
     {
-        "id": "5286",
-        "name": "Akpa Akpro",
-        "team": "Verona",
+        "id": "6783",
+        "name": "Unai Gomez",
+        "team": "Udinese",
+        "role": "C",
+        "cost": 12
+    },
+    {
+        "id": "5319",
+        "name": "Sohm",
+        "team": "Venezia",
+        "role": "C",
+        "cost": 10
+    },
+    {
+        "id": "530",
+        "name": "Pellegrini Lo.",
+        "team": "Roma",
+        "role": "C",
+        "cost": 10
+    },
+    {
+        "id": "5680",
+        "name": "Sarr P.",
+        "team": "Juventus",
+        "role": "C",
+        "cost": 12
+    },
+    {
+        "id": "6010",
+        "name": "Fazzini",
+        "team": "Cagliari",
+        "role": "C",
+        "cost": 10
+    },
+    {
+        "id": "7127",
+        "name": "Addai",
+        "team": "Como",
+        "role": "C",
+        "cost": 8
+    },
+    {
+        "id": "6903",
+        "name": "Hasa",
+        "team": "Frosinone",
+        "role": "C",
+        "cost": 1
+    },
+    {
+        "id": "2857",
+        "name": "Traorè Hj.",
+        "team": "Genoa",
+        "role": "C",
+        "cost": 11
+    },
+    {
+        "id": "5301",
+        "name": "Luis Henrique",
+        "team": "Inter",
+        "role": "C",
+        "cost": 10
+    },
+    {
+        "id": "5562",
+        "name": "Thuram K.",
+        "team": "Juventus",
         "role": "C",
         "cost": 10
     },
@@ -2666,1043 +2745,952 @@ export const playersDB = [
         "name": "Ngom",
         "team": "Lecce",
         "role": "C",
-        "cost": 1
+        "cost": 8
     },
     {
-        "id": "7331",
-        "name": "Loyola",
-        "team": "Pisa",
-        "role": "C",
-        "cost": 11
-    },
-    {
-        "id": "7341",
-        "name": "Amorim",
-        "team": "Genoa",
-        "role": "C",
-        "cost": 11
-    },
-    {
-        "id": "2848",
-        "name": "Frattesi",
-        "team": "Inter",
+        "id": "6549",
+        "name": "Pierotti",
+        "team": "Lecce",
         "role": "C",
         "cost": 10
     },
     {
-        "id": "5685",
-        "name": "Koopmeiners",
-        "team": "Juventus",
-        "role": "C",
-        "cost": 11
-    },
-    {
-        "id": "5319",
-        "name": "Sohm",
-        "team": "Bologna",
-        "role": "C",
-        "cost": 12
-    },
-    {
-        "id": "7145",
-        "name": "Piccinini G.",
-        "team": "Pisa",
-        "role": "C",
-        "cost": 10
-    },
-    {
-        "id": "5688",
-        "name": "Harroui",
-        "team": "Verona",
-        "role": "C",
-        "cost": 10
-    },
-    {
-        "id": "6486",
-        "name": "Suslov",
-        "team": "Verona",
-        "role": "C",
-        "cost": 13
-    },
-    {
-        "id": "7203",
-        "name": "Jashari",
+        "id": "4199",
+        "name": "Loftus-Cheek",
         "team": "Milan",
         "role": "C",
-        "cost": 10
-    },
-    {
-        "id": "6218",
-        "name": "Oristanio",
-        "team": "Parma",
-        "role": "C",
-        "cost": 10
-    },
-    {
-        "id": "6575",
-        "name": "Zaragoza",
-        "team": "Roma",
-        "role": "C",
-        "cost": 10
-    },
-    {
-        "id": "4284",
-        "name": "Sergi Roberto",
-        "team": "Como",
-        "role": "C",
-        "cost": 12
-    },
-    {
-        "id": "6010",
-        "name": "Fazzini",
-        "team": "Fiorentina",
-        "role": "C",
-        "cost": 10
-    },
-    {
-        "id": "6191",
-        "name": "Belahyane",
-        "team": "Lazio",
-        "role": "C",
         "cost": 7
     },
     {
-        "id": "6984",
-        "name": "Ondrejka",
+        "id": "6666",
+        "name": "Bernabè",
         "team": "Parma",
         "role": "C",
-        "cost": 9
+        "cost": 16
     },
     {
-        "id": "7147",
-        "name": "Hojholt",
-        "team": "Pisa",
-        "role": "C",
-        "cost": 7
-    },
-    {
-        "id": "7150",
-        "name": "Vural",
-        "team": "Pisa",
-        "role": "C",
-        "cost": 6
-    },
-    {
-        "id": "7157",
-        "name": "Iannoni",
+        "id": "6717",
+        "name": "Konè I.",
         "team": "Sassuolo",
         "role": "C",
-        "cost": 8
+        "cost": 20
     },
     {
-        "id": "6212",
-        "name": "Zarraga",
-        "team": "Udinese",
-        "role": "C",
-        "cost": 6
-    },
-    {
-        "id": "5850",
-        "name": "Lovric",
-        "team": "Verona",
-        "role": "C",
-        "cost": 9
-    },
-    {
-        "id": "7254",
-        "name": "Lorran",
-        "team": "Pisa",
-        "role": "C",
-        "cost": 8
-    },
-    {
-        "id": "6112",
-        "name": "Iling Junior",
-        "team": "Pisa",
-        "role": "C",
-        "cost": 11
-    },
-    {
-        "id": "7132",
-        "name": "Collocolo",
-        "team": "Cremonese",
-        "role": "C",
-        "cost": 8
-    },
-    {
-        "id": "5788",
-        "name": "Sabiri",
-        "team": "Fiorentina",
-        "role": "C",
-        "cost": 4
-    },
-    {
-        "id": "6980",
-        "name": "Venturino",
-        "team": "Roma",
+        "id": "5007",
+        "name": "Ilic",
+        "team": "Lecce",
         "role": "C",
         "cost": 12
-    },
-    {
-        "id": "4459",
-        "name": "Rovella",
-        "team": "Lazio",
-        "role": "C",
-        "cost": 8
     },
     {
         "id": "5872",
         "name": "Helgason",
-        "team": "Lecce",
+        "team": "Venezia",
         "role": "C",
-        "cost": 7
+        "cost": 6
     },
     {
-        "id": "7149",
-        "name": "Marin M.",
-        "team": "Pisa",
+        "id": "5946",
+        "name": "Sow",
+        "team": "Genoa",
         "role": "C",
-        "cost": 8
+        "cost": 10
     },
     {
-        "id": "6219",
-        "name": "Boloca",
-        "team": "Sassuolo",
+        "id": "7574",
+        "name": "Foe Ondoa",
+        "team": "Monza",
         "role": "C",
-        "cost": 4
+        "cost": 10
     },
     {
-        "id": "6889",
-        "name": "Anjorin",
-        "team": "Torino",
-        "role": "C",
-        "cost": 9
-    },
-    {
-        "id": "5540",
-        "name": "Niasse",
-        "team": "Verona",
-        "role": "C",
-        "cost": 9
-    },
-    {
-        "id": "7248",
-        "name": "Gorter",
-        "team": "Lecce",
-        "role": "C",
-        "cost": 1
-    },
-    {
-        "id": "7010",
-        "name": "Al-Musrati",
-        "team": "Verona",
-        "role": "C",
-        "cost": 7
-    },
-    {
-        "id": "4677",
-        "name": "Cornet",
+        "id": "7608",
+        "name": "Wiafe",
         "team": "Genoa",
         "role": "C",
         "cost": 5
     },
     {
-        "id": "7036",
-        "name": "Bakola",
-        "team": "Sassuolo",
+        "id": "6054",
+        "name": "Moro N.",
+        "team": "Bologna",
+        "role": "C",
+        "cost": 12
+    },
+    {
+        "id": "7409",
+        "name": "Meichtry",
+        "team": "Genoa",
+        "role": "C",
+        "cost": 6
+    },
+    {
+        "id": "7318",
+        "name": "Gandelman",
+        "team": "Lecce",
         "role": "C",
         "cost": 7
+    },
+    {
+        "id": "5453",
+        "name": "Ricci S.",
+        "team": "Como",
+        "role": "C",
+        "cost": 10
+    },
+    {
+        "id": "2741",
+        "name": "Pessina",
+        "team": "Monza",
+        "role": "C",
+        "cost": 14
+    },
+    {
+        "id": "6252",
+        "name": "Folorunsho",
+        "team": "Monza",
+        "role": "C",
+        "cost": 11
+    },
+    {
+        "id": "7138",
+        "name": "Ordonez C.",
+        "team": "Parma",
+        "role": "C",
+        "cost": 6
+    },
+    {
+        "id": "6246",
+        "name": "Lipani",
+        "team": "Sassuolo",
+        "role": "C",
+        "cost": 3
+    },
+    {
+        "id": "6005",
+        "name": "Ilkhan",
+        "team": "Torino",
+        "role": "C",
+        "cost": 7
+    },
+    {
+        "id": "6218",
+        "name": "Oristanio",
+        "team": "Torino",
+        "role": "C",
+        "cost": 6
+    },
+    {
+        "id": "7208",
+        "name": "Miller L.",
+        "team": "Udinese",
+        "role": "C",
+        "cost": 12
+    },
+    {
+        "id": "7146",
+        "name": "Tourè I.",
+        "team": "Monza",
+        "role": "C",
+        "cost": 5
+    },
+    {
+        "id": "7579",
+        "name": "Massolin",
+        "team": "Cagliari",
+        "role": "C",
+        "cost": 7
+    },
+    {
+        "id": "6024",
+        "name": "Sulemana I.",
+        "team": "Sassuolo",
+        "role": "C",
+        "cost": 5
+    },
+    {
+        "id": "7528",
+        "name": "Amondarain",
+        "team": "Bologna",
+        "role": "C",
+        "cost": 7
+    },
+    {
+        "id": "6225",
+        "name": "El Azzouzi O.",
+        "team": "Bologna",
+        "role": "C",
+        "cost": 6
     },
     {
         "id": "7165",
         "name": "Liteta",
         "team": "Cagliari",
         "role": "C",
-        "cost": 6
-    },
-    {
-        "id": "6645",
-        "name": "Marchwinski",
-        "team": "Lecce",
-        "role": "C",
-        "cost": 2
-    },
-    {
-        "id": "4890",
-        "name": "Tameze",
-        "team": "Torino",
-        "role": "C",
-        "cost": 9
-    },
-    {
-        "id": "5007",
-        "name": "Ilic",
-        "team": "Torino",
-        "role": "C",
-        "cost": 8
-    },
-    {
-        "id": "6677",
-        "name": "Adzic",
-        "team": "Juventus",
-        "role": "C",
         "cost": 1
     },
     {
-        "id": "5610",
-        "name": "Vranckx",
-        "team": "Sassuolo",
+        "id": "6640",
+        "name": "Felici",
+        "team": "Cagliari",
         "role": "C",
-        "cost": 9
+        "cost": 5
     },
     {
-        "id": "7246",
-        "name": "Sala A.",
+        "id": "6503",
+        "name": "Stankovic A.",
+        "team": "Inter",
+        "role": "C",
+        "cost": 6
+    },
+    {
+        "id": "6410",
+        "name": "Kaba",
         "team": "Lecce",
         "role": "C",
-        "cost": 9
+        "cost": 3
     },
     {
-        "id": "5561",
-        "name": "Stengs",
-        "team": "Pisa",
+        "id": "7477",
+        "name": "Colombo L.",
+        "team": "Monza",
         "role": "C",
-        "cost": 8
-    },
-    {
-        "id": "6538",
-        "name": "Onana J.",
-        "team": "Genoa",
-        "role": "C",
-        "cost": 4
+        "cost": 3
     },
     {
         "id": "7276",
         "name": "Cremaschi",
         "team": "Parma",
         "role": "C",
-        "cost": 8
+        "cost": 1
     },
     {
-        "id": "7319",
-        "name": "Fofana Sa.",
-        "team": "Lecce",
+        "id": "4349",
+        "name": "Nicolussi Caviglia",
+        "team": "Parma",
         "role": "C",
-        "cost": 6
+        "cost": 10
     },
     {
-        "id": "7345",
-        "name": "Przyborek",
-        "team": "Lazio",
+        "id": "7536",
+        "name": "Diallo O.",
+        "team": "Parma",
         "role": "C",
-        "cost": 6
-    },
-    {
-        "id": "7357",
-        "name": "Lahdo",
-        "team": "Como",
-        "role": "C",
-        "cost": 5
-    },
-    {
-        "id": "2764",
-        "name": "Martinez L.",
-        "team": "Inter",
-        "role": "A",
-        "cost": 315
-    },
-    {
-        "id": "4871",
-        "name": "Thuram",
-        "team": "Inter",
-        "role": "A",
-        "cost": 270
-    },
-    {
-        "id": "6052",
-        "name": "Hojlund",
-        "team": "Napoli",
-        "role": "A",
-        "cost": 213
-    },
-    {
-        "id": "7017",
-        "name": "Douvikas",
-        "team": "Como",
-        "role": "A",
-        "cost": 200
-    },
-    {
-        "id": "6434",
-        "name": "Yildiz",
-        "team": "Juventus",
-        "role": "A",
-        "cost": 182
-    },
-    {
-        "id": "531",
-        "name": "Berardi",
-        "team": "Sassuolo",
-        "role": "A",
-        "cost": 90
-    },
-    {
-        "id": "5585",
-        "name": "Malen",
-        "team": "Roma",
-        "role": "A",
-        "cost": 350
-    },
-    {
-        "id": "6435",
-        "name": "Krstovic",
-        "team": "Atalanta",
-        "role": "A",
-        "cost": 95
-    },
-    {
-        "id": "5637",
-        "name": "Davis K.",
-        "team": "Udinese",
-        "role": "A",
-        "cost": 110
-    },
-    {
-        "id": "2137",
-        "name": "Scamacca",
-        "team": "Atalanta",
-        "role": "A",
-        "cost": 95
-    },
-    {
-        "id": "505",
-        "name": "Bonazzoli",
-        "team": "Cremonese",
-        "role": "A",
-        "cost": 40
-    },
-    {
-        "id": "7071",
-        "name": "Esposito F.P.",
-        "team": "Inter",
-        "role": "A",
-        "cost": 41
-    },
-    {
-        "id": "2061",
-        "name": "Simeone",
-        "team": "Torino",
-        "role": "A",
-        "cost": 99
-    },
-    {
-        "id": "4463",
-        "name": "Esposito Se.",
-        "team": "Cagliari",
-        "role": "A",
-        "cost": 70
-    },
-    {
-        "id": "6060",
-        "name": "Laurient\u00e8",
-        "team": "Sassuolo",
-        "role": "A",
-        "cost": 82
-    },
-    {
-        "id": "6669",
-        "name": "Bonny",
-        "team": "Inter",
-        "role": "A",
-        "cost": 15
-    },
-    {
-        "id": "4510",
-        "name": "Leao",
-        "team": "Milan",
-        "role": "A",
-        "cost": 80
-    },
-    {
-        "id": "5734",
-        "name": "Soul\u00e8",
-        "team": "Roma",
-        "role": "A",
-        "cost": 85
-    },
-    {
-        "id": "7023",
-        "name": "Pellegrino M.",
-        "team": "Parma",
-        "role": "A",
-        "cost": 67
-    },
-    {
-        "id": "4728",
-        "name": "Nkunku",
-        "team": "Milan",
-        "role": "A",
-        "cost": 43
-    },
-    {
-        "id": "6572",
-        "name": "Castro S.",
-        "team": "Bologna",
-        "role": "A",
-        "cost": 30
-    },
-    {
-        "id": "5995",
-        "name": "De Ketelaere",
-        "team": "Atalanta",
-        "role": "A",
-        "cost": 59
-    },
-    {
-        "id": "2097",
-        "name": "Kean",
-        "team": "Fiorentina",
-        "role": "A",
-        "cost": 40
-    },
-    {
-        "id": "2841",
-        "name": "Vlahovic",
-        "team": "Juventus",
-        "role": "A",
-        "cost": 100
-    },
-    {
-        "id": "2489",
-        "name": "Pedro",
-        "team": "Lazio",
-        "role": "A",
-        "cost": 20
-    },
-    {
-        "id": "5455",
-        "name": "Moreo",
-        "team": "Pisa",
-        "role": "A",
-        "cost": 25
-    },
-    {
-        "id": "2038",
-        "name": "Pinamonti",
-        "team": "Sassuolo",
-        "role": "A",
-        "cost": 55
-    },
-    {
-        "id": "6646",
-        "name": "Adams C.",
-        "team": "Torino",
-        "role": "A",
-        "cost": 23
-    },
-    {
-        "id": "2499",
-        "name": "Vardy",
-        "team": "Cremonese",
-        "role": "A",
-        "cost": 32
-    },
-    {
-        "id": "7129",
-        "name": "Rodriguez Je.",
-        "team": "Como",
-        "role": "A",
-        "cost": 27
-    },
-    {
-        "id": "6001",
-        "name": "Banda",
-        "team": "Lecce",
-        "role": "A",
-        "cost": 22
-    },
-    {
-        "id": "4371",
-        "name": "Raspadori",
-        "team": "Atalanta",
-        "role": "A",
-        "cost": 37
-    },
-    {
-        "id": "2531",
-        "name": "Lukaku",
-        "team": "Napoli",
-        "role": "A",
-        "cost": 10
-    },
-    {
-        "id": "4923",
-        "name": "Colombo",
-        "team": "Genoa",
-        "role": "A",
-        "cost": 37
-    },
-    {
-        "id": "6556",
-        "name": "Noslin",
-        "team": "Lazio",
-        "role": "A",
-        "cost": 24
-    },
-    {
-        "id": "6552",
-        "name": "Orban G.",
-        "team": "Verona",
-        "role": "A",
-        "cost": 15
-    },
-    {
-        "id": "6164",
-        "name": "Vitinha O.",
-        "team": "Genoa",
-        "role": "A",
-        "cost": 20
-    },
-    {
-        "id": "5544",
-        "name": "David",
-        "team": "Juventus",
-        "role": "A",
-        "cost": 28
-    },
-    {
-        "id": "309",
-        "name": "Dybala",
-        "team": "Roma",
-        "role": "A",
-        "cost": 50
-    },
-    {
-        "id": "7162",
-        "name": "Giovane",
-        "team": "Napoli",
-        "role": "A",
-        "cost": 8
-    },
-    {
-        "id": "7199",
-        "name": "Kilicsoy",
-        "team": "Cagliari",
-        "role": "A",
-        "cost": 7
-    },
-    {
-        "id": "4436",
-        "name": "Cambiaghi",
-        "team": "Bologna",
-        "role": "A",
-        "cost": 10
-    },
-    {
-        "id": "6967",
-        "name": "Diao",
-        "team": "Como",
-        "role": "A",
-        "cost": 30
-    },
-    {
-        "id": "5506",
-        "name": "Ekuban",
-        "team": "Genoa",
-        "role": "A",
-        "cost": 12
-    },
-    {
-        "id": "7008",
-        "name": "Gimenez",
-        "team": "Milan",
-        "role": "A",
-        "cost": 12
-    },
-    {
-        "id": "6243",
-        "name": "Borrelli",
-        "team": "Cagliari",
-        "role": "A",
-        "cost": 15
-    },
-    {
-        "id": "5500",
-        "name": "Cancellieri",
-        "team": "Lazio",
-        "role": "A",
-        "cost": 12
-    },
-    {
-        "id": "6439",
-        "name": "Cheddira",
-        "team": "Lecce",
-        "role": "A",
-        "cost": 23
-    },
-    {
-        "id": "2832",
-        "name": "Boga",
-        "team": "Juventus",
-        "role": "A",
-        "cost": 37
-    },
-    {
-        "id": "5515",
-        "name": "Okereke",
-        "team": "Cremonese",
-        "role": "A",
-        "cost": 5
-    },
-    {
-        "id": "6822",
-        "name": "Ekhator",
-        "team": "Genoa",
-        "role": "A",
-        "cost": 8
-    },
-    {
-        "id": "6675",
-        "name": "Dovbyk",
-        "team": "Roma",
-        "role": "A",
-        "cost": 8
-    },
-    {
-        "id": "6365",
-        "name": "Ferguson E.",
-        "team": "Roma",
-        "role": "A",
-        "cost": 12
-    },
-    {
-        "id": "5336",
-        "name": "Nzola",
-        "team": "Sassuolo",
-        "role": "A",
-        "cost": 15
-    },
-    {
-        "id": "2678",
-        "name": "Fullkrug",
-        "team": "Milan",
-        "role": "A",
-        "cost": 12
-    },
-    {
-        "id": "7316",
-        "name": "Durosinmi",
-        "team": "Pisa",
-        "role": "A",
-        "cost": 9
-    },
-    {
-        "id": "7347",
-        "name": "Bowie",
-        "team": "Verona",
-        "role": "A",
-        "cost": 33
-    },
-    {
-        "id": "5918",
-        "name": "Sulemana K.",
-        "team": "Atalanta",
-        "role": "A",
-        "cost": 7
-    },
-    {
-        "id": "4359",
-        "name": "Piccoli",
-        "team": "Fiorentina",
-        "role": "A",
-        "cost": 15
-    },
-    {
-        "id": "7313",
-        "name": "Ratkov",
-        "team": "Lazio",
-        "role": "A",
-        "cost": 9
-    },
-    {
-        "id": "608",
-        "name": "Zapata D.",
-        "team": "Torino",
-        "role": "A",
-        "cost": 15
-    },
-    {
-        "id": "7252",
-        "name": "Stulic",
-        "team": "Lecce",
-        "role": "A",
-        "cost": 12
-    },
-    {
-        "id": "6380",
-        "name": "Solomon",
-        "team": "Fiorentina",
-        "role": "A",
-        "cost": 18
-    },
-    {
-        "id": "6981",
-        "name": "Vaz",
-        "team": "Roma",
-        "role": "A",
-        "cost": 11
-    },
-    {
-        "id": "7001",
-        "name": "N'Dri",
-        "team": "Lecce",
-        "role": "A",
-        "cost": 10
-    },
-    {
-        "id": "7249",
-        "name": "Buksa",
-        "team": "Udinese",
-        "role": "A",
-        "cost": 8
-    },
-    {
-        "id": "6643",
-        "name": "Dallinga",
-        "team": "Bologna",
-        "role": "A",
-        "cost": 9
-    },
-    {
-        "id": "7127",
-        "name": "Addai",
-        "team": "Como",
-        "role": "A",
-        "cost": 9
-    },
-    {
-        "id": "5672",
-        "name": "Dia",
-        "team": "Lazio",
-        "role": "A",
-        "cost": 9
-    },
-    {
-        "id": "6827",
-        "name": "Njie",
-        "team": "Torino",
-        "role": "A",
-        "cost": 4
-    },
-    {
-        "id": "7342",
-        "name": "Elphege",
-        "team": "Parma",
-        "role": "A",
-        "cost": 18
-    },
-    {
-        "id": "7128",
-        "name": "Kuhn",
-        "team": "Como",
-        "role": "A",
-        "cost": 9
-    },
-    {
-        "id": "5471",
-        "name": "Djuric",
-        "team": "Cremonese",
-        "role": "A",
-        "cost": 8
-    },
-    {
-        "id": "6836",
-        "name": "Meister",
-        "team": "Pisa",
-        "role": "A",
-        "cost": 9
-    },
-    {
-        "id": "441",
-        "name": "Belotti",
-        "team": "Cagliari",
-        "role": "A",
-        "cost": 10
-    },
-    {
-        "id": "7272",
-        "name": "Gueye",
-        "team": "Udinese",
-        "role": "A",
-        "cost": 1
-    },
-    {
-        "id": "7374",
-        "name": "Mendy P.",
-        "team": "Cagliari",
-        "role": "A",
-        "cost": 15
-    },
-    {
-        "id": "479",
-        "name": "Sanabria",
-        "team": "Cremonese",
-        "role": "A",
-        "cost": 10
-    },
-    {
-        "id": "6159",
-        "name": "Sarr A.",
-        "team": "Verona",
-        "role": "A",
-        "cost": 8
-    },
-    {
-        "id": "6630",
-        "name": "Mosquera",
-        "team": "Verona",
-        "role": "A",
-        "cost": 8
-    },
-    {
-        "id": "6314",
-        "name": "Openda",
-        "team": "Juventus",
-        "role": "A",
-        "cost": 8
-    },
-    {
-        "id": "7344",
-        "name": "Stojilkovic",
-        "team": "Pisa",
-        "role": "A",
-        "cost": 7
-    },
-    {
-        "id": "7349",
-        "name": "Kulenovic",
-        "team": "Torino",
-        "role": "A",
-        "cost": 9
-    },
-    {
-        "id": "6895",
-        "name": "Dominguez B.",
-        "team": "Bologna",
-        "role": "A",
-        "cost": 8
-    },
-    {
-        "id": "247",
-        "name": "Pavoletti",
-        "team": "Cagliari",
-        "role": "A",
-        "cost": 7
-    },
-    {
-        "id": "6207",
-        "name": "Almqvist",
-        "team": "Parma",
-        "role": "A",
-        "cost": 7
-    },
-    {
-        "id": "6519",
-        "name": "Camarda",
-        "team": "Lecce",
-        "role": "A",
-        "cost": 8
-    },
-    {
-        "id": "7161",
-        "name": "Bayo V.",
-        "team": "Udinese",
-        "role": "A",
-        "cost": 8
-    },
-    {
-        "id": "313",
-        "name": "Morata",
-        "team": "Como",
-        "role": "A",
-        "cost": 10
-    },
-    {
-        "id": "7239",
-        "name": "Braschi",
-        "team": "Fiorentina",
-        "role": "A",
-        "cost": 1
-    },
-    {
-        "id": "6555",
-        "name": "Moumbagna",
-        "team": "Cremonese",
-        "role": "A",
-        "cost": 5
-    },
-    {
-        "id": "7338",
-        "name": "Albarracin",
-        "team": "Cagliari",
-        "role": "A",
-        "cost": 1
-    },
-    {
-        "id": "7381",
-        "name": "Mikolajewski",
-        "team": "Parma",
-        "role": "A",
-        "cost": 1
-    },
-    {
-        "id": "2012",
-        "name": "Milik",
-        "team": "Juventus",
-        "role": "A",
-        "cost": 5
-    },
-    {
-        "id": "7158",
-        "name": "Moro L.",
-        "team": "Sassuolo",
-        "role": "A",
         "cost": 1
     },
     {
         "id": "7183",
         "name": "Aboukhlal",
         "team": "Torino",
+        "role": "C",
+        "cost": 2
+    },
+    {
+        "id": "6212",
+        "name": "Zarraga",
+        "team": "Udinese",
+        "role": "C",
+        "cost": 4
+    },
+    {
+        "id": "7418",
+        "name": "Chakvetadze",
+        "team": "Udinese",
+        "role": "C",
+        "cost": 9
+    },
+    {
+        "id": "7481",
+        "name": "Dagasso",
+        "team": "Venezia",
+        "role": "C",
+        "cost": 1
+    },
+    {
+        "id": "7575",
+        "name": "Mout",
+        "team": "Monza",
+        "role": "C",
+        "cost": 4
+    },
+    {
+        "id": "7092",
+        "name": "Jovanovic",
+        "team": "Udinese",
+        "role": "C",
+        "cost": 2
+    },
+    {
+        "id": "7232",
+        "name": "Fernandez T.",
+        "team": "Venezia",
+        "role": "C",
+        "cost": 4
+    },
+    {
+        "id": "7357",
+        "name": "Lahdo",
+        "team": "Como",
+        "role": "C",
+        "cost": 1
+    },
+    {
+        "id": "7456",
+        "name": "El Azzouzi A.",
+        "team": "Frosinone",
+        "role": "C",
+        "cost": 1
+    },
+    {
+        "id": "5725",
+        "name": "Kone B.",
+        "team": "Frosinone",
+        "role": "C",
+        "cost": 1
+    },
+    {
+        "id": "6241",
+        "name": "Gelli F.",
+        "team": "Frosinone",
+        "role": "C",
+        "cost": 1
+    },
+    {
+        "id": "6980",
+        "name": "Venturino",
+        "team": "Genoa",
+        "role": "C",
+        "cost": 2
+    },
+    {
+        "id": "333",
+        "name": "Cataldi",
+        "team": "Lazio",
+        "role": "C",
+        "cost": 7
+    },
+    {
+        "id": "7345",
+        "name": "Przyborek",
+        "team": "Lazio",
+        "role": "C",
+        "cost": 2
+    },
+    {
+        "id": "7319",
+        "name": "Fofana Sa.",
+        "team": "Lecce",
+        "role": "C",
+        "cost": 1
+    },
+    {
+        "id": "6015",
+        "name": "Berisha M.",
+        "team": "Lecce",
+        "role": "C",
+        "cost": 4
+    },
+    {
+        "id": "5880",
+        "name": "Ciurria",
+        "team": "Monza",
+        "role": "C",
+        "cost": 1
+    },
+    {
+        "id": "6219",
+        "name": "Boloca",
+        "team": "Sassuolo",
+        "role": "C",
+        "cost": 1
+    },
+    {
+        "id": "526",
+        "name": "Duncan",
+        "team": "Venezia",
+        "role": "C",
+        "cost": 1
+    },
+    {
+        "id": "7550",
+        "name": "Grillitsch",
+        "team": "Frosinone",
+        "role": "C",
+        "cost": 7
+    },
+    {
+        "id": "6592",
+        "name": "Forson O.",
+        "team": "Monza",
+        "role": "C",
+        "cost": 3
+    },
+    {
+        "id": "7571",
+        "name": "Laerke",
+        "team": "Lecce",
+        "role": "C",
+        "cost": 1
+    },
+    {
+        "id": "7572",
+        "name": "Comotto",
+        "team": "Milan",
+        "role": "C",
+        "cost": 1
+    },
+    {
+        "id": "5462",
+        "name": "Ciervo",
+        "team": "Cagliari",
+        "role": "C",
+        "cost": 1
+    },
+    {
+        "id": "801",
+        "name": "Gagliardini",
+        "team": "Cagliari",
+        "role": "C",
+        "cost": 7
+    },
+    {
+        "id": "7629",
+        "name": "Libra",
+        "team": "Bologna",
+        "role": "C",
+        "cost": 1
+    },
+    {
+        "id": "5850",
+        "name": "Lovric",
+        "team": "Udinese",
+        "role": "C",
+        "cost": 1
+    },
+    {
+        "id": "5585",
+        "name": "Malen",
+        "team": "Roma",
         "role": "A",
-        "cost": 8
+        "cost": 425
+    },
+    {
+        "id": "4871",
+        "name": "Thuram",
+        "team": "Inter",
+        "role": "A",
+        "cost": 345
+    },
+    {
+        "id": "2764",
+        "name": "Martinez L.",
+        "team": "Inter",
+        "role": "A",
+        "cost": 345
+    },
+    {
+        "id": "7017",
+        "name": "Douvikas",
+        "team": "Como",
+        "role": "A",
+        "cost": 143
+    },
+    {
+        "id": "6435",
+        "name": "Krstovic",
+        "team": "Atalanta",
+        "role": "A",
+        "cost": 186
+    },
+    {
+        "id": "6052",
+        "name": "Hojlund",
+        "team": "Napoli",
+        "role": "A",
+        "cost": 175
+    },
+    {
+        "id": "7071",
+        "name": "Esposito F.P.",
+        "team": "Inter",
+        "role": "A",
+        "cost": 88
+    },
+    {
+        "id": "5734",
+        "name": "Soulè",
+        "team": "Roma",
+        "role": "A",
+        "cost": 90
+    },
+    {
+        "id": "7523",
+        "name": "Varela G.",
+        "team": "Monza",
+        "role": "A",
+        "cost": 168
+    },
+    {
+        "id": "4463",
+        "name": "Esposito Se.",
+        "team": "Sassuolo",
+        "role": "A",
+        "cost": 37
+    },
+    {
+        "id": "6397",
+        "name": "Ramos G.",
+        "team": "Milan",
+        "role": "A",
+        "cost": 182
+    },
+    {
+        "id": "6752",
+        "name": "Woltemade",
+        "team": "Juventus",
+        "role": "A",
+        "cost": 45
+    },
+    {
+        "id": "5436",
+        "name": "Raimondo",
+        "team": "Frosinone",
+        "role": "A",
+        "cost": 80
+    },
+    {
+        "id": "6556",
+        "name": "Noslin",
+        "team": "Lazio",
+        "role": "A",
+        "cost": 100
+    },
+    {
+        "id": "6646",
+        "name": "Adams C.",
+        "team": "Torino",
+        "role": "A",
+        "cost": 33
+    },
+    {
+        "id": "2061",
+        "name": "Simeone",
+        "team": "Torino",
+        "role": "A",
+        "cost": 69
+    },
+    {
+        "id": "4896",
+        "name": "Maldini",
+        "team": "Cagliari",
+        "role": "A",
+        "cost": 63
+    },
+    {
+        "id": "6530",
+        "name": "Ghedjemis",
+        "team": "Frosinone",
+        "role": "A",
+        "cost": 56
+    },
+    {
+        "id": "6204",
+        "name": "Kvernadze",
+        "team": "Frosinone",
+        "role": "A",
+        "cost": 58
+    },
+    {
+        "id": "5951",
+        "name": "Kolo Muani",
+        "team": "Juventus",
+        "role": "A",
+        "cost": 82
+    },
+    {
+        "id": "2097",
+        "name": "Kean",
+        "team": "Como",
+        "role": "A",
+        "cost": 40
+    },
+    {
+        "id": "7023",
+        "name": "Pellegrino M.",
+        "team": "Fiorentina",
+        "role": "A",
+        "cost": 50
+    },
+    {
+        "id": "309",
+        "name": "Dybala",
+        "team": "Roma",
+        "role": "A",
+        "cost": 75
+    },
+    {
+        "id": "531",
+        "name": "Berardi",
+        "team": "Sassuolo",
+        "role": "A",
+        "cost": 70
+    },
+    {
+        "id": "6060",
+        "name": "Laurientè",
+        "team": "Sassuolo",
+        "role": "A",
+        "cost": 55
+    },
+    {
+        "id": "7554",
+        "name": "Romero D.",
+        "team": "Parma",
+        "role": "A",
+        "cost": 26
+    },
+    {
+        "id": "7600",
+        "name": "Osmajic",
+        "team": "Genoa",
+        "role": "A",
+        "cost": 85
+    },
+    {
+        "id": "6572",
+        "name": "Castro S.",
+        "team": "Roma",
+        "role": "A",
+        "cost": 42
+    },
+    {
+        "id": "2038",
+        "name": "Pinamonti",
+        "team": "Lazio",
+        "role": "A",
+        "cost": 43
+    },
+    {
+        "id": "5995",
+        "name": "De Ketelaere",
+        "team": "Atalanta",
+        "role": "A",
+        "cost": 55
+    },
+    {
+        "id": "2137",
+        "name": "Scamacca",
+        "team": "Atalanta",
+        "role": "A",
+        "cost": 41
+    },
+    {
+        "id": "7374",
+        "name": "Mendy P.",
+        "team": "Cagliari",
+        "role": "A",
+        "cost": 30
+    },
+    {
+        "id": "6434",
+        "name": "Yildiz",
+        "team": "Juventus",
+        "role": "A",
+        "cost": 60
+    },
+    {
+        "id": "5637",
+        "name": "Davis K.",
+        "team": "Udinese",
+        "role": "A",
+        "cost": 65
+    },
+    {
+        "id": "7546",
+        "name": "Robinson J.",
+        "team": "Monza",
+        "role": "A",
+        "cost": 20
+    },
+    {
+        "id": "7561",
+        "name": "Lontani",
+        "team": "Parma",
+        "role": "A",
+        "cost": 22
+    },
+    {
+        "id": "6967",
+        "name": "Diao",
+        "team": "Como",
+        "role": "A",
+        "cost": 41
+    },
+    {
+        "id": "6669",
+        "name": "Bonny",
+        "team": "Inter",
+        "role": "A",
+        "cost": 18
+    },
+    {
+        "id": "7484",
+        "name": "Adams A.",
+        "team": "Venezia",
+        "role": "A",
+        "cost": 29
+    },
+    {
+        "id": "4371",
+        "name": "Raspadori",
+        "team": "Atalanta",
+        "role": "A",
+        "cost": 12
+    },
+    {
+        "id": "5882",
+        "name": "Mota",
+        "team": "Monza",
+        "role": "A",
+        "cost": 14
+    },
+    {
+        "id": "7120",
+        "name": "Lang",
+        "team": "Napoli",
+        "role": "A",
+        "cost": 26
+    },
+    {
+        "id": "7349",
+        "name": "Kulenovic",
+        "team": "Torino",
+        "role": "A",
+        "cost": 15
+    },
+    {
+        "id": "7347",
+        "name": "Bowie",
+        "team": "Sassuolo",
+        "role": "A",
+        "cost": 14
+    },
+    {
+        "id": "6675",
+        "name": "Dovbyk",
+        "team": "Bologna",
+        "role": "A",
+        "cost": 10
+    },
+    {
+        "id": "7001",
+        "name": "N'Dri",
+        "team": "Lecce",
+        "role": "A",
+        "cost": 14
+    },
+    {
+        "id": "5694",
+        "name": "Beto",
+        "team": "Fiorentina",
+        "role": "A",
+        "cost": 15
+    },
+    {
+        "id": "4359",
+        "name": "Piccoli",
+        "team": "Bologna",
+        "role": "A",
+        "cost": 23
+    },
+    {
+        "id": "7602",
+        "name": "Fatah",
+        "team": "Lecce",
+        "role": "A",
+        "cost": 7
+    },
+    {
+        "id": "7610",
+        "name": "Birligea",
+        "team": "Frosinone",
+        "role": "A",
+        "cost": 25
+    },
+    {
+        "id": "5336",
+        "name": "Nzola",
+        "team": "Cagliari",
+        "role": "A",
+        "cost": 21
+    },
+    {
+        "id": "2832",
+        "name": "Boga",
+        "team": "Juventus",
+        "role": "A",
+        "cost": 17
+    },
+    {
+        "id": "7351",
+        "name": "Santos A.",
+        "team": "Napoli",
+        "role": "A",
+        "cost": 17
+    },
+    {
+        "id": "6904",
+        "name": "Yeboah J.",
+        "team": "Venezia",
+        "role": "A",
+        "cost": 21
+    },
+    {
+        "id": "7620",
+        "name": "Zeballos",
+        "team": "Monza",
+        "role": "A",
+        "cost": 9
+    },
+    {
+        "id": "4923",
+        "name": "Colombo",
+        "team": "Genoa",
+        "role": "A",
+        "cost": 17
+    },
+    {
+        "id": "6229",
+        "name": "Tourè E.",
+        "team": "Parma",
+        "role": "A",
+        "cost": 20
+    },
+    {
+        "id": "7272",
+        "name": "Gueye",
+        "team": "Udinese",
+        "role": "A",
+        "cost": 4
+    },
+    {
+        "id": "7547",
+        "name": "Kevin Carlos",
+        "team": "Cagliari",
+        "role": "A",
+        "cost": 9
+    },
+    {
+        "id": "6164",
+        "name": "Vitinha O.",
+        "team": "Genoa",
+        "role": "A",
+        "cost": 10
+    },
+    {
+        "id": "7162",
+        "name": "Giovane",
+        "team": "Napoli",
+        "role": "A",
+        "cost": 6
+    },
+    {
+        "id": "7612",
+        "name": "Bobcek",
+        "team": "Frosinone",
+        "role": "A",
+        "cost": 9
+    },
+    {
+        "id": "7623",
+        "name": "Gnonto",
+        "team": "Fiorentina",
+        "role": "A",
+        "cost": 12
+    },
+    {
+        "id": "5029",
+        "name": "Geubbels",
+        "team": "Lecce",
+        "role": "A",
+        "cost": 11
+    },
+    {
+        "id": "2155",
+        "name": "Cutrone",
+        "team": "Monza",
+        "role": "A",
+        "cost": 10
+    },
+    {
+        "id": "6215",
+        "name": "Lucca",
+        "team": "Napoli",
+        "role": "A",
+        "cost": 10
     },
     {
         "id": "7213",
         "name": "Frigan",
         "team": "Parma",
         "role": "A",
+        "cost": 1
+    },
+    {
+        "id": "7342",
+        "name": "Elphege",
+        "team": "Parma",
+        "role": "A",
+        "cost": 3
+    },
+    {
+        "id": "7449",
+        "name": "Rrahmani Al.",
+        "team": "Venezia",
+        "role": "A",
         "cost": 5
     },
     {
-        "id": "7262",
-        "name": "Balentien",
-        "team": "Milan",
+        "id": "7252",
+        "name": "Stulic",
+        "team": "Lecce",
         "role": "A",
-        "cost": 1
+        "cost": 8
     },
     {
-        "id": "7277",
-        "name": "Arena A.",
-        "team": "Roma",
+        "id": "6831",
+        "name": "Neres",
+        "team": "Napoli",
         "role": "A",
-        "cost": 1
+        "cost": 11
     },
     {
-        "id": "7309",
-        "name": "Isaac",
-        "team": "Verona",
+        "id": "608",
+        "name": "Zapata D.",
+        "team": "Torino",
         "role": "A",
-        "cost": 1
+        "cost": 4
+    },
+    {
+        "id": "6145",
+        "name": "Ngonge",
+        "team": "Monza",
+        "role": "A",
+        "cost": 8
+    },
+    {
+        "id": "7627",
+        "name": "Enem",
+        "team": "Bologna",
+        "role": "A",
+        "cost": 9
+    },
+    {
+        "id": "5918",
+        "name": "Sulemana K.",
+        "team": "Atalanta",
+        "role": "A",
+        "cost": 3
     },
     {
         "id": "7317",
@@ -3712,16 +3700,79 @@ export const playersDB = [
         "cost": 1
     },
     {
-        "id": "7368",
-        "name": "Vermesan",
-        "team": "Verona",
+        "id": "6519",
+        "name": "Camarda",
+        "team": "Milan",
+        "role": "A",
+        "cost": 4
+    },
+    {
+        "id": "7482",
+        "name": "Lauberbach",
+        "team": "Venezia",
         "role": "A",
         "cost": 1
     },
     {
-        "id": "7388",
-        "name": "Mosconi",
-        "team": "Inter",
+        "id": "7647",
+        "name": "Esteban",
+        "team": "Lecce",
+        "role": "A",
+        "cost": 6
+    },
+    {
+        "id": "7453",
+        "name": "Havel",
+        "team": "Genoa",
+        "role": "A",
+        "cost": 1
+    },
+    {
+        "id": "6822",
+        "name": "Ekhator",
+        "team": "Juventus",
+        "role": "A",
+        "cost": 4
+    },
+    {
+        "id": "7161",
+        "name": "Bayo V.",
+        "team": "Udinese",
+        "role": "A",
+        "cost": 3
+    },
+    {
+        "id": "7408",
+        "name": "Lisman",
+        "team": "Venezia",
+        "role": "A",
+        "cost": 1
+    },
+    {
+        "id": "4387",
+        "name": "Adorante",
+        "team": "Venezia",
+        "role": "A",
+        "cost": 1
+    },
+    {
+        "id": "2012",
+        "name": "Milik",
+        "team": "Juventus",
+        "role": "A",
+        "cost": 1
+    },
+    {
+        "id": "7568",
+        "name": "De Martis",
+        "team": "Parma",
+        "role": "A",
+        "cost": 1
+    },
+    {
+        "id": "7622",
+        "name": "Robinho Junior",
+        "team": "Genoa",
         "role": "A",
         "cost": 1
     }
