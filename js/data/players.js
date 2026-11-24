@@ -1,4 +1,4 @@
-export const playersLastUpdated = "2026-11-20T15:57:45Z";
+export const playersLastUpdated = "2026-11-24T18:43:26Z";
 
 export const playersSeason = 21;
 
@@ -8,28 +8,35 @@ export const playersDB = [
         "name": "Mandas",
         "team": "Lazio",
         "role": "P",
-        "cost": 64
+        "cost": 68
     },
     {
         "id": "5841",
         "name": "Svilar",
         "team": "Roma",
         "role": "P",
-        "cost": 65
+        "cost": 67
     },
     {
         "id": "6966",
         "name": "Butez",
         "team": "Como",
         "role": "P",
-        "cost": 56
+        "cost": 59
     },
     {
         "id": "4312",
         "name": "Maignan",
         "team": "Milan",
         "role": "P",
-        "cost": 48
+        "cost": 47
+    },
+    {
+        "id": "4964",
+        "name": "Vicario",
+        "team": "Juventus",
+        "role": "P",
+        "cost": 55
     },
     {
         "id": "4360",
@@ -39,25 +46,11 @@ export const playersDB = [
         "cost": 30
     },
     {
-        "id": "6415",
-        "name": "Palmisani",
-        "team": "Frosinone",
-        "role": "P",
-        "cost": 28
-    },
-    {
-        "id": "4964",
-        "name": "Vicario",
-        "team": "Juventus",
-        "role": "P",
-        "cost": 53
-    },
-    {
         "id": "4431",
         "name": "Carnesecchi",
         "team": "Atalanta",
         "role": "P",
-        "cost": 34
+        "cost": 20
     },
     {
         "id": "133",
@@ -67,53 +60,25 @@ export const playersDB = [
         "cost": 21
     },
     {
+        "id": "6415",
+        "name": "Palmisani",
+        "team": "Frosinone",
+        "role": "P",
+        "cost": 28
+    },
+    {
         "id": "7332",
         "name": "Bijlow",
         "team": "Genoa",
         "role": "P",
-        "cost": 14
-    },
-    {
-        "id": "5116",
-        "name": "Martinez Jo.",
-        "team": "Inter",
-        "role": "P",
-        "cost": 51
-    },
-    {
-        "id": "6248",
-        "name": "Stankovic F.",
-        "team": "Venezia",
-        "role": "P",
-        "cost": 10
-    },
-    {
-        "id": "572",
-        "name": "Meret",
-        "team": "Napoli",
-        "role": "P",
-        "cost": 42
+        "cost": 13
     },
     {
         "id": "2170",
         "name": "Milinkovic-Savic V.",
         "team": "Napoli",
         "role": "P",
-        "cost": 15
-    },
-    {
-        "id": "7411",
-        "name": "Daffara",
-        "team": "Parma",
-        "role": "P",
-        "cost": 15
-    },
-    {
-        "id": "610",
-        "name": "Gollini",
-        "team": "Roma",
-        "role": "P",
-        "cost": 20
+        "cost": 25
     },
     {
         "id": "6534",
@@ -123,11 +88,53 @@ export const playersDB = [
         "cost": 13
     },
     {
+        "id": "5116",
+        "name": "Martinez Jo.",
+        "team": "Inter",
+        "role": "P",
+        "cost": 47
+    },
+    {
+        "id": "572",
+        "name": "Meret",
+        "team": "Napoli",
+        "role": "P",
+        "cost": 35
+    },
+    {
+        "id": "7411",
+        "name": "Daffara",
+        "team": "Parma",
+        "role": "P",
+        "cost": 12
+    },
+    {
+        "id": "610",
+        "name": "Gollini",
+        "team": "Roma",
+        "role": "P",
+        "cost": 15
+    },
+    {
+        "id": "6248",
+        "name": "Stankovic F.",
+        "team": "Venezia",
+        "role": "P",
+        "cost": 10
+    },
+    {
         "id": "6344",
         "name": "Sanchez Ro.",
         "team": "Como",
         "role": "P",
         "cost": 4
+    },
+    {
+        "id": "6462",
+        "name": "Okoye",
+        "team": "Udinese",
+        "role": "P",
+        "cost": 9
     },
     {
         "id": "7301",
@@ -141,21 +148,14 @@ export const playersDB = [
         "name": "De Gea",
         "team": "Fiorentina",
         "role": "P",
-        "cost": 13
+        "cost": 10
     },
     {
         "id": "2134",
         "name": "Falcone",
         "team": "Lecce",
         "role": "P",
-        "cost": 17
-    },
-    {
-        "id": "6462",
-        "name": "Okoye",
-        "team": "Udinese",
-        "role": "P",
-        "cost": 9
+        "cost": 15
     },
     {
         "id": "6662",
@@ -170,6 +170,13 @@ export const playersDB = [
         "team": "Inter",
         "role": "P",
         "cost": 10
+    },
+    {
+        "id": "4485",
+        "name": "Thiam",
+        "team": "Monza",
+        "role": "P",
+        "cost": 1
     },
     {
         "id": "4236",
@@ -193,13 +200,6 @@ export const playersDB = [
         "cost": 1
     },
     {
-        "id": "4485",
-        "name": "Thiam",
-        "team": "Monza",
-        "role": "P",
-        "cost": 1
-    },
-    {
         "id": "6125",
         "name": "Vasquez D.",
         "team": "Roma",
@@ -211,7 +211,7 @@ export const playersDB = [
         "name": "Sportiello",
         "team": "Atalanta",
         "role": "P",
-        "cost": 1
+        "cost": 10
     },
     {
         "id": "7533",
@@ -466,88 +466,95 @@ export const playersDB = [
         "cost": 135
     },
     {
-        "id": "2788",
-        "name": "Bremer",
-        "team": "Juventus",
-        "role": "D",
-        "cost": 75
-    },
-    {
         "id": "6869",
         "name": "Ramon",
         "team": "Como",
         "role": "D",
-        "cost": 41
+        "cost": 65
     },
     {
         "id": "7181",
         "name": "Wesley",
         "team": "Roma",
         "role": "D",
-        "cost": 87
+        "cost": 100
+    },
+    {
+        "id": "2788",
+        "name": "Bremer",
+        "team": "Juventus",
+        "role": "D",
+        "cost": 77
     },
     {
         "id": "4734",
         "name": "Miranda J.",
         "team": "Bologna",
         "role": "D",
-        "cost": 41
-    },
-    {
-        "id": "6531",
-        "name": "Jimenez A.",
-        "team": "Fiorentina",
-        "role": "D",
         "cost": 40
-    },
-    {
-        "id": "5877",
-        "name": "Carlos Augusto",
-        "team": "Inter",
-        "role": "D",
-        "cost": 45
-    },
-    {
-        "id": "5620",
-        "name": "Tavares N.",
-        "team": "Lazio",
-        "role": "D",
-        "cost": 95
-    },
-    {
-        "id": "5833",
-        "name": "Gila",
-        "team": "Milan",
-        "role": "D",
-        "cost": 35
     },
     {
         "id": "7414",
         "name": "Kaiki",
         "team": "Como",
         "role": "D",
-        "cost": 21
+        "cost": 22
+    },
+    {
+        "id": "5877",
+        "name": "Carlos Augusto",
+        "team": "Inter",
+        "role": "D",
+        "cost": 43
+    },
+    {
+        "id": "5620",
+        "name": "Tavares N.",
+        "team": "Lazio",
+        "role": "D",
+        "cost": 90
+    },
+    {
+        "id": "5833",
+        "name": "Gila",
+        "team": "Milan",
+        "role": "D",
+        "cost": 37
     },
     {
         "id": "4807",
         "name": "Hermoso",
         "team": "Roma",
         "role": "D",
-        "cost": 45
+        "cost": 46
+    },
+    {
+        "id": "6531",
+        "name": "Jimenez A.",
+        "team": "Fiorentina",
+        "role": "D",
+        "cost": 38
+    },
+    {
+        "id": "6821",
+        "name": "Hainaut",
+        "team": "Venezia",
+        "role": "D",
+        "cost": 29
     },
     {
         "id": "4998",
         "name": "Molina N.",
         "team": "Roma",
         "role": "D",
-        "cost": 42
+        "cost": 37
     },
     {
         "id": "6217",
         "name": "Bisseck",
         "team": "Inter",
         "role": "D",
-        "cost": 29
+        "cost": 27
     },
     {
         "id": "7485",
@@ -564,18 +571,11 @@ export const playersDB = [
         "cost": 17
     },
     {
-        "id": "6821",
-        "name": "Hainaut",
-        "team": "Venezia",
-        "role": "D",
-        "cost": 30
-    },
-    {
         "id": "4705",
         "name": "Balerdi",
         "team": "Roma",
         "role": "D",
-        "cost": 34
+        "cost": 32
     },
     {
         "id": "7220",
@@ -585,74 +585,32 @@ export const playersDB = [
         "cost": 28
     },
     {
-        "id": "7469",
-        "name": "Bracaglia",
-        "team": "Frosinone",
-        "role": "D",
-        "cost": 14
-    },
-    {
-        "id": "6238",
-        "name": "Oyono A.",
-        "team": "Frosinone",
-        "role": "D",
-        "cost": 12
-    },
-    {
-        "id": "2120",
-        "name": "Bastoni",
-        "team": "Inter",
-        "role": "D",
-        "cost": 37
-    },
-    {
         "id": "6989",
         "name": "Tiago Gabriel",
         "team": "Lecce",
         "role": "D",
-        "cost": 21
+        "cost": 19
     },
     {
         "id": "4409",
         "name": "Rrahmani",
         "team": "Napoli",
         "role": "D",
-        "cost": 44
+        "cost": 42
     },
     {
         "id": "2296",
         "name": "Mancini",
         "team": "Roma",
         "role": "D",
-        "cost": 49
+        "cost": 50
     },
     {
         "id": "4317",
         "name": "Ndicka",
         "team": "Roma",
         "role": "D",
-        "cost": 34
-    },
-    {
-        "id": "4159",
-        "name": "Akanji",
-        "team": "Inter",
-        "role": "D",
-        "cost": 29
-    },
-    {
-        "id": "5022",
-        "name": "Pavlovic",
-        "team": "Milan",
-        "role": "D",
-        "cost": 53
-    },
-    {
-        "id": "2816",
-        "name": "Di Lorenzo",
-        "team": "Napoli",
-        "role": "D",
-        "cost": 32
+        "cost": 35
     },
     {
         "id": "5498",
@@ -662,32 +620,53 @@ export const playersDB = [
         "cost": 7
     },
     {
-        "id": "4976",
-        "name": "Kalulu",
-        "team": "Juventus",
+        "id": "7469",
+        "name": "Bracaglia",
+        "team": "Frosinone",
         "role": "D",
-        "cost": 24
+        "cost": 13
     },
     {
-        "id": "7131",
-        "name": "Floriani Mussolini",
-        "team": "Lazio",
-        "role": "D",
-        "cost": 20
-    },
-    {
-        "id": "5851",
-        "name": "Doig",
-        "team": "Sassuolo",
+        "id": "6238",
+        "name": "Oyono A.",
+        "team": "Frosinone",
         "role": "D",
         "cost": 12
     },
     {
-        "id": "6495",
-        "name": "Comuzzo",
-        "team": "Torino",
+        "id": "4159",
+        "name": "Akanji",
+        "team": "Inter",
         "role": "D",
-        "cost": 13
+        "cost": 28
+    },
+    {
+        "id": "2120",
+        "name": "Bastoni",
+        "team": "Inter",
+        "role": "D",
+        "cost": 35
+    },
+    {
+        "id": "5022",
+        "name": "Pavlovic",
+        "team": "Milan",
+        "role": "D",
+        "cost": 52
+    },
+    {
+        "id": "2816",
+        "name": "Di Lorenzo",
+        "team": "Napoli",
+        "role": "D",
+        "cost": 30
+    },
+    {
+        "id": "6727",
+        "name": "Couto",
+        "team": "Como",
+        "role": "D",
+        "cost": 30
     },
     {
         "id": "6537",
@@ -697,39 +676,46 @@ export const playersDB = [
         "cost": 5
     },
     {
-        "id": "7467",
-        "name": "Calvani",
-        "team": "Frosinone",
+        "id": "4433",
+        "name": "Zortea",
+        "team": "Bologna",
         "role": "D",
-        "cost": 16
+        "cost": 15
     },
     {
-        "id": "7012",
-        "name": "Provstgaard",
+        "id": "7131",
+        "name": "Floriani Mussolini",
         "team": "Lazio",
         "role": "D",
-        "cost": 18
+        "cost": 22
+    },
+    {
+        "id": "5851",
+        "name": "Doig",
+        "team": "Sassuolo",
+        "role": "D",
+        "cost": 12
     },
     {
         "id": "6642",
         "name": "Coco",
         "team": "Torino",
         "role": "D",
+        "cost": 14
+    },
+    {
+        "id": "6495",
+        "name": "Comuzzo",
+        "team": "Torino",
+        "role": "D",
         "cost": 13
     },
     {
-        "id": "6021",
-        "name": "Abankwah",
-        "team": "Udinese",
+        "id": "7599",
+        "name": "Lulli",
+        "team": "Roma",
         "role": "D",
-        "cost": 12
-    },
-    {
-        "id": "6727",
-        "name": "Couto",
-        "team": "Como",
-        "role": "D",
-        "cost": 22
+        "cost": 25
     },
     {
         "id": "5675",
@@ -739,11 +725,46 @@ export const playersDB = [
         "cost": 11
     },
     {
-        "id": "2404",
-        "name": "Alaba",
-        "team": "Udinese",
+        "id": "5831",
+        "name": "Gatti",
+        "team": "Juventus",
         "role": "D",
         "cost": 12
+    },
+    {
+        "id": "4976",
+        "name": "Kalulu",
+        "team": "Juventus",
+        "role": "D",
+        "cost": 23
+    },
+    {
+        "id": "7012",
+        "name": "Provstgaard",
+        "team": "Lazio",
+        "role": "D",
+        "cost": 16
+    },
+    {
+        "id": "7238",
+        "name": "Kouadio",
+        "team": "Monza",
+        "role": "D",
+        "cost": 11
+    },
+    {
+        "id": "6021",
+        "name": "Abankwah",
+        "team": "Udinese",
+        "role": "D",
+        "cost": 13
+    },
+    {
+        "id": "6047",
+        "name": "Ehizibue",
+        "team": "Genoa",
+        "role": "D",
+        "cost": 9
     },
     {
         "id": "6893",
@@ -753,25 +774,18 @@ export const playersDB = [
         "cost": 15
     },
     {
-        "id": "6867",
-        "name": "Valle",
-        "team": "Como",
-        "role": "D",
-        "cost": 20
-    },
-    {
         "id": "5750",
         "name": "Ostigard",
         "team": "Genoa",
         "role": "D",
-        "cost": 26
+        "cost": 29
     },
     {
-        "id": "5831",
-        "name": "Gatti",
-        "team": "Juventus",
+        "id": "6320",
+        "name": "Doekhi",
+        "team": "Lazio",
         "role": "D",
-        "cost": 12
+        "cost": 11
     },
     {
         "id": "4817",
@@ -779,6 +793,90 @@ export const playersDB = [
         "team": "Lazio",
         "role": "D",
         "cost": 7
+    },
+    {
+        "id": "5739",
+        "name": "De Winter",
+        "team": "Milan",
+        "role": "D",
+        "cost": 16
+    },
+    {
+        "id": "5838",
+        "name": "Birindelli",
+        "team": "Monza",
+        "role": "D",
+        "cost": 12
+    },
+    {
+        "id": "6631",
+        "name": "Ghilardi",
+        "team": "Roma",
+        "role": "D",
+        "cost": 15
+    },
+    {
+        "id": "5010",
+        "name": "Ismajli",
+        "team": "Torino",
+        "role": "D",
+        "cost": 9
+    },
+    {
+        "id": "6956",
+        "name": "Solet",
+        "team": "Udinese",
+        "role": "D",
+        "cost": 18
+    },
+    {
+        "id": "4375",
+        "name": "Terzic",
+        "team": "Frosinone",
+        "role": "D",
+        "cost": 5
+    },
+    {
+        "id": "2404",
+        "name": "Alaba",
+        "team": "Udinese",
+        "role": "D",
+        "cost": 10
+    },
+    {
+        "id": "6867",
+        "name": "Valle",
+        "team": "Como",
+        "role": "D",
+        "cost": 19
+    },
+    {
+        "id": "7175",
+        "name": "Joao Mario",
+        "team": "Fiorentina",
+        "role": "D",
+        "cost": 13
+    },
+    {
+        "id": "7467",
+        "name": "Calvani",
+        "team": "Frosinone",
+        "role": "D",
+        "cost": 13
+    },
+    {
+        "id": "5514",
+        "name": "Vasquez",
+        "team": "Genoa",
+        "role": "D",
+        "cost": 18
+    },
+    {
+        "id": "6039",
+        "name": "Cabal",
+        "team": "Juventus",
+        "role": "D",
+        "cost": 4
     },
     {
         "id": "6990",
@@ -795,39 +893,18 @@ export const playersDB = [
         "cost": 12
     },
     {
-        "id": "7238",
-        "name": "Kouadio",
-        "team": "Monza",
+        "id": "4751",
+        "name": "Tomori",
+        "team": "Milan",
         "role": "D",
-        "cost": 13
-    },
-    {
-        "id": "5838",
-        "name": "Birindelli",
-        "team": "Monza",
-        "role": "D",
-        "cost": 12
+        "cost": 10
     },
     {
         "id": "5862",
         "name": "Valeri",
         "team": "Parma",
         "role": "D",
-        "cost": 20
-    },
-    {
-        "id": "6631",
-        "name": "Ghilardi",
-        "team": "Roma",
-        "role": "D",
-        "cost": 15
-    },
-    {
-        "id": "6956",
-        "name": "Solet",
-        "team": "Udinese",
-        "role": "D",
-        "cost": 20
+        "cost": 19
     },
     {
         "id": "5641",
@@ -851,102 +928,11 @@ export const playersDB = [
         "cost": 4
     },
     {
-        "id": "7599",
-        "name": "Lulli",
-        "team": "Roma",
-        "role": "D",
-        "cost": 20
-    },
-    {
-        "id": "6047",
-        "name": "Ehizibue",
-        "team": "Genoa",
-        "role": "D",
-        "cost": 9
-    },
-    {
         "id": "5526",
         "name": "Scalvini",
         "team": "Atalanta",
         "role": "D",
         "cost": 16
-    },
-    {
-        "id": "4433",
-        "name": "Zortea",
-        "team": "Bologna",
-        "role": "D",
-        "cost": 15
-    },
-    {
-        "id": "7274",
-        "name": "Zè Pedro",
-        "team": "Cagliari",
-        "role": "D",
-        "cost": 13
-    },
-    {
-        "id": "7175",
-        "name": "Joao Mario",
-        "team": "Fiorentina",
-        "role": "D",
-        "cost": 13
-    },
-    {
-        "id": "4952",
-        "name": "Monterisi",
-        "team": "Frosinone",
-        "role": "D",
-        "cost": 10
-    },
-    {
-        "id": "6320",
-        "name": "Doekhi",
-        "team": "Lazio",
-        "role": "D",
-        "cost": 11
-    },
-    {
-        "id": "4751",
-        "name": "Tomori",
-        "team": "Milan",
-        "role": "D",
-        "cost": 10
-    },
-    {
-        "id": "5739",
-        "name": "De Winter",
-        "team": "Milan",
-        "role": "D",
-        "cost": 16
-    },
-    {
-        "id": "5010",
-        "name": "Ismajli",
-        "team": "Torino",
-        "role": "D",
-        "cost": 9
-    },
-    {
-        "id": "4375",
-        "name": "Terzic",
-        "team": "Frosinone",
-        "role": "D",
-        "cost": 5
-    },
-    {
-        "id": "2640",
-        "name": "Kolasinac",
-        "team": "Atalanta",
-        "role": "D",
-        "cost": 10
-    },
-    {
-        "id": "6042",
-        "name": "Lucumì",
-        "team": "Juventus",
-        "role": "D",
-        "cost": 14
     },
     {
         "id": "4210",
@@ -956,18 +942,25 @@ export const playersDB = [
         "cost": 11
     },
     {
+        "id": "7274",
+        "name": "Zè Pedro",
+        "team": "Cagliari",
+        "role": "D",
+        "cost": 13
+    },
+    {
         "id": "5603",
         "name": "Pongracic",
         "team": "Fiorentina",
         "role": "D",
-        "cost": 8
+        "cost": 7
     },
     {
-        "id": "5514",
-        "name": "Vasquez",
-        "team": "Genoa",
+        "id": "4952",
+        "name": "Monterisi",
+        "team": "Frosinone",
         "role": "D",
-        "cost": 18
+        "cost": 9
     },
     {
         "id": "2514",
@@ -991,18 +984,18 @@ export const playersDB = [
         "cost": 22
     },
     {
+        "id": "5840",
+        "name": "Olivera",
+        "team": "Napoli",
+        "role": "D",
+        "cost": 10
+    },
+    {
         "id": "1852",
         "name": "Spinazzola",
         "team": "Napoli",
         "role": "D",
         "cost": 11
-    },
-    {
-        "id": "5481",
-        "name": "Mazzocchi",
-        "team": "Venezia",
-        "role": "D",
-        "cost": 10
     },
     {
         "id": "6664",
@@ -1017,13 +1010,6 @@ export const playersDB = [
         "team": "Udinese",
         "role": "D",
         "cost": 6
-    },
-    {
-        "id": "6681",
-        "name": "Sagrado",
-        "team": "Venezia",
-        "role": "D",
-        "cost": 3
     },
     {
         "id": "7154",
@@ -1047,6 +1033,20 @@ export const playersDB = [
         "cost": 8
     },
     {
+        "id": "2525",
+        "name": "Darmian",
+        "team": "Bologna",
+        "role": "D",
+        "cost": 12
+    },
+    {
+        "id": "2640",
+        "name": "Kolasinac",
+        "team": "Atalanta",
+        "role": "D",
+        "cost": 10
+    },
+    {
         "id": "4887",
         "name": "Bellanova",
         "team": "Atalanta",
@@ -1059,6 +1059,13 @@ export const playersDB = [
         "team": "Atalanta",
         "role": "D",
         "cost": 13
+    },
+    {
+        "id": "6042",
+        "name": "Lucumì",
+        "team": "Juventus",
+        "role": "D",
+        "cost": 12
     },
     {
         "id": "7326",
@@ -1075,32 +1082,11 @@ export const playersDB = [
         "cost": 11
     },
     {
-        "id": "5701",
-        "name": "Obert",
-        "team": "Cagliari",
-        "role": "D",
-        "cost": 12
-    },
-    {
-        "id": "5365",
-        "name": "Dragusin",
-        "team": "Fiorentina",
-        "role": "D",
-        "cost": 12
-    },
-    {
         "id": "7294",
         "name": "Valdepenas",
         "team": "Fiorentina",
         "role": "D",
         "cost": 10
-    },
-    {
-        "id": "5885",
-        "name": "Dodò",
-        "team": "Fiorentina",
-        "role": "D",
-        "cost": 7
     },
     {
         "id": "6660",
@@ -1117,25 +1103,25 @@ export const playersDB = [
         "cost": 8
     },
     {
-        "id": "7240",
-        "name": "Siebert",
-        "team": "Lecce",
+        "id": "4925",
+        "name": "Carboni A.",
+        "team": "Monza",
         "role": "D",
-        "cost": 12
+        "cost": 9
     },
     {
-        "id": "5840",
-        "name": "Olivera",
-        "team": "Napoli",
+        "id": "5481",
+        "name": "Mazzocchi",
+        "team": "Venezia",
         "role": "D",
-        "cost": 10
+        "cost": 9
     },
     {
         "id": "7235",
         "name": "Troilo",
         "team": "Parma",
         "role": "D",
-        "cost": 13
+        "cost": 11
     },
     {
         "id": "7526",
@@ -1145,18 +1131,11 @@ export const playersDB = [
         "cost": 4
     },
     {
-        "id": "4994",
-        "name": "Vojvoda",
-        "team": "Udinese",
-        "role": "D",
-        "cost": 13
-    },
-    {
-        "id": "5695",
-        "name": "Haps",
+        "id": "6681",
+        "name": "Sagrado",
         "team": "Venezia",
         "role": "D",
-        "cost": 8
+        "cost": 3
     },
     {
         "id": "7563",
@@ -1177,28 +1156,7 @@ export const playersDB = [
         "name": "Cinquegrano",
         "team": "Sassuolo",
         "role": "D",
-        "cost": 10
-    },
-    {
-        "id": "256",
-        "name": "Juan Jesus",
-        "team": "Venezia",
-        "role": "D",
-        "cost": 11
-    },
-    {
-        "id": "4137",
-        "name": "Diego Carlos",
-        "team": "Parma",
-        "role": "D",
-        "cost": 10
-    },
-    {
-        "id": "2525",
-        "name": "Darmian",
-        "team": "Bologna",
-        "role": "D",
-        "cost": 10
+        "cost": 8
     },
     {
         "id": "7219",
@@ -1212,7 +1170,7 @@ export const playersDB = [
         "name": "Heggem",
         "team": "Bologna",
         "role": "D",
-        "cost": 10
+        "cost": 5
     },
     {
         "id": "5678",
@@ -1229,11 +1187,25 @@ export const playersDB = [
         "cost": 2
     },
     {
+        "id": "5701",
+        "name": "Obert",
+        "team": "Cagliari",
+        "role": "D",
+        "cost": 12
+    },
+    {
         "id": "7014",
         "name": "Smolcic I.",
         "team": "Como",
         "role": "D",
         "cost": 8
+    },
+    {
+        "id": "5365",
+        "name": "Dragusin",
+        "team": "Fiorentina",
+        "role": "D",
+        "cost": 12
     },
     {
         "id": "7410",
@@ -1243,6 +1215,13 @@ export const playersDB = [
         "cost": 10
     },
     {
+        "id": "5885",
+        "name": "Dodò",
+        "team": "Fiorentina",
+        "role": "D",
+        "cost": 5
+    },
+    {
         "id": "5757",
         "name": "Cittadini",
         "team": "Frosinone",
@@ -1250,18 +1229,25 @@ export const playersDB = [
         "cost": 10
     },
     {
-        "id": "6039",
-        "name": "Cabal",
+        "id": "6766",
+        "name": "Kelly L.",
         "team": "Juventus",
         "role": "D",
-        "cost": 4
+        "cost": 10
     },
     {
-        "id": "6632",
-        "name": "Gaspar K.",
+        "id": "7240",
+        "name": "Siebert",
         "team": "Lecce",
         "role": "D",
-        "cost": 8
+        "cost": 12
+    },
+    {
+        "id": "7525",
+        "name": "Diawara S.",
+        "team": "Milan",
+        "role": "D",
+        "cost": 11
     },
     {
         "id": "6496",
@@ -1271,25 +1257,18 @@ export const playersDB = [
         "cost": 10
     },
     {
-        "id": "6659",
-        "name": "Lucchesi",
-        "team": "Monza",
+        "id": "5273",
+        "name": "Estupinan",
+        "team": "Milan",
         "role": "D",
-        "cost": 11
+        "cost": 9
     },
     {
-        "id": "4925",
-        "name": "Carboni A.",
-        "team": "Monza",
+        "id": "6202",
+        "name": "Beukema",
+        "team": "Napoli",
         "role": "D",
-        "cost": 10
-    },
-    {
-        "id": "7476",
-        "name": "Bakoune",
-        "team": "Monza",
-        "role": "D",
-        "cost": 2
+        "cost": 7
     },
     {
         "id": "7255",
@@ -1303,7 +1282,7 @@ export const playersDB = [
         "name": "Koulierakis",
         "team": "Roma",
         "role": "D",
-        "cost": 8
+        "cost": 7
     },
     {
         "id": "6672",
@@ -1313,18 +1292,25 @@ export const playersDB = [
         "cost": 10
     },
     {
-        "id": "5994",
-        "name": "Ebosse",
+        "id": "4263",
+        "name": "Kabasele",
         "team": "Udinese",
         "role": "D",
-        "cost": 5
+        "cost": 7
     },
     {
-        "id": "7538",
-        "name": "Halhal",
-        "team": "Venezia",
+        "id": "4994",
+        "name": "Vojvoda",
+        "team": "Udinese",
         "role": "D",
-        "cost": 7
+        "cost": 13
+    },
+    {
+        "id": "5527",
+        "name": "Zanoli",
+        "team": "Udinese",
+        "role": "D",
+        "cost": 8
     },
     {
         "id": "4845",
@@ -1332,6 +1318,13 @@ export const playersDB = [
         "team": "Venezia",
         "role": "D",
         "cost": 7
+    },
+    {
+        "id": "5695",
+        "name": "Haps",
+        "team": "Venezia",
+        "role": "D",
+        "cost": 8
     },
     {
         "id": "7329",
@@ -1345,14 +1338,21 @@ export const playersDB = [
         "name": "Badiashile",
         "team": "Napoli",
         "role": "D",
-        "cost": 7
+        "cost": 5
     },
     {
-        "id": "6826",
-        "name": "Dembelè A.",
-        "team": "Lecce",
+        "id": "256",
+        "name": "Juan Jesus",
+        "team": "Venezia",
         "role": "D",
-        "cost": 1
+        "cost": 11
+    },
+    {
+        "id": "4137",
+        "name": "Diego Carlos",
+        "team": "Parma",
+        "role": "D",
+        "cost": 10
     },
     {
         "id": "7621",
@@ -1367,13 +1367,6 @@ export const playersDB = [
         "team": "Atalanta",
         "role": "D",
         "cost": 8
-    },
-    {
-        "id": "7068",
-        "name": "Vitik",
-        "team": "Bologna",
-        "role": "D",
-        "cost": 5
     },
     {
         "id": "5424",
@@ -1397,13 +1390,6 @@ export const playersDB = [
         "cost": 10
     },
     {
-        "id": "6766",
-        "name": "Kelly L.",
-        "team": "Juventus",
-        "role": "D",
-        "cost": 10
-    },
-    {
         "id": "2263",
         "name": "Lazzari",
         "team": "Lazio",
@@ -1411,11 +1397,11 @@ export const playersDB = [
         "cost": 4
     },
     {
-        "id": "2188",
-        "name": "Marusic",
-        "team": "Lazio",
+        "id": "6632",
+        "name": "Gaspar K.",
+        "team": "Lecce",
         "role": "D",
-        "cost": 7
+        "cost": 8
     },
     {
         "id": "4401",
@@ -1425,32 +1411,18 @@ export const playersDB = [
         "cost": 7
     },
     {
-        "id": "7525",
-        "name": "Diawara S.",
-        "team": "Milan",
+        "id": "6659",
+        "name": "Lucchesi",
+        "team": "Monza",
         "role": "D",
         "cost": 10
     },
     {
-        "id": "5273",
-        "name": "Estupinan",
-        "team": "Milan",
+        "id": "7476",
+        "name": "Bakoune",
+        "team": "Monza",
         "role": "D",
-        "cost": 9
-    },
-    {
-        "id": "6202",
-        "name": "Beukema",
-        "team": "Napoli",
-        "role": "D",
-        "cost": 7
-    },
-    {
-        "id": "2724",
-        "name": "Buongiorno",
-        "team": "Napoli",
-        "role": "D",
-        "cost": 7
+        "cost": 2
     },
     {
         "id": "6986",
@@ -1460,18 +1432,11 @@ export const playersDB = [
         "cost": 12
     },
     {
-        "id": "4263",
-        "name": "Kabasele",
+        "id": "5994",
+        "name": "Ebosse",
         "team": "Udinese",
         "role": "D",
-        "cost": 7
-    },
-    {
-        "id": "6485",
-        "name": "Kristensen T.",
-        "team": "Atalanta",
-        "role": "D",
-        "cost": 10
+        "cost": 5
     },
     {
         "id": "5820",
@@ -1481,23 +1446,23 @@ export const playersDB = [
         "cost": 7
     },
     {
-        "id": "5527",
-        "name": "Zanoli",
-        "team": "Udinese",
-        "role": "D",
-        "cost": 8
-    },
-    {
-        "id": "6890",
-        "name": "Moreno M.",
+        "id": "7538",
+        "name": "Halhal",
         "team": "Venezia",
         "role": "D",
-        "cost": 6
+        "cost": 7
     },
     {
         "id": "7615",
         "name": "Drobnic",
         "team": "Parma",
+        "role": "D",
+        "cost": 1
+    },
+    {
+        "id": "6826",
+        "name": "Dembelè A.",
+        "team": "Lecce",
         "role": "D",
         "cost": 1
     },
@@ -1526,6 +1491,13 @@ export const playersDB = [
         "id": "5578",
         "name": "Kossounou",
         "team": "Atalanta",
+        "role": "D",
+        "cost": 5
+    },
+    {
+        "id": "7068",
+        "name": "Vitik",
+        "team": "Bologna",
         "role": "D",
         "cost": 5
     },
@@ -1572,11 +1544,25 @@ export const playersDB = [
         "cost": 5
     },
     {
+        "id": "2188",
+        "name": "Marusic",
+        "team": "Lazio",
+        "role": "D",
+        "cost": 7
+    },
+    {
         "id": "7182",
         "name": "Ndaba",
         "team": "Lecce",
         "role": "D",
         "cost": 4
+    },
+    {
+        "id": "2724",
+        "name": "Buongiorno",
+        "team": "Napoli",
+        "role": "D",
+        "cost": 7
     },
     {
         "id": "7202",
@@ -1593,11 +1579,25 @@ export const playersDB = [
         "cost": 4
     },
     {
+        "id": "7260",
+        "name": "Ziolkowski",
+        "team": "Monza",
+        "role": "D",
+        "cost": 2
+    },
+    {
+        "id": "6485",
+        "name": "Kristensen T.",
+        "team": "Atalanta",
+        "role": "D",
+        "cost": 10
+    },
+    {
         "id": "7312",
         "name": "Arizala",
         "team": "Udinese",
         "role": "D",
-        "cost": 7
+        "cost": 4
     },
     {
         "id": "7253",
@@ -1605,6 +1605,13 @@ export const playersDB = [
         "team": "Venezia",
         "role": "D",
         "cost": 8
+    },
+    {
+        "id": "6890",
+        "name": "Moreno M.",
+        "team": "Venezia",
+        "role": "D",
+        "cost": 6
     },
     {
         "id": "6892",
@@ -1626,13 +1633,6 @@ export const playersDB = [
         "team": "Frosinone",
         "role": "D",
         "cost": 6
-    },
-    {
-        "id": "6601",
-        "name": "Kambwala",
-        "team": "Como",
-        "role": "D",
-        "cost": 4
     },
     {
         "id": "7125",
@@ -1712,13 +1712,6 @@ export const playersDB = [
         "cost": 3
     },
     {
-        "id": "7260",
-        "name": "Ziolkowski",
-        "team": "Monza",
-        "role": "D",
-        "cost": 2
-    },
-    {
         "id": "4374",
         "name": "Walukiewicz",
         "team": "Sassuolo",
@@ -1789,6 +1782,13 @@ export const playersDB = [
         "cost": 1
     },
     {
+        "id": "6601",
+        "name": "Kambwala",
+        "team": "Como",
+        "role": "D",
+        "cost": 4
+    },
+    {
         "id": "5742",
         "name": "Drameh",
         "team": "Genoa",
@@ -1803,130 +1803,116 @@ export const playersDB = [
         "cost": 1
     },
     {
-        "id": "6875",
-        "name": "Paz N.",
-        "team": "Como",
-        "role": "C",
-        "cost": 220
-    },
-    {
         "id": "2379",
         "name": "Rabiot",
         "team": "Milan",
         "role": "C",
-        "cost": 225
+        "cost": 240
     },
     {
         "id": "2423",
         "name": "Pulisic",
         "team": "Milan",
         "role": "C",
-        "cost": 180
+        "cost": 200
+    },
+    {
+        "id": "6875",
+        "name": "Paz N.",
+        "team": "Como",
+        "role": "C",
+        "cost": 210
     },
     {
         "id": "2194",
         "name": "Calhanoglu",
         "team": "Inter",
         "role": "C",
-        "cost": 200
+        "cost": 180
     },
     {
         "id": "7556",
         "name": "Mora",
         "team": "Roma",
         "role": "C",
-        "cost": 80
+        "cost": 111
     },
     {
         "id": "2517",
         "name": "De Bruyne",
         "team": "Napoli",
         "role": "C",
-        "cost": 111
+        "cost": 90
     },
     {
         "id": "7126",
         "name": "Baturina",
         "team": "Como",
         "role": "C",
-        "cost": 155
-    },
-    {
-        "id": "632",
-        "name": "Zaccagni",
-        "team": "Lazio",
-        "role": "C",
-        "cost": 117
+        "cost": 120
     },
     {
         "id": "7472",
         "name": "Calò",
         "team": "Frosinone",
         "role": "C",
-        "cost": 100
+        "cost": 95
     },
     {
-        "id": "2167",
-        "name": "Orsolini",
-        "team": "Bologna",
+        "id": "632",
+        "name": "Zaccagni",
+        "team": "Lazio",
         "role": "C",
-        "cost": 125
+        "cost": 110
     },
     {
         "id": "4777",
         "name": "McTominay",
         "team": "Napoli",
         "role": "C",
-        "cost": 145
-    },
-    {
-        "id": "6398",
-        "name": "Isaksen",
-        "team": "Lazio",
-        "role": "C",
-        "cost": 60
-    },
-    {
-        "id": "7078",
-        "name": "Mastantuono",
-        "team": "Fiorentina",
-        "role": "C",
-        "cost": 87
+        "cost": 170
     },
     {
         "id": "6372",
         "name": "Moreira",
         "team": "Milan",
         "role": "C",
-        "cost": 82
+        "cost": 105
     },
     {
-        "id": "1870",
-        "name": "Barella",
-        "team": "Inter",
+        "id": "2167",
+        "name": "Orsolini",
+        "team": "Bologna",
         "role": "C",
-        "cost": 63
+        "cost": 115
     },
     {
-        "id": "152",
-        "name": "Zielinski",
-        "team": "Inter",
+        "id": "6398",
+        "name": "Isaksen",
+        "team": "Lazio",
         "role": "C",
-        "cost": 42
+        "cost": 88
     },
     {
         "id": "7314",
         "name": "Taylor K.",
         "team": "Lazio",
         "role": "C",
-        "cost": 60
+        "cost": 74
+    },
+    {
+        "id": "7078",
+        "name": "Mastantuono",
+        "team": "Fiorentina",
+        "role": "C",
+        "cost": 85
     },
     {
         "id": "7551",
         "name": "Schmid",
         "team": "Frosinone",
         "role": "C",
-        "cost": 62
+        "cost": 59
     },
     {
         "id": "184",
@@ -1936,95 +1922,53 @@ export const playersDB = [
         "cost": 48
     },
     {
-        "id": "536",
-        "name": "Politano",
-        "team": "Napoli",
+        "id": "1870",
+        "name": "Barella",
+        "team": "Inter",
         "role": "C",
-        "cost": 51
-    },
-    {
-        "id": "6684",
-        "name": "Ekkelenkamp",
-        "team": "Udinese",
-        "role": "C",
-        "cost": 57
+        "cost": 64
     },
     {
         "id": "2848",
         "name": "Frattesi",
         "team": "Lazio",
         "role": "C",
-        "cost": 120
+        "cost": 145
     },
     {
-        "id": "5298",
-        "name": "Pobega",
-        "team": "Bologna",
+        "id": "6684",
+        "name": "Ekkelenkamp",
+        "team": "Udinese",
         "role": "C",
-        "cost": 22
+        "cost": 46
     },
     {
         "id": "5559",
         "name": "Da Cunha",
         "team": "Como",
         "role": "C",
-        "cost": 51
+        "cost": 65
+    },
+    {
+        "id": "152",
+        "name": "Zielinski",
+        "team": "Inter",
+        "role": "C",
+        "cost": 41
+    },
+    {
+        "id": "536",
+        "name": "Politano",
+        "team": "Napoli",
+        "role": "C",
+        "cost": 50
     },
     {
         "id": "4970",
         "name": "Messias",
         "team": "Genoa",
         "role": "C",
-        "cost": 18
-    },
-    {
-        "id": "6274",
-        "name": "Diouf",
-        "team": "Inter",
-        "role": "C",
-        "cost": 50
-    },
-    {
-        "id": "4436",
-        "name": "Cambiaghi",
-        "team": "Bologna",
-        "role": "C",
-        "cost": 35
-    },
-    {
-        "id": "5761",
-        "name": "Zhegrova",
-        "team": "Juventus",
-        "role": "C",
-        "cost": 16
-    },
-    {
-        "id": "7436",
-        "name": "Alajbegovic",
-        "team": "Juventus",
-        "role": "C",
-        "cost": 30
-    },
-    {
-        "id": "6884",
-        "name": "Conceicao",
-        "team": "Juventus",
-        "role": "C",
-        "cost": 40
-    },
-    {
-        "id": "5589",
-        "name": "Konè M.",
-        "team": "Roma",
-        "role": "C",
-        "cost": 45
-    },
-    {
-        "id": "6190",
-        "name": "Pisilli",
-        "team": "Roma",
-        "role": "C",
-        "cost": 36
+        "cost": 22
     },
     {
         "id": "5422",
@@ -2034,74 +1978,39 @@ export const playersDB = [
         "cost": 14
     },
     {
-        "id": "1933",
-        "name": "Mandragora",
-        "team": "Torino",
+        "id": "5298",
+        "name": "Pobega",
+        "team": "Bologna",
         "role": "C",
-        "cost": 30
+        "cost": 20
     },
     {
-        "id": "2606",
-        "name": "Modric",
-        "team": "Milan",
+        "id": "5761",
+        "name": "Zhegrova",
+        "team": "Juventus",
         "role": "C",
-        "cost": 55
+        "cost": 18
     },
     {
-        "id": "779",
-        "name": "Cristante",
-        "team": "Roma",
+        "id": "4436",
+        "name": "Cambiaghi",
+        "team": "Bologna",
         "role": "C",
-        "cost": 42
+        "cost": 34
     },
     {
-        "id": "6827",
-        "name": "Njie",
-        "team": "Fiorentina",
+        "id": "6274",
+        "name": "Diouf",
+        "team": "Inter",
         "role": "C",
-        "cost": 83
-    },
-    {
-        "id": "5119",
-        "name": "Samardzic",
-        "team": "Atalanta",
-        "role": "C",
-        "cost": 14
-    },
-    {
-        "id": "7311",
-        "name": "Romano",
-        "team": "Cagliari",
-        "role": "C",
-        "cost": 25
-    },
-    {
-        "id": "5036",
-        "name": "Caqueret",
-        "team": "Como",
-        "role": "C",
-        "cost": 19
-    },
-    {
-        "id": "5823",
-        "name": "Baldanzi",
-        "team": "Genoa",
-        "role": "C",
-        "cost": 19
+        "cost": 45
     },
     {
         "id": "7070",
         "name": "Sucic P.",
         "team": "Inter",
         "role": "C",
-        "cost": 20
-    },
-    {
-        "id": "4973",
-        "name": "McKennie",
-        "team": "Juventus",
-        "role": "C",
-        "cost": 50
+        "cost": 22
     },
     {
         "id": "5685",
@@ -2111,11 +2020,67 @@ export const playersDB = [
         "cost": 12
     },
     {
-        "id": "6629",
-        "name": "Dele-Bashiru",
-        "team": "Lazio",
+        "id": "2606",
+        "name": "Modric",
+        "team": "Milan",
         "role": "C",
-        "cost": 10
+        "cost": 60
+    },
+    {
+        "id": "779",
+        "name": "Cristante",
+        "team": "Roma",
+        "role": "C",
+        "cost": 44
+    },
+    {
+        "id": "5589",
+        "name": "Konè M.",
+        "team": "Roma",
+        "role": "C",
+        "cost": 50
+    },
+    {
+        "id": "6190",
+        "name": "Pisilli",
+        "team": "Roma",
+        "role": "C",
+        "cost": 32
+    },
+    {
+        "id": "6827",
+        "name": "Njie",
+        "team": "Fiorentina",
+        "role": "C",
+        "cost": 80
+    },
+    {
+        "id": "1933",
+        "name": "Mandragora",
+        "team": "Torino",
+        "role": "C",
+        "cost": 28
+    },
+    {
+        "id": "5823",
+        "name": "Baldanzi",
+        "team": "Genoa",
+        "role": "C",
+        "cost": 17
+    },
+    {
+        "id": "7436",
+        "name": "Alajbegovic",
+        "team": "Juventus",
+        "role": "C",
+        "cost": 27
+    },
+    {
+        "id": "6884",
+        "name": "Conceicao",
+        "team": "Juventus",
+        "role": "C",
+        "cost": 35
     },
     {
         "id": "5504",
@@ -2125,13 +2090,6 @@ export const playersDB = [
         "cost": 17
     },
     {
-        "id": "4287",
-        "name": "Lobotka",
-        "team": "Napoli",
-        "role": "C",
-        "cost": 12
-    },
-    {
         "id": "2528",
         "name": "Matic",
         "team": "Sassuolo",
@@ -2139,25 +2097,18 @@ export const playersDB = [
         "cost": 15
     },
     {
-        "id": "6677",
-        "name": "Adzic",
-        "team": "Sassuolo",
+        "id": "2766",
+        "name": "Zaniolo",
+        "team": "Udinese",
         "role": "C",
-        "cost": 31
+        "cost": 55
     },
     {
-        "id": "4179",
-        "name": "Gonzalez N.",
-        "team": "Juventus",
+        "id": "6618",
+        "name": "Cissè A.",
+        "team": "Milan",
         "role": "C",
-        "cost": 25
-    },
-    {
-        "id": "6833",
-        "name": "Mbangula",
-        "team": "Bologna",
-        "role": "C",
-        "cost": 14
+        "cost": 100
     },
     {
         "id": "4870",
@@ -2167,6 +2118,20 @@ export const playersDB = [
         "cost": 20
     },
     {
+        "id": "7311",
+        "name": "Romano",
+        "team": "Cagliari",
+        "role": "C",
+        "cost": 23
+    },
+    {
+        "id": "5036",
+        "name": "Caqueret",
+        "team": "Como",
+        "role": "C",
+        "cost": 16
+    },
+    {
         "id": "6020",
         "name": "Ellertsson",
         "team": "Genoa",
@@ -2174,18 +2139,18 @@ export const playersDB = [
         "cost": 25
     },
     {
-        "id": "6191",
-        "name": "Belahyane",
-        "team": "Lazio",
+        "id": "6917",
+        "name": "Masini",
+        "team": "Frosinone",
         "role": "C",
-        "cost": 13
+        "cost": 14
     },
     {
-        "id": "5500",
-        "name": "Cancellieri",
-        "team": "Lazio",
+        "id": "4973",
+        "name": "McKennie",
+        "team": "Juventus",
         "role": "C",
-        "cost": 13
+        "cost": 51
     },
     {
         "id": "5131",
@@ -2195,6 +2160,62 @@ export const playersDB = [
         "cost": 11
     },
     {
+        "id": "4287",
+        "name": "Lobotka",
+        "team": "Napoli",
+        "role": "C",
+        "cost": 12
+    },
+    {
+        "id": "6677",
+        "name": "Adzic",
+        "team": "Sassuolo",
+        "role": "C",
+        "cost": 25
+    },
+    {
+        "id": "1850",
+        "name": "Kessiè",
+        "team": "Atalanta",
+        "role": "C",
+        "cost": 17
+    },
+    {
+        "id": "6833",
+        "name": "Mbangula",
+        "team": "Bologna",
+        "role": "C",
+        "cost": 13
+    },
+    {
+        "id": "5119",
+        "name": "Samardzic",
+        "team": "Atalanta",
+        "role": "C",
+        "cost": 14
+    },
+    {
+        "id": "6191",
+        "name": "Belahyane",
+        "team": "Lazio",
+        "role": "C",
+        "cost": 13
+    },
+    {
+        "id": "6629",
+        "name": "Dele-Bashiru",
+        "team": "Lazio",
+        "role": "C",
+        "cost": 11
+    },
+    {
+        "id": "5500",
+        "name": "Cancellieri",
+        "team": "Lazio",
+        "role": "C",
+        "cost": 13
+    },
+    {
         "id": "7223",
         "name": "Vergara",
         "team": "Napoli",
@@ -2202,46 +2223,25 @@ export const playersDB = [
         "cost": 13
     },
     {
-        "id": "7036",
-        "name": "Bakola",
-        "team": "Sassuolo",
+        "id": "4179",
+        "name": "Gonzalez N.",
+        "team": "Juventus",
         "role": "C",
-        "cost": 15
-    },
-    {
-        "id": "5687",
-        "name": "Vlasic",
-        "team": "Torino",
-        "role": "C",
-        "cost": 52
-    },
-    {
-        "id": "2766",
-        "name": "Zaniolo",
-        "team": "Udinese",
-        "role": "C",
-        "cost": 47
-    },
-    {
-        "id": "6618",
-        "name": "Cissè A.",
-        "team": "Milan",
-        "role": "C",
-        "cost": 82
+        "cost": 24
     },
     {
         "id": "795",
         "name": "El Shaarawy",
         "team": "Genoa",
         "role": "C",
-        "cost": 24
+        "cost": 21
     },
     {
         "id": "5792",
         "name": "Ederson D.S.",
         "team": "Atalanta",
         "role": "C",
-        "cost": 34
+        "cost": 31
     },
     {
         "id": "4364",
@@ -2255,35 +2255,28 @@ export const playersDB = [
         "name": "Ferguson",
         "team": "Bologna",
         "role": "C",
-        "cost": 22
+        "cost": 21
     },
     {
-        "id": "6151",
-        "name": "Perrone",
+        "id": "6678",
+        "name": "Liberali",
         "team": "Como",
         "role": "C",
-        "cost": 20
+        "cost": 16
+    },
+    {
+        "id": "6206",
+        "name": "Fabbian",
+        "team": "Parma",
+        "role": "C",
+        "cost": 18
     },
     {
         "id": "5800",
         "name": "Gudmundsson A.",
         "team": "Lazio",
         "role": "C",
-        "cost": 15
-    },
-    {
-        "id": "6917",
-        "name": "Masini",
-        "team": "Frosinone",
-        "role": "C",
         "cost": 14
-    },
-    {
-        "id": "4892",
-        "name": "Saelemaekers",
-        "team": "Milan",
-        "role": "C",
-        "cost": 20
     },
     {
         "id": "4856",
@@ -2291,6 +2284,13 @@ export const playersDB = [
         "team": "Milan",
         "role": "C",
         "cost": 18
+    },
+    {
+        "id": "7036",
+        "name": "Bakola",
+        "team": "Sassuolo",
+        "role": "C",
+        "cost": 12
     },
     {
         "id": "7060",
@@ -2307,46 +2307,46 @@ export const playersDB = [
         "cost": 18
     },
     {
-        "id": "1850",
-        "name": "Kessiè",
+        "id": "5687",
+        "name": "Vlasic",
+        "team": "Torino",
+        "role": "C",
+        "cost": 40
+    },
+    {
+        "id": "4479",
+        "name": "Elmas",
         "team": "Atalanta",
         "role": "C",
-        "cost": 17
+        "cost": 27
     },
     {
         "id": "7618",
         "name": "Hutchinson",
         "team": "Milan",
         "role": "C",
-        "cost": 21
+        "cost": 16
+    },
+    {
+        "id": "7624",
+        "name": "Braganca",
+        "team": "Torino",
+        "role": "C",
+        "cost": 16
     },
     {
         "id": "7625",
         "name": "Goncalves P.",
         "team": "Fiorentina",
         "role": "C",
-        "cost": 33
+        "cost": 32
     },
     {
-        "id": "6678",
-        "name": "Liberali",
+        "id": "6151",
+        "name": "Perrone",
         "team": "Como",
         "role": "C",
-        "cost": 16
-    },
-    {
-        "id": "6908",
-        "name": "Atta",
-        "team": "Fiorentina",
-        "role": "C",
-        "cost": 30
-    },
-    {
-        "id": "6206",
-        "name": "Fabbian",
-        "team": "Parma",
-        "role": "C",
-        "cost": 20
+        "cost": 21
     },
     {
         "id": "7473",
@@ -2356,11 +2356,11 @@ export const playersDB = [
         "cost": 10
     },
     {
-        "id": "4911",
-        "name": "Douglas Luiz",
-        "team": "Juventus",
+        "id": "4892",
+        "name": "Saelemaekers",
+        "team": "Milan",
         "role": "C",
-        "cost": 27
+        "cost": 20
     },
     {
         "id": "6593",
@@ -2368,6 +2368,62 @@ export const playersDB = [
         "team": "Monza",
         "role": "C",
         "cost": 12
+    },
+    {
+        "id": "6994",
+        "name": "Perez K.",
+        "team": "Venezia",
+        "role": "C",
+        "cost": 20
+    },
+    {
+        "id": "7412",
+        "name": "Milla",
+        "team": "Como",
+        "role": "C",
+        "cost": 22
+    },
+    {
+        "id": "4465",
+        "name": "Fagioli",
+        "team": "Fiorentina",
+        "role": "C",
+        "cost": 17
+    },
+    {
+        "id": "6908",
+        "name": "Atta",
+        "team": "Fiorentina",
+        "role": "C",
+        "cost": 25
+    },
+    {
+        "id": "5791",
+        "name": "Frendrup",
+        "team": "Genoa",
+        "role": "C",
+        "cost": 15
+    },
+    {
+        "id": "4911",
+        "name": "Douglas Luiz",
+        "team": "Juventus",
+        "role": "C",
+        "cost": 24
+    },
+    {
+        "id": "7203",
+        "name": "Jashari",
+        "team": "Milan",
+        "role": "C",
+        "cost": 11
+    },
+    {
+        "id": "5295",
+        "name": "Musah",
+        "team": "Milan",
+        "role": "C",
+        "cost": 17
     },
     {
         "id": "5878",
@@ -2381,63 +2437,14 @@ export const playersDB = [
         "name": "Zambo Anguissa",
         "team": "Napoli",
         "role": "C",
-        "cost": 23
-    },
-    {
-        "id": "6994",
-        "name": "Perez K.",
-        "team": "Venezia",
-        "role": "C",
-        "cost": 20
-    },
-    {
-        "id": "7624",
-        "name": "Braganca",
-        "team": "Torino",
-        "role": "C",
-        "cost": 16
-    },
-    {
-        "id": "7412",
-        "name": "Milla",
-        "team": "Como",
-        "role": "C",
-        "cost": 21
-    },
-    {
-        "id": "4465",
-        "name": "Fagioli",
-        "team": "Fiorentina",
-        "role": "C",
-        "cost": 20
-    },
-    {
-        "id": "5791",
-        "name": "Frendrup",
-        "team": "Genoa",
-        "role": "C",
-        "cost": 15
-    },
-    {
-        "id": "5295",
-        "name": "Musah",
-        "team": "Milan",
-        "role": "C",
-        "cost": 17
-    },
-    {
-        "id": "5844",
-        "name": "Thorstvedt",
-        "team": "Sassuolo",
-        "role": "C",
-        "cost": 17
+        "cost": 22
     },
     {
         "id": "5735",
         "name": "Volpato",
         "team": "Sassuolo",
         "role": "C",
-        "cost": 13
+        "cost": 11
     },
     {
         "id": "6680",
@@ -2458,21 +2465,7 @@ export const playersDB = [
         "name": "Basic",
         "team": "Venezia",
         "role": "C",
-        "cost": 17
-    },
-    {
-        "id": "5172",
-        "name": "Jones C.",
-        "team": "Inter",
-        "role": "C",
-        "cost": 12
-    },
-    {
-        "id": "4479",
-        "name": "Elmas",
-        "team": "Atalanta",
-        "role": "C",
-        "cost": 23
+        "cost": 16
     },
     {
         "id": "22",
@@ -2482,32 +2475,25 @@ export const playersDB = [
         "cost": 10
     },
     {
+        "id": "6844",
+        "name": "Rowe",
+        "team": "Atalanta",
+        "role": "C",
+        "cost": 24
+    },
+    {
         "id": "4260",
         "name": "Winks",
         "team": "Cagliari",
         "role": "C",
-        "cost": 13
-    },
-    {
-        "id": "7129",
-        "name": "Rodriguez Je.",
-        "team": "Como",
-        "role": "C",
-        "cost": 14
-    },
-    {
-        "id": "6294",
-        "name": "Ndour",
-        "team": "Fiorentina",
-        "role": "C",
-        "cost": 18
+        "cost": 12
     },
     {
         "id": "2529",
         "name": "Mkhitaryan",
         "team": "Inter",
         "role": "C",
-        "cost": 13
+        "cost": 12
     },
     {
         "id": "5457",
@@ -2517,6 +2503,20 @@ export const playersDB = [
         "cost": 7
     },
     {
+        "id": "5844",
+        "name": "Thorstvedt",
+        "team": "Sassuolo",
+        "role": "C",
+        "cost": 16
+    },
+    {
+        "id": "5172",
+        "name": "Jones C.",
+        "team": "Inter",
+        "role": "C",
+        "cost": 12
+    },
+    {
         "id": "7619",
         "name": "Monteiro J.",
         "team": "Lecce",
@@ -2524,11 +2524,11 @@ export const playersDB = [
         "cost": 10
     },
     {
-        "id": "6844",
-        "name": "Rowe",
-        "team": "Atalanta",
+        "id": "7628",
+        "name": "Sierro",
+        "team": "Parma",
         "role": "C",
-        "cost": 22
+        "cost": 12
     },
     {
         "id": "2765",
@@ -2545,11 +2545,18 @@ export const playersDB = [
         "cost": 10
     },
     {
-        "id": "6506",
-        "name": "Fini ",
-        "team": "Frosinone",
+        "id": "7129",
+        "name": "Rodriguez Je.",
+        "team": "Como",
         "role": "C",
-        "cost": 10
+        "cost": 12
+    },
+    {
+        "id": "6294",
+        "name": "Ndour",
+        "team": "Fiorentina",
+        "role": "C",
+        "cost": 18
     },
     {
         "id": "827",
@@ -2557,13 +2564,6 @@ export const playersDB = [
         "team": "Juventus",
         "role": "C",
         "cost": 15
-    },
-    {
-        "id": "7203",
-        "name": "Jashari",
-        "team": "Milan",
-        "role": "C",
-        "cost": 11
     },
     {
         "id": "6898",
@@ -2580,13 +2580,6 @@ export const playersDB = [
         "cost": 5
     },
     {
-        "id": "6170",
-        "name": "Gineitis",
-        "team": "Torino",
-        "role": "C",
-        "cost": 10
-    },
-    {
         "id": "5507",
         "name": "Busio",
         "team": "Venezia",
@@ -2594,18 +2587,11 @@ export const playersDB = [
         "cost": 12
     },
     {
-        "id": "7628",
-        "name": "Sierro",
-        "team": "Parma",
-        "role": "C",
-        "cost": 15
-    },
-    {
         "id": "2077",
         "name": "Pasalic",
         "team": "Atalanta",
         "role": "C",
-        "cost": 13
+        "cost": 11
     },
     {
         "id": "6895",
@@ -2622,11 +2608,11 @@ export const playersDB = [
         "cost": 10
     },
     {
-        "id": "7464",
-        "name": "Oulai",
-        "team": "Fiorentina",
+        "id": "6010",
+        "name": "Fazzini",
+        "team": "Cagliari",
         "role": "C",
-        "cost": 10
+        "cost": 12
     },
     {
         "id": "4947",
@@ -2636,6 +2622,13 @@ export const playersDB = [
         "cost": 7
     },
     {
+        "id": "6506",
+        "name": "Fini ",
+        "team": "Frosinone",
+        "role": "C",
+        "cost": 10
+    },
+    {
         "id": "5998",
         "name": "Zerbin",
         "team": "Frosinone",
@@ -2643,18 +2636,11 @@ export const playersDB = [
         "cost": 8
     },
     {
-        "id": "7341",
-        "name": "Amorim",
+        "id": "2857",
+        "name": "Traorè Hj.",
         "team": "Genoa",
         "role": "C",
-        "cost": 6
-    },
-    {
-        "id": "4459",
-        "name": "Rovella",
-        "team": "Lazio",
-        "role": "C",
-        "cost": 12
+        "cost": 11
     },
     {
         "id": "7248",
@@ -2664,18 +2650,18 @@ export const playersDB = [
         "cost": 9
     },
     {
-        "id": "5888",
-        "name": "Casadei",
+        "id": "2741",
+        "name": "Pessina",
+        "team": "Monza",
+        "role": "C",
+        "cost": 15
+    },
+    {
+        "id": "6170",
+        "name": "Gineitis",
         "team": "Torino",
         "role": "C",
         "cost": 8
-    },
-    {
-        "id": "6783",
-        "name": "Unai Gomez",
-        "team": "Udinese",
-        "role": "C",
-        "cost": 12
     },
     {
         "id": "5319",
@@ -2692,18 +2678,18 @@ export const playersDB = [
         "cost": 10
     },
     {
+        "id": "7574",
+        "name": "Foe Ondoa",
+        "team": "Monza",
+        "role": "C",
+        "cost": 10
+    },
+    {
         "id": "5680",
         "name": "Sarr P.",
         "team": "Juventus",
         "role": "C",
         "cost": 12
-    },
-    {
-        "id": "6010",
-        "name": "Fazzini",
-        "team": "Cagliari",
-        "role": "C",
-        "cost": 10
     },
     {
         "id": "7127",
@@ -2713,6 +2699,13 @@ export const playersDB = [
         "cost": 8
     },
     {
+        "id": "7464",
+        "name": "Oulai",
+        "team": "Fiorentina",
+        "role": "C",
+        "cost": 10
+    },
+    {
         "id": "6903",
         "name": "Hasa",
         "team": "Frosinone",
@@ -2720,18 +2713,11 @@ export const playersDB = [
         "cost": 1
     },
     {
-        "id": "2857",
-        "name": "Traorè Hj.",
+        "id": "7341",
+        "name": "Amorim",
         "team": "Genoa",
         "role": "C",
-        "cost": 11
-    },
-    {
-        "id": "5301",
-        "name": "Luis Henrique",
-        "team": "Inter",
-        "role": "C",
-        "cost": 10
+        "cost": 6
     },
     {
         "id": "5562",
@@ -2739,6 +2725,13 @@ export const playersDB = [
         "team": "Juventus",
         "role": "C",
         "cost": 10
+    },
+    {
+        "id": "4459",
+        "name": "Rovella",
+        "team": "Lazio",
+        "role": "C",
+        "cost": 12
     },
     {
         "id": "7322",
@@ -2752,7 +2745,7 @@ export const playersDB = [
         "name": "Pierotti",
         "team": "Lecce",
         "role": "C",
-        "cost": 10
+        "cost": 7
     },
     {
         "id": "4199",
@@ -2762,23 +2755,23 @@ export const playersDB = [
         "cost": 7
     },
     {
-        "id": "6666",
-        "name": "Bernabè",
-        "team": "Parma",
-        "role": "C",
-        "cost": 16
-    },
-    {
-        "id": "6717",
-        "name": "Konè I.",
-        "team": "Sassuolo",
-        "role": "C",
-        "cost": 20
-    },
-    {
         "id": "5007",
         "name": "Ilic",
         "team": "Lecce",
+        "role": "C",
+        "cost": 12
+    },
+    {
+        "id": "5888",
+        "name": "Casadei",
+        "team": "Torino",
+        "role": "C",
+        "cost": 8
+    },
+    {
+        "id": "6783",
+        "name": "Unai Gomez",
+        "team": "Udinese",
         "role": "C",
         "cost": 12
     },
@@ -2797,13 +2790,6 @@ export const playersDB = [
         "cost": 10
     },
     {
-        "id": "7574",
-        "name": "Foe Ondoa",
-        "team": "Monza",
-        "role": "C",
-        "cost": 10
-    },
-    {
         "id": "7608",
         "name": "Wiafe",
         "team": "Genoa",
@@ -2818,11 +2804,25 @@ export const playersDB = [
         "cost": 12
     },
     {
+        "id": "7357",
+        "name": "Lahdo",
+        "team": "Como",
+        "role": "C",
+        "cost": 1
+    },
+    {
         "id": "7409",
         "name": "Meichtry",
         "team": "Genoa",
         "role": "C",
         "cost": 6
+    },
+    {
+        "id": "5301",
+        "name": "Luis Henrique",
+        "team": "Inter",
+        "role": "C",
+        "cost": 10
     },
     {
         "id": "7318",
@@ -2839,11 +2839,11 @@ export const playersDB = [
         "cost": 10
     },
     {
-        "id": "2741",
-        "name": "Pessina",
+        "id": "7477",
+        "name": "Colombo L.",
         "team": "Monza",
         "role": "C",
-        "cost": 14
+        "cost": 3
     },
     {
         "id": "6252",
@@ -2860,11 +2860,18 @@ export const playersDB = [
         "cost": 6
     },
     {
-        "id": "6246",
-        "name": "Lipani",
+        "id": "6666",
+        "name": "Bernabè",
+        "team": "Parma",
+        "role": "C",
+        "cost": 16
+    },
+    {
+        "id": "6717",
+        "name": "Konè I.",
         "team": "Sassuolo",
         "role": "C",
-        "cost": 3
+        "cost": 15
     },
     {
         "id": "6005",
@@ -2888,18 +2895,18 @@ export const playersDB = [
         "cost": 12
     },
     {
-        "id": "7146",
-        "name": "Tourè I.",
-        "team": "Monza",
-        "role": "C",
-        "cost": 5
-    },
-    {
         "id": "7579",
         "name": "Massolin",
         "team": "Cagliari",
         "role": "C",
         "cost": 7
+    },
+    {
+        "id": "5850",
+        "name": "Lovric",
+        "team": "Udinese",
+        "role": "C",
+        "cost": 1
     },
     {
         "id": "6024",
@@ -2923,13 +2930,6 @@ export const playersDB = [
         "cost": 6
     },
     {
-        "id": "7165",
-        "name": "Liteta",
-        "team": "Cagliari",
-        "role": "C",
-        "cost": 1
-    },
-    {
         "id": "6640",
         "name": "Felici",
         "team": "Cagliari",
@@ -2937,23 +2937,9 @@ export const playersDB = [
         "cost": 5
     },
     {
-        "id": "6503",
-        "name": "Stankovic A.",
-        "team": "Inter",
-        "role": "C",
-        "cost": 6
-    },
-    {
         "id": "6410",
         "name": "Kaba",
         "team": "Lecce",
-        "role": "C",
-        "cost": 3
-    },
-    {
-        "id": "7477",
-        "name": "Colombo L.",
-        "team": "Monza",
         "role": "C",
         "cost": 3
     },
@@ -2965,18 +2951,18 @@ export const playersDB = [
         "cost": 1
     },
     {
-        "id": "4349",
-        "name": "Nicolussi Caviglia",
-        "team": "Parma",
-        "role": "C",
-        "cost": 10
-    },
-    {
         "id": "7536",
         "name": "Diallo O.",
         "team": "Parma",
         "role": "C",
         "cost": 1
+    },
+    {
+        "id": "6246",
+        "name": "Lipani",
+        "team": "Sassuolo",
+        "role": "C",
+        "cost": 3
     },
     {
         "id": "7183",
@@ -3007,6 +2993,13 @@ export const playersDB = [
         "cost": 1
     },
     {
+        "id": "7146",
+        "name": "Tourè I.",
+        "team": "Monza",
+        "role": "C",
+        "cost": 5
+    },
+    {
         "id": "7575",
         "name": "Mout",
         "team": "Monza",
@@ -3028,9 +3021,9 @@ export const playersDB = [
         "cost": 4
     },
     {
-        "id": "7357",
-        "name": "Lahdo",
-        "team": "Como",
+        "id": "7165",
+        "name": "Liteta",
+        "team": "Cagliari",
         "role": "C",
         "cost": 1
     },
@@ -3061,6 +3054,13 @@ export const playersDB = [
         "team": "Genoa",
         "role": "C",
         "cost": 2
+    },
+    {
+        "id": "6503",
+        "name": "Stankovic A.",
+        "team": "Inter",
+        "role": "C",
+        "cost": 6
     },
     {
         "id": "333",
@@ -3098,6 +3098,13 @@ export const playersDB = [
         "cost": 1
     },
     {
+        "id": "4349",
+        "name": "Nicolussi Caviglia",
+        "team": "Parma",
+        "role": "C",
+        "cost": 8
+    },
+    {
         "id": "6219",
         "name": "Boloca",
         "team": "Sassuolo",
@@ -3116,7 +3123,7 @@ export const playersDB = [
         "name": "Grillitsch",
         "team": "Frosinone",
         "role": "C",
-        "cost": 7
+        "cost": 5
     },
     {
         "id": "6592",
@@ -3151,7 +3158,7 @@ export const playersDB = [
         "name": "Gagliardini",
         "team": "Cagliari",
         "role": "C",
-        "cost": 7
+        "cost": 5
     },
     {
         "id": "7629",
@@ -3161,18 +3168,11 @@ export const playersDB = [
         "cost": 1
     },
     {
-        "id": "5850",
-        "name": "Lovric",
-        "team": "Udinese",
-        "role": "C",
-        "cost": 1
-    },
-    {
         "id": "5585",
         "name": "Malen",
         "team": "Roma",
         "role": "A",
-        "cost": 425
+        "cost": 500
     },
     {
         "id": "4871",
@@ -3186,266 +3186,210 @@ export const playersDB = [
         "name": "Martinez L.",
         "team": "Inter",
         "role": "A",
-        "cost": 345
-    },
-    {
-        "id": "7017",
-        "name": "Douvikas",
-        "team": "Como",
-        "role": "A",
-        "cost": 143
+        "cost": 340
     },
     {
         "id": "6435",
         "name": "Krstovic",
         "team": "Atalanta",
         "role": "A",
-        "cost": 186
+        "cost": 184
     },
     {
-        "id": "6052",
-        "name": "Hojlund",
-        "team": "Napoli",
+        "id": "7017",
+        "name": "Douvikas",
+        "team": "Como",
         "role": "A",
-        "cost": 175
+        "cost": 140
     },
     {
         "id": "7071",
         "name": "Esposito F.P.",
         "team": "Inter",
         "role": "A",
-        "cost": 88
-    },
-    {
-        "id": "5734",
-        "name": "Soulè",
-        "team": "Roma",
-        "role": "A",
-        "cost": 90
+        "cost": 125
     },
     {
         "id": "7523",
         "name": "Varela G.",
         "team": "Monza",
         "role": "A",
-        "cost": 168
+        "cost": 200
     },
     {
-        "id": "4463",
-        "name": "Esposito Se.",
-        "team": "Sassuolo",
+        "id": "6052",
+        "name": "Hojlund",
+        "team": "Napoli",
         "role": "A",
-        "cost": 37
+        "cost": 165
     },
     {
-        "id": "6397",
-        "name": "Ramos G.",
-        "team": "Milan",
+        "id": "5734",
+        "name": "Soulè",
+        "team": "Roma",
         "role": "A",
-        "cost": 182
-    },
-    {
-        "id": "6752",
-        "name": "Woltemade",
-        "team": "Juventus",
-        "role": "A",
-        "cost": 45
-    },
-    {
-        "id": "5436",
-        "name": "Raimondo",
-        "team": "Frosinone",
-        "role": "A",
-        "cost": 80
+        "cost": 89
     },
     {
         "id": "6556",
         "name": "Noslin",
         "team": "Lazio",
         "role": "A",
-        "cost": 100
+        "cost": 130
     },
     {
-        "id": "6646",
-        "name": "Adams C.",
-        "team": "Torino",
-        "role": "A",
-        "cost": 33
-    },
-    {
-        "id": "2061",
-        "name": "Simeone",
-        "team": "Torino",
-        "role": "A",
-        "cost": 69
-    },
-    {
-        "id": "4896",
-        "name": "Maldini",
-        "team": "Cagliari",
-        "role": "A",
-        "cost": 63
-    },
-    {
-        "id": "6530",
-        "name": "Ghedjemis",
-        "team": "Frosinone",
-        "role": "A",
-        "cost": 56
-    },
-    {
-        "id": "6204",
-        "name": "Kvernadze",
-        "team": "Frosinone",
-        "role": "A",
-        "cost": 58
-    },
-    {
-        "id": "5951",
-        "name": "Kolo Muani",
+        "id": "6752",
+        "name": "Woltemade",
         "team": "Juventus",
         "role": "A",
-        "cost": 82
+        "cost": 57
     },
     {
-        "id": "2097",
-        "name": "Kean",
-        "team": "Como",
+        "id": "6397",
+        "name": "Ramos G.",
+        "team": "Milan",
         "role": "A",
-        "cost": 40
+        "cost": 185
     },
     {
-        "id": "7023",
-        "name": "Pellegrino M.",
-        "team": "Fiorentina",
-        "role": "A",
-        "cost": 50
-    },
-    {
-        "id": "309",
-        "name": "Dybala",
-        "team": "Roma",
-        "role": "A",
-        "cost": 75
-    },
-    {
-        "id": "531",
-        "name": "Berardi",
+        "id": "4463",
+        "name": "Esposito Se.",
         "team": "Sassuolo",
         "role": "A",
-        "cost": 70
-    },
-    {
-        "id": "6060",
-        "name": "Laurientè",
-        "team": "Sassuolo",
-        "role": "A",
-        "cost": 55
-    },
-    {
-        "id": "7554",
-        "name": "Romero D.",
-        "team": "Parma",
-        "role": "A",
-        "cost": 26
+        "cost": 34
     },
     {
         "id": "7600",
         "name": "Osmajic",
         "team": "Genoa",
         "role": "A",
-        "cost": 85
+        "cost": 100
     },
     {
-        "id": "6572",
-        "name": "Castro S.",
-        "team": "Roma",
+        "id": "4896",
+        "name": "Maldini",
+        "team": "Cagliari",
         "role": "A",
-        "cost": 42
+        "cost": 59
     },
     {
-        "id": "2038",
-        "name": "Pinamonti",
-        "team": "Lazio",
+        "id": "6204",
+        "name": "Kvernadze",
+        "team": "Frosinone",
         "role": "A",
-        "cost": 43
+        "cost": 54
+    },
+    {
+        "id": "5951",
+        "name": "Kolo Muani",
+        "team": "Juventus",
+        "role": "A",
+        "cost": 87
+    },
+    {
+        "id": "6646",
+        "name": "Adams C.",
+        "team": "Torino",
+        "role": "A",
+        "cost": 31
+    },
+    {
+        "id": "2061",
+        "name": "Simeone",
+        "team": "Torino",
+        "role": "A",
+        "cost": 64
     },
     {
         "id": "5995",
         "name": "De Ketelaere",
         "team": "Atalanta",
         "role": "A",
-        "cost": 55
+        "cost": 75
     },
     {
-        "id": "2137",
-        "name": "Scamacca",
-        "team": "Atalanta",
+        "id": "6530",
+        "name": "Ghedjemis",
+        "team": "Frosinone",
         "role": "A",
-        "cost": 41
+        "cost": 53
     },
     {
-        "id": "7374",
-        "name": "Mendy P.",
-        "team": "Cagliari",
+        "id": "5436",
+        "name": "Raimondo",
+        "team": "Frosinone",
         "role": "A",
-        "cost": 30
+        "cost": 75
     },
     {
-        "id": "6434",
-        "name": "Yildiz",
-        "team": "Juventus",
+        "id": "309",
+        "name": "Dybala",
+        "team": "Roma",
         "role": "A",
-        "cost": 60
+        "cost": 72
     },
     {
-        "id": "5637",
-        "name": "Davis K.",
-        "team": "Udinese",
+        "id": "7023",
+        "name": "Pellegrino M.",
+        "team": "Fiorentina",
         "role": "A",
-        "cost": 65
+        "cost": 47
+    },
+    {
+        "id": "6060",
+        "name": "Laurientè",
+        "team": "Sassuolo",
+        "role": "A",
+        "cost": 52
+    },
+    {
+        "id": "2038",
+        "name": "Pinamonti",
+        "team": "Lazio",
+        "role": "A",
+        "cost": 38
     },
     {
         "id": "7546",
         "name": "Robinson J.",
         "team": "Monza",
         "role": "A",
+        "cost": 35
+    },
+    {
+        "id": "2097",
+        "name": "Kean",
+        "team": "Como",
+        "role": "A",
         "cost": 20
     },
     {
-        "id": "7561",
-        "name": "Lontani",
+        "id": "6572",
+        "name": "Castro S.",
+        "team": "Roma",
+        "role": "A",
+        "cost": 35
+    },
+    {
+        "id": "531",
+        "name": "Berardi",
+        "team": "Sassuolo",
+        "role": "A",
+        "cost": 65
+    },
+    {
+        "id": "7554",
+        "name": "Romero D.",
         "team": "Parma",
-        "role": "A",
-        "cost": 22
-    },
-    {
-        "id": "6967",
-        "name": "Diao",
-        "team": "Como",
-        "role": "A",
-        "cost": 41
-    },
-    {
-        "id": "6669",
-        "name": "Bonny",
-        "team": "Inter",
         "role": "A",
         "cost": 18
     },
     {
-        "id": "7484",
-        "name": "Adams A.",
-        "team": "Venezia",
+        "id": "7374",
+        "name": "Mendy P.",
+        "team": "Cagliari",
         "role": "A",
-        "cost": 29
-    },
-    {
-        "id": "4371",
-        "name": "Raspadori",
-        "team": "Atalanta",
-        "role": "A",
-        "cost": 12
+        "cost": 26
     },
     {
         "id": "5882",
@@ -3455,11 +3399,67 @@ export const playersDB = [
         "cost": 14
     },
     {
+        "id": "7561",
+        "name": "Lontani",
+        "team": "Parma",
+        "role": "A",
+        "cost": 22
+    },
+    {
+        "id": "2137",
+        "name": "Scamacca",
+        "team": "Atalanta",
+        "role": "A",
+        "cost": 30
+    },
+    {
+        "id": "6669",
+        "name": "Bonny",
+        "team": "Inter",
+        "role": "A",
+        "cost": 15
+    },
+    {
+        "id": "6434",
+        "name": "Yildiz",
+        "team": "Juventus",
+        "role": "A",
+        "cost": 55
+    },
+    {
         "id": "7120",
         "name": "Lang",
         "team": "Napoli",
         "role": "A",
-        "cost": 26
+        "cost": 28
+    },
+    {
+        "id": "5637",
+        "name": "Davis K.",
+        "team": "Udinese",
+        "role": "A",
+        "cost": 50
+    },
+    {
+        "id": "4371",
+        "name": "Raspadori",
+        "team": "Atalanta",
+        "role": "A",
+        "cost": 12
+    },
+    {
+        "id": "6967",
+        "name": "Diao",
+        "team": "Como",
+        "role": "A",
+        "cost": 35
+    },
+    {
+        "id": "7484",
+        "name": "Adams A.",
+        "team": "Venezia",
+        "role": "A",
+        "cost": 27
     },
     {
         "id": "7349",
@@ -3469,11 +3469,39 @@ export const playersDB = [
         "cost": 15
     },
     {
+        "id": "7001",
+        "name": "N'Dri",
+        "team": "Lecce",
+        "role": "A",
+        "cost": 14
+    },
+    {
         "id": "7347",
         "name": "Bowie",
         "team": "Sassuolo",
         "role": "A",
         "cost": 14
+    },
+    {
+        "id": "7610",
+        "name": "Birligea",
+        "team": "Frosinone",
+        "role": "A",
+        "cost": 20
+    },
+    {
+        "id": "5694",
+        "name": "Beto",
+        "team": "Fiorentina",
+        "role": "A",
+        "cost": 14
+    },
+    {
+        "id": "5336",
+        "name": "Nzola",
+        "team": "Cagliari",
+        "role": "A",
+        "cost": 20
     },
     {
         "id": "6675",
@@ -3483,25 +3511,11 @@ export const playersDB = [
         "cost": 10
     },
     {
-        "id": "7001",
-        "name": "N'Dri",
-        "team": "Lecce",
-        "role": "A",
-        "cost": 14
-    },
-    {
-        "id": "5694",
-        "name": "Beto",
-        "team": "Fiorentina",
-        "role": "A",
-        "cost": 15
-    },
-    {
         "id": "4359",
         "name": "Piccoli",
         "team": "Bologna",
         "role": "A",
-        "cost": 23
+        "cost": 21
     },
     {
         "id": "7602",
@@ -3511,39 +3525,25 @@ export const playersDB = [
         "cost": 7
     },
     {
-        "id": "7610",
-        "name": "Birligea",
-        "team": "Frosinone",
-        "role": "A",
-        "cost": 25
-    },
-    {
-        "id": "5336",
-        "name": "Nzola",
-        "team": "Cagliari",
-        "role": "A",
-        "cost": 21
-    },
-    {
         "id": "2832",
         "name": "Boga",
         "team": "Juventus",
         "role": "A",
-        "cost": 17
+        "cost": 16
     },
     {
         "id": "7351",
         "name": "Santos A.",
         "team": "Napoli",
         "role": "A",
-        "cost": 17
+        "cost": 15
     },
     {
         "id": "6904",
         "name": "Yeboah J.",
         "team": "Venezia",
         "role": "A",
-        "cost": 21
+        "cost": 18
     },
     {
         "id": "7620",
@@ -3553,32 +3553,18 @@ export const playersDB = [
         "cost": 9
     },
     {
-        "id": "4923",
-        "name": "Colombo",
-        "team": "Genoa",
+        "id": "7342",
+        "name": "Elphege",
+        "team": "Parma",
         "role": "A",
-        "cost": 17
+        "cost": 10
     },
     {
         "id": "6229",
         "name": "Tourè E.",
         "team": "Parma",
         "role": "A",
-        "cost": 20
-    },
-    {
-        "id": "7272",
-        "name": "Gueye",
-        "team": "Udinese",
-        "role": "A",
-        "cost": 4
-    },
-    {
-        "id": "7547",
-        "name": "Kevin Carlos",
-        "team": "Cagliari",
-        "role": "A",
-        "cost": 9
+        "cost": 17
     },
     {
         "id": "6164",
@@ -3588,6 +3574,20 @@ export const playersDB = [
         "cost": 10
     },
     {
+        "id": "4923",
+        "name": "Colombo",
+        "team": "Genoa",
+        "role": "A",
+        "cost": 10
+    },
+    {
+        "id": "7547",
+        "name": "Kevin Carlos",
+        "team": "Cagliari",
+        "role": "A",
+        "cost": 9
+    },
+    {
         "id": "7162",
         "name": "Giovane",
         "team": "Napoli",
@@ -3595,18 +3595,18 @@ export const playersDB = [
         "cost": 6
     },
     {
+        "id": "7272",
+        "name": "Gueye",
+        "team": "Udinese",
+        "role": "A",
+        "cost": 4
+    },
+    {
         "id": "7612",
         "name": "Bobcek",
         "team": "Frosinone",
         "role": "A",
         "cost": 9
-    },
-    {
-        "id": "7623",
-        "name": "Gnonto",
-        "team": "Fiorentina",
-        "role": "A",
-        "cost": 12
     },
     {
         "id": "5029",
@@ -3623,13 +3623,6 @@ export const playersDB = [
         "cost": 10
     },
     {
-        "id": "6215",
-        "name": "Lucca",
-        "team": "Napoli",
-        "role": "A",
-        "cost": 10
-    },
-    {
         "id": "7213",
         "name": "Frigan",
         "team": "Parma",
@@ -3637,18 +3630,11 @@ export const playersDB = [
         "cost": 1
     },
     {
-        "id": "7342",
-        "name": "Elphege",
-        "team": "Parma",
+        "id": "7623",
+        "name": "Gnonto",
+        "team": "Fiorentina",
         "role": "A",
-        "cost": 3
-    },
-    {
-        "id": "7449",
-        "name": "Rrahmani Al.",
-        "team": "Venezia",
-        "role": "A",
-        "cost": 5
+        "cost": 12
     },
     {
         "id": "7252",
@@ -3665,11 +3651,25 @@ export const playersDB = [
         "cost": 11
     },
     {
+        "id": "6215",
+        "name": "Lucca",
+        "team": "Napoli",
+        "role": "A",
+        "cost": 10
+    },
+    {
         "id": "608",
         "name": "Zapata D.",
         "team": "Torino",
         "role": "A",
         "cost": 4
+    },
+    {
+        "id": "7449",
+        "name": "Rrahmani Al.",
+        "team": "Venezia",
+        "role": "A",
+        "cost": 5
     },
     {
         "id": "6145",
@@ -3707,6 +3707,13 @@ export const playersDB = [
         "cost": 4
     },
     {
+        "id": "7161",
+        "name": "Bayo V.",
+        "team": "Udinese",
+        "role": "A",
+        "cost": 3
+    },
+    {
         "id": "7482",
         "name": "Lauberbach",
         "team": "Venezia",
@@ -3733,13 +3740,6 @@ export const playersDB = [
         "team": "Juventus",
         "role": "A",
         "cost": 4
-    },
-    {
-        "id": "7161",
-        "name": "Bayo V.",
-        "team": "Udinese",
-        "role": "A",
-        "cost": 3
     },
     {
         "id": "7408",
