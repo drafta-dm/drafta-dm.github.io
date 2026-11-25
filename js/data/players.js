@@ -1,4 +1,4 @@
-export const playersLastUpdated = "2026-11-24T18:43:26Z";
+export const playersLastUpdated = "2026-11-25T17:51:31Z";
 
 export const playersSeason = 21;
 
@@ -455,6 +455,13 @@ export const playersDB = [
         "id": "283",
         "name": "Neto",
         "team": "Juventus",
+        "role": "P",
+        "cost": 1
+    },
+    {
+        "id": "7653",
+        "name": "Sonzogni",
+        "team": "Atalanta",
         "role": "P",
         "cost": 1
     },
@@ -1799,6 +1806,13 @@ export const playersDB = [
         "id": "7633",
         "name": "Obric",
         "team": "Atalanta",
+        "role": "D",
+        "cost": 1
+    },
+    {
+        "id": "7662",
+        "name": "Grandu",
+        "team": "Cagliari",
         "role": "D",
         "cost": 1
     },
@@ -3773,6 +3787,13 @@ export const playersDB = [
         "id": "7622",
         "name": "Robinho Junior",
         "team": "Genoa",
+        "role": "A",
+        "cost": 1
+    },
+    {
+        "id": "2103",
+        "name": "Pellegri",
+        "team": "Torino",
         "role": "A",
         "cost": 1
     }
