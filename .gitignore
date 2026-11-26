@@ -26,3 +26,5 @@ __pycache__/
 
 # season id written by download_excel.py
 scripts/season.txt
+
+.claude/
